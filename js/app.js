@@ -244,14 +244,28 @@ function showToast(message, type = "success") {
   setTimeout(() => toast.remove(), 3500);
 }
 
+function scrollToTop() {
+  window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+  [".main-wrapper", ".content-body", ".app-container", "#loginScreen", "#recoveryModal", ".modal-box"].forEach(sel => {
+    const el = document.querySelector(sel);
+    if (el) el.scrollTop = 0;
+  });
+}
+
 function checkAuth() {
   const isLoggedIn = localStorage.getItem("icma_is_logged_in_v3") === "true";
   const loginScreen = document.getElementById("loginScreen");
   if (!isLoggedIn) {
-    if (loginScreen) loginScreen.style.display = "flex";
+    if (loginScreen) {
+      loginScreen.style.display = "flex";
+      loginScreen.scrollTop = 0;
+    }
   } else {
     if (loginScreen) loginScreen.style.display = "none";
   }
+  scrollToTop();
 }
 
 // Find Donor Helper
@@ -327,6 +341,8 @@ function initWilayahDropdowns(prefix = "donatur") {
 
 // Navigation View Switcher
 function switchView(viewName) {
+  scrollToTop();
+
   ["dashboardView", "donasiView", "donaturView", "kasView", "laporanView", "detailJenisDonasiView", "pengaturanView"].forEach(v => {
     const el = document.getElementById(v);
     if (el) el.style.display = "none";
@@ -349,6 +365,8 @@ function switchView(viewName) {
   else if (viewName === "laporan") renderLaporanKeuangan();
   else if (viewName === "detailJenisDonasi") renderDetailJenisDonasiView();
   else if (viewName === "pengaturan") renderPengaturanView();
+
+  scrollToTop();
 }
 
 // Render Dashboard View
@@ -2726,6 +2744,8 @@ function openRecoveryModal(e) {
   const modal = document.getElementById("recoveryModal");
   if (!modal) return;
   modal.classList.add("active");
+  const modalBox = modal.querySelector(".modal-box");
+  if (modalBox) modalBox.scrollTop = 0;
   backToRecStep0();
 }
 

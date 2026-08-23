@@ -1125,6 +1125,7 @@ textarea.form-control {
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+  overflow-y: auto;
 }
 .login-card {
   background-color: #ffffff;
