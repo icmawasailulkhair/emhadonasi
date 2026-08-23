@@ -244,13 +244,44 @@ function showToast(message, type = "success") {
   setTimeout(() => toast.remove(), 3500);
 }
 
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
 function scrollToTop() {
-  window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  try {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  } catch (e) {
+    window.scrollTo(0, 0);
+  }
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
-  [".main-wrapper", ".content-body", ".app-container", "#loginScreen", "#recoveryModal", ".modal-box"].forEach(sel => {
-    const el = document.querySelector(sel);
-    if (el) el.scrollTop = 0;
+
+  const selectors = [
+    "html",
+    "body",
+    ".app-container",
+    ".main-wrapper",
+    ".content-body",
+    "#dashboardView",
+    "#donasiView",
+    "#donaturView",
+    "#kasView",
+    "#laporanView",
+    "#detailJenisDonasiView",
+    "#pengaturanView",
+    "#loginScreen",
+    "#recoveryModal",
+    ".modal-box",
+    ".table-responsive"
+  ];
+  selectors.forEach(sel => {
+    document.querySelectorAll(sel).forEach(el => {
+      if (el) {
+        el.scrollTop = 0;
+        el.scrollLeft = 0;
+      }
+    });
   });
 }
 
@@ -266,6 +297,7 @@ function checkAuth() {
     if (loginScreen) loginScreen.style.display = "none";
   }
   scrollToTop();
+  setTimeout(() => scrollToTop(), 20);
 }
 
 // Find Donor Helper
@@ -349,7 +381,10 @@ function switchView(viewName) {
   });
 
   const activeView = document.getElementById(viewName + "View");
-  if (activeView) activeView.style.display = "block";
+  if (activeView) {
+    activeView.style.display = "block";
+    activeView.scrollTop = 0;
+  }
 
   document.querySelectorAll(".nav-item").forEach(item => {
     item.classList.remove("active");
@@ -367,6 +402,9 @@ function switchView(viewName) {
   else if (viewName === "pengaturan") renderPengaturanView();
 
   scrollToTop();
+  requestAnimationFrame(() => scrollToTop());
+  setTimeout(() => scrollToTop(), 20);
+  setTimeout(() => scrollToTop(), 80);
 }
 
 // Render Dashboard View
@@ -2475,6 +2513,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".nav-item").forEach(item => {
     item.addEventListener("click", (e) => {
       e.preventDefault();
+      scrollToTop();
       const view = item.dataset.view;
       if (view) switchView(view);
     });
