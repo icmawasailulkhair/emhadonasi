@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=2.6">
+  <link rel="stylesheet" href="css/styles.css?v=3.0">
 
   <!-- External Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -72,6 +72,9 @@
           <h1>ICMA</h1>
           <span>Sinergi Kebaikan Abadi</span>
         </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Tutup Sidebar" title="Tutup Menu">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
 
       <div class="sidebar-menu">
@@ -112,10 +115,10 @@
 
       <div class="sidebar-footer">
         <div class="user-profile-badge">
-          <div class="user-avatar">A</div>
+          <div class="user-avatar">B</div>
           <div class="user-info">
             <div class="name">Administrator</div>
-            <div class="role">Admin Keuangan</div>
+            <div class="role">Bendahara ICMA</div>
           </div>
           <button class="btn-logout" id="logoutBtn" title="Logout">
             <i class="fa-solid fa-power-off"></i>
@@ -124,7 +127,40 @@
       </div>
     </aside>
 
+    <!-- Overlay Backdrop for Mobile Sidebar -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
     <div class="main-wrapper">
+      <!-- Top Navbar (Header Responsive Smartphone & Desktop) -->
+      <header class="top-navbar">
+        <div class="top-navbar-left">
+          <button class="mobile-toggle-btn" id="mobileMenuBtn" aria-label="Toggle Menu" title="Buka Menu Navigasi">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="top-brand">
+            <img src="images/logoicma.png" alt="ICMA Logo" class="top-brand-logo">
+            <div class="top-brand-text">
+              <span class="brand-title">ICMA Sinergi</span>
+              <span class="brand-sub">Sistem Donasi & Kas</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="top-navbar-right">
+          <div class="header-user-badge">
+            <div class="header-user-avatar">
+              <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <div class="header-user-info">
+              <span class="user-role-label">Bendahara ICMA</span>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm btn-quick-add" onclick="openAddModal()" title="Catat Donasi Baru">
+            <i class="fa-solid fa-plus"></i> <span class="btn-text">Catat Donasi</span>
+          </button>
+        </div>
+      </header>
+
       <main class="content-body">
 
         <!-- 1. VIEW DASHBOARD -->
@@ -1660,7 +1696,7 @@
   <div id="invoicePrintArea" style="display:none;"></div>
   <div class="toast-container" id="toastContainer"></div>
 
-  <script src="js/app.js?v=2.6"></script>
+  <script src="js/app.js?v=3.0"></script>
 
 </body>
 </html>

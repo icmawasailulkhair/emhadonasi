@@ -2519,16 +2519,62 @@ function executeExcelExport() {
   showToast(`File Excel (${filterDesc}) berhasil diunduh!`, "success");
 }
 
+function toggleMobileSidebar(open) {
+  const sidebar = document.getElementById("appSidebar");
+  const backdrop = document.getElementById("sidebarBackdrop");
+  if (!sidebar) return;
+  const shouldOpen = open !== undefined ? open : !sidebar.classList.contains("open");
+  if (shouldOpen) {
+    sidebar.classList.add("open");
+    if (backdrop) backdrop.classList.add("active");
+    if (window.innerWidth <= 992) document.body.style.overflow = "hidden";
+  } else {
+    sidebar.classList.remove("open");
+    if (backdrop) backdrop.classList.remove("active");
+    document.body.style.overflow = "";
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initStore(); checkAuth(); populateAllCategorySelects();
 
+  // Mobile Hamburger Toggle
+  const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener("click", () => toggleMobileSidebar(true));
+  }
+
+  // Mobile Sidebar Close Button
+  const sidebarCloseBtn = document.getElementById("sidebarCloseBtn");
+  if (sidebarCloseBtn) {
+    sidebarCloseBtn.addEventListener("click", () => toggleMobileSidebar(false));
+  }
+
+  // Backdrop Overlay Click to Close Sidebar
+  const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+  if (sidebarBackdrop) {
+    sidebarBackdrop.addEventListener("click", () => toggleMobileSidebar(false));
+  }
+
+  // Auto-close sidebar on mobile when navigating
   document.querySelectorAll(".nav-item").forEach(item => {
     item.addEventListener("click", (e) => {
       e.preventDefault();
       scrollToTop();
+      toggleMobileSidebar(false);
       const view = item.dataset.view;
       if (view) switchView(view);
     });
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 992) {
+      const sidebar = document.getElementById("appSidebar");
+      const backdrop = document.getElementById("sidebarBackdrop");
+      if (sidebar) sidebar.classList.remove("open");
+      if (backdrop) backdrop.classList.remove("active");
+      document.body.style.overflow = "";
+    }
   });
 
   // Global search input
