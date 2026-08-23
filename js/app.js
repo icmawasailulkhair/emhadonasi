@@ -157,21 +157,55 @@ function saveToStorage() {
   localStorage.setItem("icma_trash_v5", JSON.stringify(trash));
 }
 
-function terbilang(angka) {
-  angka = Math.floor(Math.abs(Number(angka)));
+function numberToWords(n) {
+  n = Math.floor(Math.abs(Number(n) || 0));
   const huruf = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
-  let hasil = "";
-  if (angka < 12) hasil = " " + huruf[angka];
-  else if (angka < 20) hasil = terbilang(angka - 10) + " Belas";
-  else if (angka < 100) hasil = terbilang(Math.floor(angka / 10)) + " Puluh" + terbilang(angka % 10);
-  else if (angka < 200) hasil = " Seratus" + terbilang(angka - 100);
-  else if (angka < 1000) hasil = terbilang(Math.floor(angka / 100)) + " Ratus" + terbilang(angka % 100);
-  else if (angka < 2000) hasil = " Seribu" + terbilang(angka - 1000);
-  else if (angka < 1000000) hasil = terbilang(Math.floor(angka / 1000)) + " Ribu" + terbilang(angka % 1000);
-  else if (angka < 1000000000) hasil = terbilang(Math.floor(angka / 1000000)) + " Juta" + terbilang(angka % 1000000);
-  else if (angka < 1000000000000) hasil = terbilang(Math.floor(angka / 1000000000)) + " Milyar" + terbilang(angka % 1000000000);
-  else if (angka < 1000000000000000) hasil = terbilang(Math.floor(angka / 1000000000000)) + " Triliun" + terbilang(angka % 1000000000000);
-  return hasil.trim() + " Rupiah";
+  if (n < 12) return huruf[n];
+  if (n < 20) return (numberToWords(n - 10) + " Belas").trim();
+  if (n < 100) {
+    const sisa = n % 10;
+    return (numberToWords(Math.floor(n / 10)) + " Puluh" + (sisa > 0 ? " " + numberToWords(sisa) : "")).trim();
+  }
+  if (n < 200) {
+    const sisa = n - 100;
+    return ("Seratus" + (sisa > 0 ? " " + numberToWords(sisa) : "")).trim();
+  }
+  if (n < 1000) {
+    const sisa = n % 100;
+    return (numberToWords(Math.floor(n / 100)) + " Ratus" + (sisa > 0 ? " " + numberToWords(sisa) : "")).trim();
+  }
+  if (n < 2000) {
+    const sisa = n - 1000;
+    return ("Seribu" + (sisa > 0 ? " " + numberToWords(sisa) : "")).trim();
+  }
+  if (n < 1000000) {
+    const ribuan = Math.floor(n / 1000);
+    const sisa = n % 1000;
+    return (numberToWords(ribuan) + " Ribu" + (sisa > 0 ? " " + numberToWords(sisa) : "")).trim();
+  }
+  if (n < 1000000000) {
+    const jutaan = Math.floor(n / 1000000);
+    const sisa = n % 1000000;
+    return (numberToWords(jutaan) + " Juta" + (sisa > 0 ? " " + numberToWords(sisa) : "")).trim();
+  }
+  if (n < 1000000000000) {
+    const miliaran = Math.floor(n / 1000000000);
+    const sisa = n % 1000000000;
+    return (numberToWords(miliaran) + " Miliar" + (sisa > 0 ? " " + numberToWords(sisa) : "")).trim();
+  }
+  if (n < 1000000000000000) {
+    const triliunan = Math.floor(n / 1000000000000);
+    const sisa = n % 1000000000000;
+    return (numberToWords(triliunan) + " Triliun" + (sisa > 0 ? " " + numberToWords(sisa) : "")).trim();
+  }
+  return n.toString();
+}
+
+function terbilang(angka) {
+  const num = Math.floor(Math.abs(Number(angka) || 0));
+  if (num === 0) return "Nol Rupiah";
+  const words = numberToWords(num);
+  return words.replace(/\s+/g, " ").trim() + " Rupiah";
 }
 
 function formatRupiah(number) {
@@ -2103,6 +2137,15 @@ function viewInvoiceModal(id) {
   if (!printArea) return;
 
   const terbilangStr = terbilang(item.jumlah);
+  const bendaharaSig = localStorage.getItem("icma_bendahara_signature");
+  const bendaharaName = localStorage.getItem("icma_bendahara_name") || "Bendahara ICMA";
+
+  const signatureHtml = bendaharaSig
+    ? `<img src="${bendaharaSig}" alt="TTD Bendahara" style="max-height:60px; max-width:160px; object-fit:contain; display:block; margin:0 auto;">`
+    : `<svg width="120" height="45" viewBox="0 0 200 80" fill="none" style="display:block; margin:0 auto;">
+         <path d="M10 50 Q 50 10 90 50 T 170 30" stroke="#1d4ed8" stroke-width="4" fill="none"/>
+         <path d="M40 60 Q 90 20 140 60" stroke="#1d4ed8" stroke-width="2" fill="none"/>
+       </svg>`;
 
   printArea.innerHTML = `
     <div class="invoice-card" id="printableReceipt">
@@ -2112,7 +2155,7 @@ function viewInvoiceModal(id) {
           <div class="invoice-org-info">
             <h2>ICMA SINERGI KEBAIKAN ABADI</h2>
             <p>Lembaga Pengelola Wakaf, Zakat, Infaq, Shodaqoh & Keuangan Syariah</p>
-            <p style="font-size:0.725rem; color:#64748b;">Berbah, Sleman, D.I. Yogyakarta | WA: +62 812-3456-7890</p>
+            <p style="font-size:0.725rem; color:#64748b;">Berbah, Sleman, D.I. Yogyakarta | WA: +62 895-3931-81822</p>
           </div>
         </div>
         <div class="invoice-meta">
@@ -2149,13 +2192,10 @@ function viewInvoiceModal(id) {
         <div class="sig-box">
           <p>Sleman, ${formatDateID(item.tanggal)}</p>
           <p style="margin-bottom:0.25rem;">Pengelola / Bendahara ICMA,</p>
-          <div class="sig-space">
-            <svg width="120" height="45" viewBox="0 0 200 80" fill="none">
-              <path d="M10 50 Q 50 10 90 50 T 170 30" stroke="#1d4ed8" stroke-width="4" fill="none"/>
-              <path d="M40 60 Q 90 20 140 60" stroke="#1d4ed8" stroke-width="2" fill="none"/>
-            </svg>
+          <div class="sig-space" style="display:flex; align-items:center; justify-content:center; min-height:55px;">
+            ${signatureHtml}
           </div>
-          <div class="sig-name">Admin Keuangan ICMA</div>
+          <div class="sig-name">${bendaharaName}</div>
         </div>
       </div>
     </div>
@@ -3042,6 +3082,8 @@ function renderPengaturanView() {
   if (elEmail) elEmail.innerText = acc.email;
   if (elPhone) elPhone.innerText = acc.phone;
 
+  renderSignaturePreview();
+
   const cfg = getEmailJsConfig();
   const elPub = document.getElementById("cfgEmailJsPublicKey");
   const elSrv = document.getElementById("cfgEmailJsServiceId");
@@ -3199,5 +3241,86 @@ function handleChangePasswordSubmit(e) {
 
   document.getElementById("formChangePassword")?.reset();
   showToast("Kata sandi akun berhasil diperbarui!", "success");
+}
+
+// ------------------------------------------
+// BENDAHARA SIGNATURE & TTD PNG HANDLERS
+// ------------------------------------------
+
+function handleSignatureFileSelect(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (!file.type.match(/^image\/(png|jpeg|jpg|webp)$/i)) {
+    showToast("Harap pilih file gambar PNG, JPG, atau WEBP!", "danger");
+    event.target.value = "";
+    return;
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    showToast("Ukuran file maksimal 2MB!", "danger");
+    event.target.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const base64 = e.target.result;
+    localStorage.setItem("icma_bendahara_signature", base64);
+    renderSignaturePreview();
+    showToast("Tanda tangan bendahara berhasil diunggah & disimpan!", "success");
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleSaveBendaharaName(e) {
+  if (e) e.preventDefault();
+  const nameInput = document.getElementById("inputBendaharaName");
+  const name = nameInput ? nameInput.value.trim() : "Bendahara ICMA";
+  localStorage.setItem("icma_bendahara_name", name || "Bendahara ICMA");
+  showToast("Nama/Jabatan penandatangan berhasil diperbarui!", "success");
+}
+
+function handleDeleteSignature() {
+  if (!confirm("Hapus tanda tangan PNG dan gunakan tanda tangan default?")) return;
+  localStorage.removeItem("icma_bendahara_signature");
+  const fileInp = document.getElementById("signatureFileInput");
+  if (fileInp) fileInp.value = "";
+  renderSignaturePreview();
+  showToast("Tanda tangan khusus dihapus. Menggunakan format default.", "warning");
+}
+
+function renderSignaturePreview() {
+  const previewBox = document.getElementById("signaturePreviewBox");
+  const btnDelete = document.getElementById("btnDeleteSignature");
+  const sig = localStorage.getItem("icma_bendahara_signature");
+  const name = localStorage.getItem("icma_bendahara_name") || "Bendahara ICMA";
+  const nameInp = document.getElementById("inputBendaharaName");
+  if (nameInp) nameInp.value = name;
+
+  if (!previewBox) return;
+
+  if (sig) {
+    previewBox.innerHTML = `
+      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0.75rem; background:#ffffff; border:1px dashed #cbd5e1; border-radius:8px; min-height:80px;">
+        <img src="${sig}" alt="TTD Bendahara" style="max-height:70px; max-width:180px; object-fit:contain;">
+        <span style="font-size:0.7rem; color:var(--emerald-600); font-weight:600; margin-top:0.35rem;">
+          <i class="fa-solid fa-circle-check"></i> File Tanda Tangan PNG Aktif
+        </span>
+      </div>
+    `;
+    if (btnDelete) btnDelete.style.display = "inline-flex";
+  } else {
+    previewBox.innerHTML = `
+      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0.75rem; background:#ffffff; border:1px dashed #cbd5e1; border-radius:8px; min-height:80px;">
+        <svg width="120" height="40" viewBox="0 0 200 80" fill="none">
+          <path d="M10 50 Q 50 10 90 50 T 170 30" stroke="#1d4ed8" stroke-width="4" fill="none"/>
+          <path d="M40 60 Q 90 20 140 60" stroke="#1d4ed8" stroke-width="2" fill="none"/>
+        </svg>
+        <span style="font-size:0.7rem; color:var(--slate-500); margin-top:0.25rem;">(Format Default Digital)</span>
+      </div>
+    `;
+    if (btnDelete) btnDelete.style.display = "none";
+  }
 }
 

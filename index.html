@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=2.5">
+  <link rel="stylesheet" href="css/styles.css?v=2.6">
 
   <!-- External Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -940,6 +940,56 @@
               </div>
             </div>
 
+            <!-- Card: Tanda Tangan Resmi Bendahara ICMA (Upload File PNG) -->
+            <div class="card" style="padding: 1.5rem; grid-column: span 2;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+                <div>
+                  <h3 style="font-size:0.95rem; margin:0;">
+                    <i class="fa-solid fa-signature" style="color:var(--primary-600); margin-right:0.35rem;"></i>
+                    Tanda Tangan Resmi Bendahara ICMA (File PNG)
+                  </h3>
+                  <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;">
+                    Upload file tanda tangan asli format PNG (transparan disarankan) untuk digunakan otomatis pada Bukti Donasi & Kwitansi Resmi.
+                  </p>
+                </div>
+              </div>
+
+              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.25rem; align-items:start;">
+                <div>
+                  <label style="font-size:0.78rem; font-weight:600; color:var(--slate-700); display:block; margin-bottom:0.4rem;">
+                    Preview Tanda Tangan Saat Ini:
+                  </label>
+                  <div id="signaturePreviewBox">
+                    <!-- Populated dynamically via JS -->
+                  </div>
+                  <div style="display:flex; gap:0.5rem; margin-top:0.75rem;">
+                    <button type="button" class="btn btn-secondary btn-sm" id="btnDeleteSignature" onclick="handleDeleteSignature()" style="display:none; color:var(--rose-600);">
+                      <i class="fa-solid fa-trash-can"></i> Hapus TTD Khusus (Reset ke Default)
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="form-group mb-3">
+                    <label for="inputBendaharaName">Nama / Jabatan Penandatangan di Kwitansi</label>
+                    <div style="display:flex; gap:0.5rem;">
+                      <input type="text" id="inputBendaharaName" class="form-control" placeholder="Contoh: Bendahara ICMA" value="Bendahara ICMA">
+                      <button type="button" class="btn btn-primary btn-sm" onclick="handleSaveBendaharaName(event)" style="white-space:nowrap;">
+                        <i class="fa-solid fa-save"></i> Simpan Nama
+                      </button>
+                    </div>
+                    <small style="font-size:0.7rem; color:var(--slate-500);">Nama yang tertera di bawah tanda tangan kwitansi donasi.</small>
+                  </div>
+
+                  <div class="form-group mb-2">
+                    <label for="signatureFileInput">Upload File Gambar TTD (PNG / JPG / WEBP)</label>
+                    <input type="file" id="signatureFileInput" class="form-control" accept="image/png, image/jpeg, image/jpg, image/webp" onchange="handleSignatureFileSelect(event)">
+                    <small style="font-size:0.7rem; color:var(--slate-500);">Ukuran file maksimal 2MB. TTD langsung otomatis tampil di bukti donasi / cetak invoice.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- Card 5: Ubah Kata Sandi -->
             <div class="card" style="padding: 1.5rem;">
               <h3 style="font-size:0.95rem; margin-bottom:0.25rem;">
@@ -969,7 +1019,7 @@
               </form>
             </div>
 
-            <!-- Card 5: Konfigurasi EmailJS (Opsional) -->
+            <!-- Card 6: Konfigurasi EmailJS (Opsional) -->
             <div class="card" style="padding: 1.5rem; grid-column: span 2;">
               <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
                 <h3 style="font-size:0.95rem; margin:0;">
@@ -1610,7 +1660,7 @@
   <div id="invoicePrintArea" style="display:none;"></div>
   <div class="toast-container" id="toastContainer"></div>
 
-  <script src="js/app.js?v=2.5"></script>
+  <script src="js/app.js?v=2.6"></script>
 
 </body>
 </html>
