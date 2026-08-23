@@ -131,12 +131,12 @@ let currentChartPurpose = null;
 let activeInvoiceData = null;
 
 function initStore() {
-  const storedDonors = localStorage.getItem("icma_donors_v4");
-  const storedDonations = localStorage.getItem("icma_donasi_v4");
-  const storedExpenses = localStorage.getItem("icma_expenses_v4");
-  const storedCatMasuk = localStorage.getItem("icma_cat_masuk_v4");
-  const storedCatKeluar = localStorage.getItem("icma_cat_keluar_v4");
-  const storedTrash = localStorage.getItem("icma_trash_v4");
+  const storedDonors = localStorage.getItem("icma_donors_v5");
+  const storedDonations = localStorage.getItem("icma_donasi_v5");
+  const storedExpenses = localStorage.getItem("icma_expenses_v5");
+  const storedCatMasuk = localStorage.getItem("icma_cat_masuk_v5");
+  const storedCatKeluar = localStorage.getItem("icma_cat_keluar_v5");
+  const storedTrash = localStorage.getItem("icma_trash_v5");
 
   donors = storedDonors ? JSON.parse(storedDonors) : [...INITIAL_DONORS];
   donations = storedDonations ? JSON.parse(storedDonations) : [...INITIAL_DONATIONS];
@@ -149,12 +149,12 @@ function initStore() {
 }
 
 function saveToStorage() {
-  localStorage.setItem("icma_donors_v4", JSON.stringify(donors));
-  localStorage.setItem("icma_donasi_v4", JSON.stringify(donations));
-  localStorage.setItem("icma_expenses_v4", JSON.stringify(expenses));
-  localStorage.setItem("icma_cat_masuk_v4", JSON.stringify(categoriesMasuk));
-  localStorage.setItem("icma_cat_keluar_v4", JSON.stringify(categoriesKeluar));
-  localStorage.setItem("icma_trash_v4", JSON.stringify(trash));
+  localStorage.setItem("icma_donors_v5", JSON.stringify(donors));
+  localStorage.setItem("icma_donasi_v5", JSON.stringify(donations));
+  localStorage.setItem("icma_expenses_v5", JSON.stringify(expenses));
+  localStorage.setItem("icma_cat_masuk_v5", JSON.stringify(categoriesMasuk));
+  localStorage.setItem("icma_cat_keluar_v5", JSON.stringify(categoriesKeluar));
+  localStorage.setItem("icma_trash_v5", JSON.stringify(trash));
 }
 
 function terbilang(angka) {
