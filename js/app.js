@@ -2810,19 +2810,29 @@ function sendVerificationOtpEmail(toEmail, otpCode, purposeTitle = "Pemulihan Ak
         purpose: purposeTitle,
         expiry: "5 Menit"
       }).then(() => {
-        showToast(`Kode OTP 6 digit telah dikirim ke email ${toEmail}. Silakan periksa kotak masuk/spam Anda.`, "success");
+        showToast(`Kode OTP 6 digit telah dikirim ke email ${toEmail}. Silakan periksa inbox/spam Anda.`, "success");
       }).catch(err => {
         console.warn("EmailJS error:", err);
-        showToast(`Kode OTP telah dikirim ke email ${toEmail}. Silakan periksa inbox Anda.`, "success");
-        console.log(`[EmailJS Fallback OTP]: ${otpCode}`);
+        showToast(`Gagal kirim via EmailJS (${err.text || 'API Error'}). Kode OTP Simulasi: ${otpCode}`, "warning");
+        alert(`[KODE VERIFIKASI OTP ICMA]\n\nKeperluan: ${purposeTitle}\nKode OTP: ${otpCode}\n\n(Pesan EmailJS gagal/belum aktif, gunakan kode di atas untuk verifikasi).`);
       });
       return;
     } catch (e) {
       console.warn("EmailJS init error:", e);
     }
   }
-  showToast(`Kode OTP verifikasi telah dikirim ke email ${toEmail}. Silakan periksa inbox/spam Anda.`, "success");
-  console.log(`[Verifikasi Email OTP]: ${otpCode}`);
+
+  // Fallback / Simulator: tampilkan dialog langsung di layar
+  showToast(`Kode OTP verifikasi Anda: ${otpCode}`, "success");
+  setTimeout(() => {
+    alert(`[KODE VERIFIKASI OTP ICMA]\n\nKeperluan: ${purposeTitle}\nKode OTP: ${otpCode}\n\nMasukkan 6 digit kode ini pada kotak verifikasi.`);
+  }, 100);
+
+  // Helper tampilan kode di form ganti email jika ada
+  const hintEl = document.getElementById("otpSimulatedHintEmail");
+  if (hintEl) {
+    hintEl.innerHTML = `<span style="font-size:0.75rem; color:var(--primary-700); background:var(--primary-50); padding:0.35rem 0.6rem; border-radius:6px; border:1px dashed var(--primary-300); display:inline-block; margin-top:0.4rem;"><i class="fa-solid fa-key"></i> Kode OTP: <strong>${otpCode}</strong> (Mode Simulasi)</span>`;
+  }
 }
 
 function sendVerificationOtpWhatsApp(toPhone, otpCode, purposeTitle = "Pemulihan Akun ICMA") {
@@ -2833,6 +2843,11 @@ function sendVerificationOtpWhatsApp(toPhone, otpCode, purposeTitle = "Pemulihan
   window.open(url, "_blank");
   showToast(`Pesan verifikasi WhatsApp telah dibuka. Silakan kirim pesan untuk menerima kode OTP Anda.`, "success");
   console.log(`[Verifikasi WhatsApp OTP]: ${otpCode}`);
+
+  const hintEl = document.getElementById("otpSimulatedHintPhone");
+  if (hintEl) {
+    hintEl.innerHTML = `<span style="font-size:0.75rem; color:var(--emerald-700); background:var(--emerald-50); padding:0.35rem 0.6rem; border-radius:6px; border:1px dashed var(--emerald-300); display:inline-block; margin-top:0.4rem;"><i class="fa-solid fa-key"></i> Kode OTP: <strong>${otpCode}</strong></span>`;
+  }
 }
 
 // ------------------------------------------

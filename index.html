@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=3.1">
+  <link rel="stylesheet" href="css/styles.css?v=3.2">
 
   <!-- External Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -943,6 +943,7 @@
                   <input type="text" id="otpChangeEmailInput" class="form-control" placeholder="6 digit" maxlength="6" style="letter-spacing:3px; text-align:center; font-weight:700;">
                   <button type="button" class="btn btn-success btn-sm" onclick="handleConfirmChangeEmail()">Verifikasi</button>
                 </div>
+                <div id="otpSimulatedHintEmail"></div>
               </div>
             </div>
 
@@ -973,6 +974,7 @@
                   <input type="text" id="otpChangePhoneInput" class="form-control" placeholder="6 digit" maxlength="6" style="letter-spacing:3px; text-align:center; font-weight:700;">
                   <button type="button" class="btn btn-success btn-sm" onclick="handleConfirmChangePhone()">Verifikasi</button>
                 </div>
+                <div id="otpSimulatedHintPhone"></div>
               </div>
             </div>
 
@@ -1696,7 +1698,7 @@
   <div id="invoicePrintArea" style="display:none;"></div>
   <div class="toast-container" id="toastContainer"></div>
 
-  <script src="js/app.js?v=3.1"></script>
+  <script src="js/app.js?v=3.2"></script>
 
 </body>
 </html>
