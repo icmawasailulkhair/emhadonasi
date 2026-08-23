@@ -67,67 +67,31 @@ const WILAYAH_DB = {
   "RIAU": { "KABUPATEN S I A K": { "TUALANG": ["PERAWANG"] } }
 };
 
-// Initial Seed Donors with ID Donatur
+// Initial Seed Donors with ID Donatur (5 Donatur)
 const INITIAL_DONORS = [
-  { id: "DNR-001", nama: "H.Mile & Hj.Masita", phone: "6281234567801", provinsi: "DI YOGYAKARTA", kabupaten: "KABUPATEN SLEMAN", kecamatan: "BERBAH", kelurahan: "TEGALTIRTO", alamat: "Berbah. Sleman. D.I.Yogyakarta" },
-  { id: "DNR-002", nama: "Ibu Lulu", phone: "6281234567802", provinsi: "DI YOGYAKARTA", kabupaten: "KABUPATEN SLEMAN", kecamatan: "BERBAH", kelurahan: "KALITIRTO", alamat: "Berbah. Sleman. D.I.Yogyakarta" },
-  { id: "DNR-003", nama: "Ibu Siti Rahayu", phone: "6281234567803", provinsi: "DI YOGYAKARTA", kabupaten: "KABUPATEN SLEMAN", kecamatan: "BERBAH", kelurahan: "SENDANGTIRTO", alamat: "Berbah. Sleman. D.I. Yogyakarta" },
-  { id: "DNR-004", nama: "Bp Sumadi", phone: "6281234567804", provinsi: "DI YOGYAKARTA", kabupaten: "KABUPATEN SLEMAN", kecamatan: "BERBAH", kelurahan: "JOGOTIRTO", alamat: "Berbah. Sleman. D.I. Yogyakarta" },
-  { id: "DNR-005", nama: "Ibu Tri Isti Rahayu", phone: "6281234567805", provinsi: "DI YOGYAKARTA", kabupaten: "KABUPATEN SLEMAN", kecamatan: "BERBAH", kelurahan: "TEGALTIRTO", alamat: "Berbah. Sleman. D.I.Yogyakarta" },
-  { id: "DNR-006", nama: "Ibu Farida Firdausiyah", phone: "6281234567806", provinsi: "DI YOGYAKARTA", kabupaten: "KABUPATEN SLEMAN", kecamatan: "BERBAH", kelurahan: "KALITIRTO", alamat: "Berbah. Sleman. D.I. Yogyakarta" },
-  { id: "DNR-007", nama: "Bp Sukiman", phone: "6281234567807", provinsi: "DI YOGYAKARTA", kabupaten: "KABUPATEN SLEMAN", kecamatan: "BERBAH", kelurahan: "TEGALTIRTO", alamat: "Berbah. Sleman. D.I. Yogyakarta" },
-  { id: "DNR-008", nama: "Idola Rizki Sembodo Hadi", phone: "6281234567808", provinsi: "DI YOGYAKARTA", kabupaten: "KABUPATEN BANTUL", kecamatan: "KASIHAN", kelurahan: "TIRTONIRMOLO", alamat: "Tegal Kenongo RT 1, Tirtonirmolo, Kasihan, Bantul 55188" },
-  { id: "DNR-009", nama: "Keluarga Bpk Sriyatno Prawirotaman", phone: "6281234567809", provinsi: "DI YOGYAKARTA", kabupaten: "KOTA YOGYAKARTA", kecamatan: "GONTOMAN", kelurahan: "PRAWIROTAMAN", alamat: "Jln Prawirotaman 4 mg 3 / 705. Yogyakarta." },
-  { id: "DNR-010", nama: "Bp Rizqi Rajiv Effendi", phone: "6281234567810", provinsi: "JAWA TIMUR", kabupaten: "KABUPATEN TUBAN", kecamatan: "TUBAN", kelurahan: "PERBON", alamat: "Perum perbon raya 2 klv/no 39 tuban" },
-  { id: "DNR-011", nama: "Bo Sigit Isnaini", phone: "6281234567811", provinsi: "DI YOGYAKARTA", kabupaten: "KABUPATEN SLEMAN", kecamatan: "BERBAH", kelurahan: "TEGALTIRTO", alamat: "Berbah. Sleman. D.I. Yogyakarta" },
-  { id: "DNR-012", nama: "Ibu Sukirah & Bapak Sutomo", phone: "6281234567812", provinsi: "SUMATERA SELATAN", kabupaten: "KABUPATEN MUSI BANYUASIN", kecamatan: "SUNGAI KERUH", kelurahan: "SUNGAI KERUH", alamat: "Berbah. Sleman. D.I. Yogyakarta" },
-  { id: "DNR-013", nama: "Ibu Ratih Sulanjari", phone: "6281234567813", provinsi: "RIAU", kabupaten: "KABUPATEN S I A K", kecamatan: "TUALANG", kelurahan: "PERAWANG", alamat: "Berbah. Sleman. D.I. Yogyakarta" },
-  { id: "DNR-014", nama: "Hamba Allah", phone: "-", provinsi: "DI YOGYAKARTA", kabupaten: "KABUPATEN SLEMAN", kecamatan: "BERBAH", kelurahan: "TEGALTIRTO", alamat: "Berbah. Sleman. D.I. Yogyakarta" }
+  { id: "DNR-001", nama: "H. Mile & Hj. Masita", phone: "6281234567801", provinsi: "DI YOGYAKARTA", kabupaten: "KABUPATEN SLEMAN", kecamatan: "BERBAH", kelurahan: "TEGALTIRTO", alamat: "Berbah, Sleman, D.I. Yogyakarta" },
+  { id: "DNR-002", nama: "Ibu Lulu", phone: "6281234567802", provinsi: "DI YOGYAKARTA", kabupaten: "KABUPATEN SLEMAN", kecamatan: "BERBAH", kelurahan: "KALITIRTO", alamat: "Berbah, Sleman, D.I. Yogyakarta" },
+  { id: "DNR-003", nama: "Ibu Siti Rahayu", phone: "6281234567803", provinsi: "DI YOGYAKARTA", kabupaten: "KABUPATEN SLEMAN", kecamatan: "BERBAH", kelurahan: "SENDANGTIRTO", alamat: "Berbah, Sleman, D.I. Yogyakarta" },
+  { id: "DNR-004", nama: "Bp Sumadi", phone: "6281234567804", provinsi: "DI YOGYAKARTA", kabupaten: "KABUPATEN SLEMAN", kecamatan: "BERBAH", kelurahan: "JOGOTIRTO", alamat: "Berbah, Sleman, D.I. Yogyakarta" },
+  { id: "DNR-005", nama: "Ibu Tri Isti Rahayu", phone: "6281234567805", provinsi: "DI YOGYAKARTA", kabupaten: "KABUPATEN SLEMAN", kecamatan: "BERBAH", kelurahan: "TEGALTIRTO", alamat: "Berbah, Sleman, D.I. Yogyakarta" }
 ];
 
-// Initial 32 Donation Records linked via Donor ID or Donor Name
+// Initial 5 Donation Records (1 for each 5 donation categories: Wakaf Jariyah, Zakat, Infaq, Shodaqoh, Dana Riba)
 const INITIAL_DONATIONS = [
-  { id: "DON-20260801-001", donorId: "DNR-001", nama: "H.Mile,Hj.Masita,Sunardi, Sudarmin Rahimahullah", tanggal: "2026-08-01", jumlah: 50000, tujuan: "Wakaf Jariyah", metode: "Transfer", catatan: "Wakaf masjid" },
-  { id: "DON-20260801-002", donorId: "DNR-014", nama: "Hamba Allah", tanggal: "2026-08-01", jumlah: 50000, tujuan: "Infaq", metode: "Tunai", catatan: "Semoga berkah" },
-  { id: "DON-20260801-003", donorId: "DNR-002", nama: "Ibu Lulu", tanggal: "2026-08-01", jumlah: 1010000, tujuan: "Zakat", metode: "Transfer", catatan: "Zakat Maal" },
-  { id: "DON-20260801-004", donorId: "DNR-003", nama: "Ibu Siti Rahayu Rahimahallah", tanggal: "2026-08-01", jumlah: 500000, tujuan: "Wakaf Jariyah", metode: "Transfer", catatan: "Pahala almarhumah" },
-  { id: "DON-20260801-005", donorId: "DNR-004", nama: "Bo Sumadi Rahimahullah", tanggal: "2026-08-01", jumlah: 500000, tujuan: "Shodaqoh", metode: "Tunai", catatan: "Sedekah subuh" },
-  { id: "DON-20260801-006", donorId: "DNR-005", nama: "Ibu Tri Isti Rahayu", tanggal: "2026-08-01", jumlah: 100000, tujuan: "Infaq", metode: "Transfer", catatan: "Infaq rutin" },
-  { id: "DON-20260802-007", donorId: "DNR-006", nama: "Ibu Farida Firdausiyah", tanggal: "2026-08-02", jumlah: 500000, tujuan: "Zakat", metode: "Transfer", catatan: "Zakat profesi" },
-  { id: "DON-20260802-008", donorId: "DNR-014", nama: "Ibu Dien Nur Annisa", tanggal: "2026-08-02", jumlah: 500000, tujuan: "Wakaf Jariyah", metode: "Transfer", catatan: "Wakaf Al-Qur'an" },
-  { id: "DON-20260803-009", donorId: "DNR-014", nama: "Hamba Allah", tanggal: "2026-08-03", jumlah: 100000, tujuan: "Shodaqoh", metode: "Tunai", catatan: "Lillahi Ta'ala" },
-  { id: "DON-20260803-010", donorId: "DNR-014", nama: "Ibu Laili Nurjannah", tanggal: "2026-08-03", jumlah: 200000, tujuan: "Infaq", metode: "Transfer", catatan: "Infaq dakwah" },
-  { id: "DON-20260804-011", donorId: "DNR-007", nama: "Bp Sukiman", tanggal: "2026-08-04", jumlah: 1000000, tujuan: "Wakaf Jariyah", metode: "Transfer", catatan: "Wakaf sumur bor" },
-  { id: "DON-20260804-012", donorId: "DNR-014", nama: "Ibu Endah Budi SW", tanggal: "2026-08-04", jumlah: 500000, tujuan: "Zakat", metode: "Transfer", catatan: "Zakat maal" },
-  { id: "DON-20260804-013", donorId: "DNR-008", nama: "Idola Rizki Sembodo Hadi", tanggal: "2026-08-04", jumlah: 1440000, tujuan: "Wakaf Jariyah", metode: "Transfer", catatan: "Wakaf pembebasan tanah" },
-  { id: "DON-20260805-014", donorId: "DNR-014", nama: "Hamba Allah", tanggal: "2026-08-05", jumlah: 50000, tujuan: "Infaq", metode: "Tunai", catatan: "-" },
-  { id: "DON-20260805-015", donorId: "DNR-014", nama: "Ibu Wiwi Herawati", tanggal: "2026-08-05", jumlah: 500000, tujuan: "Shodaqoh", metode: "Transfer", catatan: "Shodaqoh yatim" },
-  { id: "DON-20260806-016", donorId: "DNR-014", nama: "Hamba Allah", tanggal: "2026-08-06", jumlah: 50000, tujuan: "Dana Riba", metode: "Transfer", catatan: "Penyucian dana jasa giro" },
-  { id: "DON-20260807-017", donorId: "DNR-014", nama: "Bp Sukandar Bin Atmosudiro", tanggal: "2026-08-07", jumlah: 100000, tujuan: "Wakaf Jariyah", metode: "Transfer", catatan: "Wakaf operasional ICMA" },
-  { id: "DON-20260807-018", donorId: "DNR-014", nama: "Bapak Isnan Setyo Haryomi", tanggal: "2026-08-07", jumlah: 100000, tujuan: "Infaq", metode: "Transfer", catatan: "-" },
-  { id: "DON-20260807-019", donorId: "DNR-014", nama: "Ibu Hartati", tanggal: "2026-08-07", jumlah: 800000, tujuan: "Zakat", metode: "Transfer", catatan: "Zakat mal" },
-  { id: "DON-20260807-020", donorId: "DNR-014", nama: "Bp Sani dan Keluarga", tanggal: "2026-08-07", jumlah: 250000, tujuan: "Shodaqoh", metode: "Tunai", catatan: "Sedekah keluarga" },
-  { id: "DON-20260808-021", donorId: "DNR-014", nama: "Hamba Allah", tanggal: "2026-08-08", jumlah: 50000, tujuan: "Dana Riba", metode: "Transfer", catatan: "Fasilitas umum" },
-  { id: "DON-20260814-022", donorId: "DNR-014", nama: "Ibu Ika Kurniawati", tanggal: "2026-08-14", jumlah: 600000, tujuan: "Wakaf Jariyah", metode: "Transfer", catatan: "Wakaf prasarana" },
-  { id: "DON-20260814-023", donorId: "DNR-014", nama: "Hamba Allah", tanggal: "2026-08-14", jumlah: 500000, tujuan: "Infaq", metode: "Transfer", catatan: "Infaq Garut" },
-  { id: "DON-20260814-024", donorId: "DNR-009", nama: "Keluarga Bpk Sriyatno Prawirotaman", tanggal: "2026-08-14", jumlah: 3000000, tujuan: "Wakaf Jariyah", metode: "Transfer", catatan: "Wakaf Gedung Tahap 1" },
-  { id: "DON-20260814-025", donorId: "DNR-009", nama: "Keluarga Bpk Sriyatno Prawirotaman", tanggal: "2026-08-14", jumlah: 3000000, tujuan: "Zakat", metode: "Transfer", catatan: "Zakat Maal Keluarga" },
-  { id: "DON-20260814-026", donorId: "DNR-009", nama: "Keluarga Bpk Sriyatno Prawirotaman", tanggal: "2026-08-14", jumlah: 3000000, tujuan: "Shodaqoh", metode: "Tunai", catatan: "Sedekah Berkah" },
-  { id: "DON-20260814-027", donorId: "DNR-010", nama: "Bp Rizqi Rajiv Effendi", tanggal: "2026-08-14", jumlah: 200000, tujuan: "Infaq", metode: "Transfer", catatan: "Infaq online" },
-  { id: "DON-20260814-028", donorId: "DNR-011", nama: "Bo Sigit Isnaini", tanggal: "2026-08-14", jumlah: 3000000, tujuan: "Wakaf Jariyah", metode: "Transfer", catatan: "Wakaf Sarana" },
-  { id: "DON-20260814-029", donorId: "DNR-011", nama: "Bo Sigit Isnaini", tanggal: "2026-08-14", jumlah: 3000000, tujuan: "Zakat", metode: "Transfer", catatan: "Zakat Maal" },
-  { id: "DON-20260819-030", donorId: "DNR-012", nama: "Ibu Sukirah & Bapak Sutomo", tanggal: "2026-08-19", jumlah: 500000000, tujuan: "Wakaf Jariyah", metode: "Transfer", catatan: "Wakaf Lahan ICMA" },
-  { id: "DON-20260819-031", donorId: "DNR-013", nama: "Ibu Ratih Sulanjari", tanggal: "2026-08-19", jumlah: 500000000, tujuan: "Wakaf Jariyah", metode: "Transfer", catatan: "Wakaf Pembangunan Gedung" },
-  { id: "DON-20260819-032", donorId: "DNR-014", nama: "Hamba Allah", tanggal: "2026-08-19", jumlah: 60000, tujuan: "Infaq", metode: "Tunai", catatan: "Infaq penutup" }
+  { id: "DON-20260801-001", donorId: "DNR-001", nama: "H. Mile & Hj. Masita", tanggal: "2026-08-01", jumlah: 1500000, tujuan: "Wakaf Jariyah", metode: "Transfer", catatan: "Wakaf pembangunan gedung ICMA" },
+  { id: "DON-20260802-002", donorId: "DNR-002", nama: "Ibu Lulu", tanggal: "2026-08-02", jumlah: 1000000, tujuan: "Zakat", metode: "Transfer", catatan: "Zakat Maal Penghasilan" },
+  { id: "DON-20260803-003", donorId: "DNR-003", nama: "Ibu Siti Rahayu", tanggal: "2026-08-03", jumlah: 250000, tujuan: "Infaq", metode: "Tunai", catatan: "Infaq operasional dakwah" },
+  { id: "DON-20260804-004", donorId: "DNR-004", nama: "Bp Sumadi", tanggal: "2026-08-04", jumlah: 500000, tujuan: "Shodaqoh", metode: "Tunai", catatan: "Sedekah subuh berkah" },
+  { id: "DON-20260805-005", donorId: "DNR-005", nama: "Ibu Tri Isti Rahayu", tanggal: "2026-08-05", jumlah: 200000, tujuan: "Dana Riba", metode: "Transfer", catatan: "Penyucian dana jasa giro" }
 ];
 
-// Initial Seed Expenses (Uang Keluar / Operasional & Penyaluran)
+// Initial 5 Seed Expenses (Uang Keluar / Operasional & Penyaluran 5 Kali)
 const INITIAL_EXPENSES = [
-  { id: "EXP-20260802-001", tanggal: "2026-08-02", kategori: "Operasional Kantor", jumlah: 850000, metode: "Transfer", catatan: "Tagihan Listrik & Air Kantor ICMA" },
-  { id: "EXP-20260805-002", tanggal: "2026-08-05", kategori: "Penyaluran Santunan", jumlah: 2500000, metode: "Tunai", catatan: "Santunan 25 Anak Yatim & Dhuafa" },
-  { id: "EXP-20260810-003", tanggal: "2026-08-10", kategori: "Logistik & Sarana", jumlah: 1750000, metode: "Transfer", catatan: "Wakaf Mushaf Al-Qur'an & Sound System" },
-  { id: "EXP-20260815-004", tanggal: "2026-08-15", kategori: "Penyaluran Wakaf", jumlah: 4500000, metode: "Transfer", catatan: "Bantuan Pembangunan Sumur Bor Air Bersih" },
-  { id: "EXP-20260818-005", tanggal: "2026-08-18", kategori: "Gaji & Honor", jumlah: 1200000, metode: "Transfer", catatan: "Honor Pengajar Kajian Rutin Pekanan" }
+  { id: "EXP-20260802-001", tanggal: "2026-08-02", kategori: "Operasional Kantor", jumlah: 450000, metode: "Transfer", catatan: "Tagihan Listrik & Air Kantor ICMA" },
+  { id: "EXP-20260805-002", tanggal: "2026-08-05", kategori: "Penyaluran Santunan", jumlah: 1000000, metode: "Tunai", catatan: "Santunan 10 Anak Yatim & Dhuafa" },
+  { id: "EXP-20260810-003", tanggal: "2026-08-10", kategori: "Logistik & Sarana", jumlah: 500000, metode: "Transfer", catatan: "Pengadaan Al-Qur'an & Sound System" },
+  { id: "EXP-20260815-004", tanggal: "2026-08-15", kategori: "Penyaluran Wakaf", jumlah: 1200000, metode: "Transfer", catatan: "Bantuan Pengeboran Sumur Air Bersih" },
+  { id: "EXP-20260818-005", tanggal: "2026-08-18", kategori: "Gaji & Honor", jumlah: 300000, metode: "Tunai", catatan: "Honor Pemateri Kajian Pekanan" }
 ];
 
 const DEFAULT_CATEGORIES_MASUK = [
@@ -167,12 +131,12 @@ let currentChartPurpose = null;
 let activeInvoiceData = null;
 
 function initStore() {
-  const storedDonors = localStorage.getItem("icma_donors_v3");
-  const storedDonations = localStorage.getItem("icma_donasi_v3");
-  const storedExpenses = localStorage.getItem("icma_expenses_v3");
-  const storedCatMasuk = localStorage.getItem("icma_cat_masuk_v3");
-  const storedCatKeluar = localStorage.getItem("icma_cat_keluar_v3");
-  const storedTrash = localStorage.getItem("icma_trash_v3");
+  const storedDonors = localStorage.getItem("icma_donors_v4");
+  const storedDonations = localStorage.getItem("icma_donasi_v4");
+  const storedExpenses = localStorage.getItem("icma_expenses_v4");
+  const storedCatMasuk = localStorage.getItem("icma_cat_masuk_v4");
+  const storedCatKeluar = localStorage.getItem("icma_cat_keluar_v4");
+  const storedTrash = localStorage.getItem("icma_trash_v4");
 
   donors = storedDonors ? JSON.parse(storedDonors) : [...INITIAL_DONORS];
   donations = storedDonations ? JSON.parse(storedDonations) : [...INITIAL_DONATIONS];
@@ -185,12 +149,12 @@ function initStore() {
 }
 
 function saveToStorage() {
-  localStorage.setItem("icma_donors_v3", JSON.stringify(donors));
-  localStorage.setItem("icma_donasi_v3", JSON.stringify(donations));
-  localStorage.setItem("icma_expenses_v3", JSON.stringify(expenses));
-  localStorage.setItem("icma_cat_masuk_v3", JSON.stringify(categoriesMasuk));
-  localStorage.setItem("icma_cat_keluar_v3", JSON.stringify(categoriesKeluar));
-  localStorage.setItem("icma_trash_v3", JSON.stringify(trash));
+  localStorage.setItem("icma_donors_v4", JSON.stringify(donors));
+  localStorage.setItem("icma_donasi_v4", JSON.stringify(donations));
+  localStorage.setItem("icma_expenses_v4", JSON.stringify(expenses));
+  localStorage.setItem("icma_cat_masuk_v4", JSON.stringify(categoriesMasuk));
+  localStorage.setItem("icma_cat_keluar_v4", JSON.stringify(categoriesKeluar));
+  localStorage.setItem("icma_trash_v4", JSON.stringify(trash));
 }
 
 function terbilang(angka) {
