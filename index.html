@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICMA Sinergi Kebaikan Abadi - Sistem Pencatatan Donasi & Laporan Keuangan</title>
+  <meta name="description" content="Sistem Informasi Pencatatan Donasi, Kelola Donatur, dan Laporan Keuangan SaaS ICMA Sinergi Kebaikan Abadi.">
+  <link rel="icon" type="image/png" href="images/logoicma.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- External Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body>
+
+  <!-- Login Screen Overlay -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-brand">
+        <img src="images/logoicma.png" alt="ICMA Sinergi Kebaikan Abadi" class="login-logo-img">
+        <h2>ICMA Sinergi Kebaikan Abadi</h2>
+        <p>Sistem Pencatatan Donasi & Laporan Keuangan</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group mb-3" style="text-align: left; margin-bottom: 1rem;">
+          <label for="loginIdentifier">Username / Email / Nomor WhatsApp</label>
+          <input type="text" id="loginIdentifier" class="form-control" value="icmawasailulkhair@gmail.com" placeholder="contoh: admin / icmawasailulkhair@gmail.com / 0895393181822" required>
+        </div>
+
+        <div class="form-group mb-3" style="text-align: left; margin-bottom: 1.25rem;">
+          <label for="loginPass">Password</label>
+          <input type="password" id="loginPass" class="form-control" value="admin123" placeholder="Masukkan kata sandi" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.8rem; font-size: 1rem;">
+          <i class="fa-solid fa-right-to-bracket"></i> Masuk ke Dashboard Admin
+        </button>
+      </form>
+
+      <div style="margin-top: 1.15rem; text-align: center;">
+        <a href="#" id="btnOpenRecovery" style="font-size: 0.8rem; color: var(--primary-600); text-decoration: none; font-weight: 500;" onclick="openRecoveryModal(event)">
+          <i class="fa-solid fa-shield-halved" style="font-size:0.75rem;"></i> Lupa Email / No. HP / Password?
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-container">
+    
+    <!-- Sidebar Navigasi Kiri (Royal Blue SaaS Theme) -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo-container">
+          <img src="images/logoicma.png" alt="ICMA Logo" class="sidebar-logo-img">
+        </div>
+        <div class="logo-text">
+          <h1>ICMA</h1>
+          <span>Sinergi Kebaikan Abadi</span>
+        </div>
+      </div>
+
+      <div class="sidebar-menu">
+        <div class="menu-category">NAVIGASI UTAMA</div>
+        
+        <a href="#" class="nav-item active" data-view="dashboard" id="navDashboard">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="#" class="nav-item" data-view="donasi" id="navDonasi">
+          <i class="fa-solid fa-hand-holding-heart"></i>
+          <span>Kelola Donasi</span>
+        </a>
+
+        <a href="#" class="nav-item" data-view="donatur" id="navDonatur">
+          <i class="fa-solid fa-address-book"></i>
+          <span>Kelola Donatur</span>
+        </a>
+
+        <a href="#" class="nav-item" data-view="kas" id="navKas">
+          <i class="fa-solid fa-money-bill-transfer"></i>
+          <span>Arus Kas (Masuk/Keluar)</span>
+        </a>
+
+        <a href="#" class="nav-item" data-view="laporan" id="navLaporan">
+          <i class="fa-solid fa-file-invoice-dollar"></i>
+          <span>Laporan Keuangan</span>
+        </a>
+
+        <div class="menu-category" style="margin-top: 1rem;">SISTEM & PENGATURAN</div>
+
+        <a href="#" class="nav-item" data-view="pengaturan" id="navPengaturan">
+          <i class="fa-solid fa-gear"></i>
+          <span>Pengaturan Akun</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-badge">
+          <div class="user-avatar">A</div>
+          <div class="user-info">
+            <div class="name">Administrator</div>
+            <div class="role">Admin Keuangan</div>
+          </div>
+          <button class="btn-logout" id="logoutBtn" title="Logout">
+            <i class="fa-solid fa-power-off"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <main class="content-body">
+
+        <!-- 1. VIEW DASHBOARD -->
+        <section id="dashboardView">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Dashboard ICMA</h2>
+              <p>Ringkasan real-time pencatatan donasi & statistik donatur.</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-primary" onclick="openAddModal()">
+                <i class="fa-solid fa-plus"></i> Catat Donasi Baru
+              </button>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-details">
+                <span class="stat-label">Total Donasi</span>
+                <span class="stat-value" id="dashTotalDonasi">Rp 0</span>
+                <span class="stat-subtext up"><i class="fa-solid fa-arrow-up"></i> Akumulasi Keseluruhan</span>
+              </div>
+              <div class="stat-icon blue"><i class="fa-solid fa-wallet"></i></div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-details">
+                <span class="stat-label">Total Donatur</span>
+                <span class="stat-value" id="dashTotalDonatur">0</span>
+                <span class="stat-subtext"><i class="fa-solid fa-users"></i> Donatur Terdaftar</span>
+              </div>
+              <div class="stat-icon green"><i class="fa-solid fa-user-group"></i></div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-details">
+                <span class="stat-label">Jumlah Transaksi</span>
+                <span class="stat-value" id="dashTotalTransaksi">0</span>
+                <span class="stat-subtext"><i class="fa-solid fa-receipt"></i> Transaksi Donasi</span>
+              </div>
+              <div class="stat-icon amber"><i class="fa-solid fa-list-check"></i></div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-details">
+                <span class="stat-label">Rata-rata Donasi</span>
+                <span class="stat-value" id="dashAvgDonasi">Rp 0</span>
+                <span class="stat-subtext"><i class="fa-solid fa-calculator"></i> Per Transaksi</span>
+              </div>
+              <div class="stat-icon purple"><i class="fa-solid fa-chart-line"></i></div>
+            </div>
+          </div>
+
+          <div class="charts-grid">
+            <div class="card">
+              <div class="card-header"><h3>Grafik Pemasukan Donasi</h3></div>
+              <div class="chart-container"><canvas id="chartTrend"></canvas></div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3>Distribusi Tujuan Donasi</h3></div>
+              <div class="chart-container"><canvas id="chartPurpose"></canvas></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Transaksi Terakhir</h3>
+              <button class="btn btn-secondary btn-sm" onclick="switchView('donasi')">Lihat Semua Data</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 45px; text-align: center;">No</th>
+                    <th style="min-width: 150px;">ID & Nama Donatur</th>
+                    <th style="width: 110px;">Tujuan</th>
+                    <th style="width: 95px;">Tanggal</th>
+                    <th style="width: 90px;">Metode</th>
+                    <th style="width: 120px; text-align: right;">Nominal</th>
+                    <th style="width: 70px; text-align: center;">Invoice</th>
+                  </tr>
+                </thead>
+                <tbody id="dashRecentTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. VIEW KELOLA DONASI (Pencatatan Donasi Saja - Filter Tanggal & Live Search) -->
+        <section id="donasiView" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Kelola Donasi (Pencatatan Transaksi)</h2>
+              <p>Khusus entri & sortir tanggal transaksi donasi masuk.</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-secondary" onclick="openManageCategoriesModal('Masuk')">
+                <i class="fa-solid fa-tags"></i> Kelola Kategori
+              </button>
+              <button class="btn btn-success" onclick="openExportModal('masuk')">
+                <i class="fa-solid fa-file-excel"></i> Unduh Rekap Excel
+              </button>
+              <button class="btn btn-primary" onclick="openAddModal()">
+                <i class="fa-solid fa-plus"></i> Catat Donasi Baru
+              </button>
+            </div>
+          </div>
+
+          <div class="filter-bar">
+            <div class="filter-group" style="flex:2;">
+              <label for="donasiSearch">Pencarian Transaksi</label>
+              <input type="text" id="donasiSearch" class="form-control" placeholder="Ketik huruf awal ID Donatur / Nama / Tujuan...">
+            </div>
+
+            <div class="filter-group">
+              <label for="donasiFilterStart">Pilih Tanggal Dari</label>
+              <input type="date" id="donasiFilterStart" class="form-control">
+            </div>
+
+            <div class="filter-group">
+              <label for="donasiFilterEnd">Pilih Tanggal Hingga</label>
+              <input type="date" id="donasiFilterEnd" class="form-control">
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 35px; text-align: center;">No</th>
+                    <th>ID & Nama Donatur</th>
+                    <th style="width: 90px;">Tanggal</th>
+                    <th style="width: 105px;">Tujuan</th>
+                    <th style="width: 80px; text-align: center;">Metode</th>
+                    <th style="width: 120px; text-align: right;">Nominal</th>
+                    <th style="width: 95px; text-align: center;">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="donasiTableBody"></tbody>
+              </table>
+            </div>
+
+            <div class="pagination-bar">
+              <div class="pagination-info" id="paginationInfo">Menampilkan data...</div>
+              <div class="pagination-controls" id="paginationControls"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. VIEW KELOLA DONATUR (ID Donatur, Wilayah Jawa Tengah, WA wa.me, Google Maps) -->
+        <section id="donaturView" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Kelola Data Donatur</h2>
+              <p>Data profil donatur, ID donatur, Wilayah, kontak WhatsApp, & Google Maps.</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-primary" onclick="openAddDonaturModal()">
+                <i class="fa-solid fa-user-plus"></i> Tambah Donatur Baru
+              </button>
+            </div>
+          </div>
+
+          <div class="filter-bar">
+            <div class="filter-group" style="flex:3;">
+              <label for="donaturSearch">Pencarian Donatur</label>
+              <input type="text" id="donaturSearch" class="form-control" placeholder="Ketik huruf awal ID Donatur, Nama, WhatsApp, Wilayah...">
+            </div>
+
+            <div class="filter-group">
+              <label for="donaturFilterProvinsi">Filter Provinsi</label>
+              <select id="donaturFilterProvinsi" class="form-control">
+                <option value="">Semua Provinsi</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 35px; text-align: center;">No</th>
+                    <th>ID & Nama Donatur</th>
+                    <th style="width: 120px;">Nomor WhatsApp</th>
+                    <th>Wilayah & Alamat</th>
+                    <th style="width: 140px; text-align: center;">Aksi Kontak & Maps</th>
+                  </tr>
+                </thead>
+                <tbody id="donaturTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3.5. VIEW ARUS KAS (UANG MASUK & UANG KELUAR) -->
+        <section id="kasView" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Arus Kas (Uang Masuk & Keluar)</h2>
+              <p>Pencatatan mutasi kas pemasukan dana donasi dan pengeluaran operasional / penyaluran.</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-secondary" onclick="openManageCategoriesModal()">
+                <i class="fa-solid fa-tags"></i> Kelola Kategori
+              </button>
+              <button class="btn btn-primary" onclick="openAddKasModal('Masuk')">
+                <i class="fa-solid fa-plus"></i> Catat Uang Masuk
+              </button>
+              <button class="btn btn-danger" onclick="openAddKasModal('Keluar')">
+                <i class="fa-solid fa-minus"></i> Catat Uang Keluar
+              </button>
+            </div>
+          </div>
+
+          <!-- KPI Summary Cards -->
+          <div class="stats-grid" style="margin-bottom: 1.15rem;">
+            <div class="stat-card">
+              <div class="stat-details">
+                <span class="stat-label">Total Uang Masuk</span>
+                <span class="stat-value" id="kasTotalMasuk" style="color:var(--emerald-600);">Rp 0</span>
+                <span class="stat-subtext up"><i class="fa-solid fa-arrow-down"></i> Pemasukan & Donasi</span>
+              </div>
+              <div class="stat-icon green"><i class="fa-solid fa-money-bill-wave"></i></div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-details">
+                <span class="stat-label">Total Uang Keluar</span>
+                <span class="stat-value" id="kasTotalKeluar" style="color:var(--rose-600);">Rp 0</span>
+                <span class="stat-subtext" style="color:var(--rose-600);"><i class="fa-solid fa-arrow-up"></i> Beban & Penyaluran</span>
+              </div>
+              <div class="stat-icon rose"><i class="fa-solid fa-receipt"></i></div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-details">
+                <span class="stat-label">Sisa Saldo Kas</span>
+                <span class="stat-value" id="kasSaldoBersih" style="color:var(--primary-600);">Rp 0</span>
+                <span class="stat-subtext" id="kasSaldoSubtext">Saldo Kas Bersih</span>
+              </div>
+              <div class="stat-icon blue"><i class="fa-solid fa-wallet"></i></div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-details">
+                <span class="stat-label">Total Mutasi</span>
+                <span class="stat-value" id="kasTotalCount">0</span>
+                <span class="stat-subtext">Transaksi Kas</span>
+              </div>
+              <div class="stat-icon amber"><i class="fa-solid fa-list-check"></i></div>
+            </div>
+          </div>
+
+          <!-- Filter Bar -->
+          <div class="filter-bar">
+            <div class="filter-group" style="flex:2;">
+              <label for="kasSearch">Pencarian Mutasi Kas</label>
+              <input type="text" id="kasSearch" class="form-control" placeholder="Cari keterangan, pihak terkait, kategori...">
+            </div>
+
+            <div class="filter-group">
+              <label for="kasFilterType">Jenis Mutasi</label>
+              <select id="kasFilterType" class="form-control">
+                <option value="">Semua Mutasi</option>
+                <option value="Masuk">Uang Masuk (+)</option>
+                <option value="Keluar">Uang Keluar (-)</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="kasFilterStart">Dari Tanggal</label>
+              <input type="date" id="kasFilterStart" class="form-control">
+            </div>
+
+            <div class="filter-group">
+              <label for="kasFilterEnd">Hingga Tanggal</label>
+              <input type="date" id="kasFilterEnd" class="form-control">
+            </div>
+          </div>
+
+          <!-- Table Card -->
+          <div class="card">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 35px; text-align: center;">No</th>
+                    <th style="width: 85px;">Tanggal</th>
+                    <th style="width: 85px; text-align: center;">Jenis</th>
+                    <th style="width: 120px;">Pos Dana</th>
+                    <th>Keterangan / Keperluan</th>
+                    <th style="width: 75px; text-align: center;">Metode</th>
+                    <th style="width: 120px; text-align: right;">Nominal</th>
+                    <th style="width: 65px; text-align: center;">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="kasTableBody"></tbody>
+              </table>
+            </div>
+
+            <div class="pagination-bar">
+              <div class="pagination-info" id="kasPaginationInfo">Menampilkan data...</div>
+              <div class="pagination-controls" id="kasPaginationControls"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. VIEW LAPORAN KEUANGAN STANDAR (Pemasukan, Pengeluaran, Surplus/Defisit) -->
+        <section id="laporanView" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Laporan Keuangan Komprehensif</h2>
+              <p>Rekapitulasi penerimaan donasi (uang masuk) & penyaluran/operasional (uang keluar).</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-success" onclick="openExportModal('all')">
+                <i class="fa-solid fa-file-excel"></i> Unduh Rekap Excel (.xlsx)
+              </button>
+            </div>
+          </div>
+
+          <!-- KPI Summary Cards -->
+          <div class="stats-grid" style="margin-bottom: 1.15rem;">
+            <div class="stat-card">
+              <div class="stat-details">
+                <span class="stat-label">Total Penerimaan (Masuk)</span>
+                <span class="stat-value" id="lapKpiMasuk" style="color:var(--emerald-600);">Rp 0</span>
+                <span class="stat-subtext up" id="lapKpiMasukCount">0 Transaksi Donasi</span>
+              </div>
+              <div class="stat-icon green"><i class="fa-solid fa-arrow-down"></i></div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-details">
+                <span class="stat-label">Total Penyaluran (Keluar)</span>
+                <span class="stat-value" id="lapKpiKeluar" style="color:var(--rose-600);">Rp 0</span>
+                <span class="stat-subtext" style="color:var(--rose-600);" id="lapKpiKeluarCount">0 Transaksi Beban</span>
+              </div>
+              <div class="stat-icon rose"><i class="fa-solid fa-arrow-up"></i></div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-details">
+                <span class="stat-label">Surplus / Defisit Kas</span>
+                <span class="stat-value" id="lapKpiSaldo" style="color:var(--primary-600);">Rp 0</span>
+                <span class="stat-subtext">Sisa Saldo Kas Periode Ini</span>
+              </div>
+              <div class="stat-icon blue"><i class="fa-solid fa-scale-balanced"></i></div>
+            </div>
+          </div>
+
+          <!-- Modern Laporan Filter Bar with Calendar Dropdown Popover -->
+          <div class="card" style="margin-bottom: 1.15rem; padding: 0.75rem 1rem; border: 1px solid var(--slate-200); background:#fff; overflow: visible !important; position: relative;">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem;">
+              
+              <!-- Search Box -->
+              <div style="flex:1; min-width:220px; max-width:380px; position:relative;">
+                <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--slate-400); font-size:0.8rem;"></i>
+                <input type="text" id="laporanSearch" class="form-control" style="padding-left:2.1rem; height:36px; border-radius:10px; font-size:0.8rem;" placeholder="Cari kategori / donatur / catatan...">
+              </div>
+
+              <!-- Filter Actions Right -->
+              <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                
+                <!-- Filter Badge Indicator -->
+                <div id="lapDetailFilterBadge" class="detail-filter-badge" onclick="toggleLapDatePanel(event)" style="cursor:pointer;" title="Klik untuk mengubah filter tanggal">
+                  <i class="fa-solid fa-filter"></i>
+                  <span id="lapDetailFilterBadgeText">Semua Data</span>
+                  <button class="detail-filter-clear" onclick="event.stopPropagation(); resetLapDateFilters();" title="Hapus filter periode">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </div>
+
+                <!-- Metode Pembayaran Filter -->
+                <div class="detail-select-wrap">
+                  <select id="laporanFilterMetode" class="detail-select">
+                    <option value="">Semua Metode</option>
+                    <option value="Transfer">Transfer</option>
+                    <option value="Tunai">Tunai</option>
+                  </select>
+                </div>
+
+                <!-- Calendar Trigger & Popover -->
+                <div class="detail-cal-wrap">
+                  <button id="lapDateToggleBtn" class="detail-cal-btn" onclick="toggleLapDatePanel(event)" title="Filter Periode / Tanggal">
+                    <i class="fa-regular fa-calendar"></i>
+                  </button>
+
+                  <!-- Popover Dropdown Panel (Matches Attached Calendar Design) -->
+                  <div id="lapDatePanel" class="detail-date-panel" onclick="event.stopPropagation()">
+                    <div class="detail-date-tabs">
+                      <button type="button" class="lap-date-tab active" data-mode="single" onclick="setLapDateMode('single')">
+                        <i class="fa-regular fa-calendar-check"></i> Tanggal
+                      </button>
+                      <button type="button" class="lap-date-tab" data-mode="range" onclick="setLapDateMode('range')">
+                        <i class="fa-solid fa-arrows-left-right"></i> Rentang
+                      </button>
+                      <button type="button" class="lap-date-tab" data-mode="month" onclick="setLapDateMode('month')">
+                        <i class="fa-regular fa-calendar-days"></i> Bulan
+                      </button>
+                      <button type="button" class="lap-date-tab" data-mode="year" onclick="setLapDateMode('year')">
+                        <i class="fa-regular fa-calendar"></i> Tahun
+                      </button>
+                    </div>
+
+                    <!-- Mode 1: Tanggal Tunggal -->
+                    <div id="lapDateMode_single" class="lap-date-mode-panel detail-date-body">
+                      <label class="detail-date-label">PILIH TANGGAL</label>
+                      <input type="date" id="lapSingleDate" class="form-control">
+                      <div class="detail-date-actions">
+                        <button type="button" class="btn btn-primary btn-sm" style="flex:1" onclick="applyLapDateFilter()">Terapkan</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="setLapDatePreset('today')">Hari Ini</button>
+                      </div>
+                    </div>
+
+                    <!-- Mode 2: Rentang Tanggal -->
+                    <div id="lapDateMode_range" class="lap-date-mode-panel detail-date-body" style="display:none">
+                      <div style="display:flex;gap:0.6rem;margin-bottom:0.5rem">
+                        <div style="flex:1">
+                          <label class="detail-date-label">DARI TANGGAL</label>
+                          <input type="date" id="lapStartDate" class="form-control">
+                        </div>
+                        <div style="flex:1">
+                          <label class="detail-date-label">HINGGA TANGGAL</label>
+                          <input type="date" id="lapEndDate" class="form-control">
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-primary btn-sm" style="width:100%" onclick="applyLapDateFilter()">Terapkan</button>
+                    </div>
+
+                    <!-- Mode 3: Bulan Tertentu -->
+                    <div id="lapDateMode_month" class="lap-date-mode-panel detail-date-body" style="display:none">
+                      <label class="detail-date-label">BULAN</label>
+                      <select id="lapMonth" class="form-control" style="margin-bottom:0.5rem">
+                        <option value="01">Januari</option><option value="02">Februari</option>
+                        <option value="03">Maret</option><option value="04">April</option>
+                        <option value="05">Mei</option><option value="06">Juni</option>
+                        <option value="07">Juli</option><option value="08" selected>Agustus</option>
+                        <option value="09">September</option><option value="10">Oktober</option>
+                        <option value="11">November</option><option value="12">Desember</option>
+                      </select>
+                      <label class="detail-date-label">TAHUN</label>
+                      <select id="lapMonthYear" class="form-control" style="margin-bottom:0.75rem">
+                        <option value="2026" selected>2026</option><option value="2025">2025</option><option value="2024">2024</option>
+                      </select>
+                      <button type="button" class="btn btn-primary btn-sm" style="width:100%" onclick="applyLapDateFilter()">Terapkan</button>
+                    </div>
+
+                    <!-- Mode 4: 1 Tahun Penuh -->
+                    <div id="lapDateMode_year" class="lap-date-mode-panel detail-date-body" style="display:none">
+                      <label class="detail-date-label">TAHUN</label>
+                      <select id="lapYear" class="form-control" style="margin-bottom:0.75rem">
+                        <option value="2026" selected>2026</option><option value="2025">2025</option><option value="2024">2024</option>
+                      </select>
+                      <button type="button" class="btn btn-primary btn-sm" style="width:100%" onclick="applyLapDateFilter()">Terapkan</button>
+                    </div>
+
+                    <div class="detail-date-footer">
+                      <span id="lapDatePanelStatus">Semua Data</span>
+                      <button type="button" class="detail-date-reset" onclick="resetLapDateFilters()">
+                        <i class="fa-solid fa-rotate-left"></i> Reset
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Master Table: LAPORAN KEUANGAN KONSOLIDASI PER SETIAP JENIS DONASI -->
+          <div class="card" style="margin-bottom: 1.25rem;">
+            <div class="card-header">
+              <div style="display:flex; align-items:center; gap:0.5rem;">
+                <span class="badge badge-transfer" style="font-size:0.75rem;"><i class="fa-solid fa-scale-balanced"></i> POS DANA</span>
+                <h3 style="font-size:0.95rem; font-weight:600; color:var(--slate-800); margin:0;">Laporan Posisi Kas per Setiap Jenis Donasi (Standar Nirlaba / PSAK)</h3>
+              </div>
+              <small style="color:var(--primary-600); font-weight:600;"><i class="fa-solid fa-arrow-pointer"></i> Klik baris jenis donasi untuk rincian mutasi</small>
+            </div>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 35px; text-align: center;">No</th>
+                    <th style="min-width: 150px;">Pos / Jenis Donasi</th>
+                    <th style="width: 125px; text-align: right;">Uang Masuk (Rp)</th>
+                    <th style="width: 125px; text-align: right;">Uang Keluar (Rp)</th>
+                    <th style="width: 135px; text-align: right;">Saldo Akhir (Rp)</th>
+                    <th style="width: 95px; text-align: center;">Status Kas</th>
+                    <th style="width: 80px; text-align: center;">Rincian</th>
+                  </tr>
+                </thead>
+                <tbody id="laporanMatriksBody"></tbody>
+                <tfoot>
+                  <tr style="background:#f1f5f9; font-weight:800;">
+                    <td colspan="2" style="color:var(--slate-800);">TOTAL KESELURUHAN DANA</td>
+                    <td id="lapMatriksTotalMasuk" class="text-right" style="color:var(--emerald-600);">Rp 0</td>
+                    <td id="lapMatriksTotalKeluar" class="text-right" style="color:var(--rose-600);">Rp 0</td>
+                    <td id="lapMatriksTotalSaldo" class="text-right" style="color:var(--primary-700); font-size:0.95rem;">Rp 0</td>
+                    <td colspan="2" id="lapMatriksStatusSummary" style="text-align:center; font-size:0.75rem; color:var(--slate-600);">-</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4.5. VIEW DETAIL RINCIAN JENIS / TUJUAN DONASI (HALAMAN DRILL-DOWN) -->
+        <section id="detailJenisDonasiView" class="detail-donasi-view" style="display: none;">
+
+          <!-- Elegant Header -->
+          <div class="detail-header">
+            <div class="detail-header-left">
+              <button class="detail-back-btn" onclick="switchView('laporan')" title="Kembali">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+              <div class="detail-header-info">
+                <h2 id="catDetailHeadingTitle">Rincian Donasi</h2>
+                <p id="catDetailSubTitle">Laporan rincian donatur dan transaksi donasi.</p>
+              </div>
+            </div>
+            <div class="detail-header-actions">
+              <!-- Filter Badge -->
+              <div id="catDetailFilterBadge" class="detail-filter-badge" onclick="toggleCatDatePanel(event)">
+                <i class="fa-solid fa-filter"></i>
+                <span id="catDetailFilterBadgeText">Semua Data</span>
+                <button class="detail-filter-clear" onclick="event.stopPropagation(); resetCatDetailFilters();" title="Hapus filter">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+
+              <!-- Jenis Donasi -->
+              <div class="detail-select-wrap">
+                <select id="catDetailPurposeSelect" class="detail-select">
+                  <option value="Wakaf Jariyah">Wakaf Jariyah</option>
+                  <option value="Zakat">Zakat</option>
+                  <option value="Infaq">Infaq</option>
+                  <option value="Shodaqoh">Shodaqoh</option>
+                  <option value="Dana Riba">Dana Riba</option>
+                </select>
+              </div>
+
+              <!-- Calendar Trigger -->
+              <div class="detail-cal-wrap">
+                <button id="catDateToggleBtn" class="detail-cal-btn" onclick="toggleCatDatePanel(event)" title="Filter Tanggal">
+                  <i class="fa-regular fa-calendar"></i>
+                </button>
+
+                <!-- Date Filter Dropdown -->
+                <div id="catDatePanel" class="detail-date-panel" onclick="event.stopPropagation()">
+                  <div class="detail-date-tabs">
+                    <button type="button" class="cat-date-tab active" data-mode="single" onclick="setCatDateMode('single')">
+                      <i class="fa-regular fa-calendar-check"></i> Tanggal
+                    </button>
+                    <button type="button" class="cat-date-tab" data-mode="range" onclick="setCatDateMode('range')">
+                      <i class="fa-solid fa-arrows-left-right"></i> Rentang
+                    </button>
+                    <button type="button" class="cat-date-tab" data-mode="month" onclick="setCatDateMode('month')">
+                      <i class="fa-regular fa-calendar-days"></i> Bulan
+                    </button>
+                    <button type="button" class="cat-date-tab" data-mode="year" onclick="setCatDateMode('year')">
+                      <i class="fa-regular fa-calendar"></i> Tahun
+                    </button>
+                  </div>
+
+                  <div id="catDateMode_single" class="cat-date-mode-panel detail-date-body">
+                    <label class="detail-date-label">Pilih Tanggal</label>
+                    <input type="date" id="catDetailSingleDate" class="form-control">
+                    <div class="detail-date-actions">
+                      <button type="button" class="btn btn-primary btn-sm" style="flex:1" onclick="applyCatDateFilter()">Terapkan</button>
+                      <button type="button" class="btn btn-secondary btn-sm" onclick="setCatDetailPreset('today')">Hari Ini</button>
+                    </div>
+                  </div>
+
+                  <div id="catDateMode_range" class="cat-date-mode-panel detail-date-body" style="display:none">
+                    <div style="display:flex;gap:0.6rem;margin-bottom:0.5rem">
+                      <div style="flex:1">
+                        <label class="detail-date-label">Dari</label>
+                        <input type="date" id="catDetailStartDate" class="form-control">
+                      </div>
+                      <div style="flex:1">
+                        <label class="detail-date-label">Sampai</label>
+                        <input type="date" id="catDetailEndDate" class="form-control">
+                      </div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm" style="width:100%" onclick="applyCatDateFilter()">Terapkan</button>
+                  </div>
+
+                  <div id="catDateMode_month" class="cat-date-mode-panel detail-date-body" style="display:none">
+                    <label class="detail-date-label">Bulan</label>
+                    <select id="catDetailMonth" class="form-control" style="margin-bottom:0.5rem">
+                      <option value="01">Januari</option><option value="02">Februari</option>
+                      <option value="03">Maret</option><option value="04">April</option>
+                      <option value="05">Mei</option><option value="06">Juni</option>
+                      <option value="07">Juli</option><option value="08">Agustus</option>
+                      <option value="09">September</option><option value="10">Oktober</option>
+                      <option value="11">November</option><option value="12">Desember</option>
+                    </select>
+                    <label class="detail-date-label">Tahun</label>
+                    <select id="catDetailMonthYear" class="form-control" style="margin-bottom:0.75rem">
+                      <option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option>
+                    </select>
+                    <button type="button" class="btn btn-primary btn-sm" style="width:100%" onclick="applyCatDateFilter()">Terapkan</button>
+                  </div>
+
+                  <div id="catDateMode_year" class="cat-date-mode-panel detail-date-body" style="display:none">
+                    <label class="detail-date-label">Tahun</label>
+                    <select id="catDetailYear" class="form-control" style="margin-bottom:0.75rem">
+                      <option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option>
+                    </select>
+                    <button type="button" class="btn btn-primary btn-sm" style="width:100%" onclick="applyCatDateFilter()">Terapkan</button>
+                  </div>
+
+                  <div class="detail-date-footer">
+                    <span id="catDatePanelStatus">Semua data</span>
+                    <button type="button" class="detail-date-reset" onclick="resetCatDetailFilters()">
+                      <i class="fa-solid fa-rotate-left"></i> Reset
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <input type="hidden" id="catDetailSearch" value="">
+          <input type="hidden" id="catDetailMetode" value="">
+
+          <!-- Elegant Stats -->
+          <div class="detail-stats">
+            <div class="detail-stat-card detail-stat-primary">
+              <div class="detail-stat-content">
+                <span class="detail-stat-label"><i class="fa-solid fa-wallet" style="margin-right:3px;"></i> Sisa Saldo Kas Pos</span>
+                <span class="detail-stat-value" id="catDetailTotalNominal">Rp 0</span>
+              </div>
+              <span class="detail-stat-badge" id="catDetailPurposeBadge">Wakaf Jariyah</span>
+            </div>
+            <div class="detail-stat-card">
+              <div class="detail-stat-icon green"><i class="fa-solid fa-arrow-down"></i></div>
+              <div class="detail-stat-content">
+                <span class="detail-stat-label">Uang Masuk (Donasi)</span>
+                <span class="detail-stat-value" id="catDetailTotalMasuk" style="color:var(--emerald-600);">Rp 0</span>
+              </div>
+            </div>
+            <div class="detail-stat-card">
+              <div class="detail-stat-icon rose"><i class="fa-solid fa-arrow-up"></i></div>
+              <div class="detail-stat-content">
+                <span class="detail-stat-label">Uang Keluar (Penyaluran)</span>
+                <span class="detail-stat-value" id="catDetailTotalKeluar" style="color:var(--rose-600);">Rp 0</span>
+              </div>
+            </div>
+            <div class="detail-stat-card">
+              <div class="detail-stat-icon blue"><i class="fa-solid fa-receipt"></i></div>
+              <div class="detail-stat-content">
+                <span class="detail-stat-label">Total Transaksi</span>
+                <span class="detail-stat-value" id="catDetailTotalTransaksi">0 Transaksi</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="card">
+            <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem">
+              <h3 id="catDetailTableTitle">Rincian Mutasi Kas Masuk & Keluar</h3>
+              <div id="catDetailFilterSummaryText" style="font-size:0.78rem;color:var(--text-muted);font-weight:500"></div>
+            </div>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width:35px;text-align:center">No</th>
+                    <th>ID & Donatur / Pihak</th>
+                    <th style="width:85px">Tanggal</th>
+                    <th style="width:80px;text-align:center">Jenis</th>
+                    <th style="width:115px;text-align:right">Nominal (Rp)</th>
+                    <th style="width:75px;text-align:center">Metode</th>
+                    <th>Keterangan / Alamat</th>
+                    <th style="width:60px;text-align:center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="catDetailTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 6: PENGATURAN AKUN & KEAMANAN -->
+        <section class="view-section" id="pengaturanView" style="display: none;">
+          <div class="page-title-box">
+            <div>
+              <h2>Pengaturan Akun & Keamanan</h2>
+              <p>Kelola email login, nomor WhatsApp, kata sandi, dan integrasi EmailJS.</p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
+            
+            <!-- Card 1: Profil Akun Saat Ini -->
+            <div class="card" style="padding: 1.5rem;">
+              <div style="display:flex; align-items:center; gap:0.85rem; margin-bottom:1.25rem;">
+                <div style="width:48px; height:48px; border-radius:12px; background:var(--primary-50); color:var(--primary-600); display:flex; align-items:center; justify-content:center; font-size:1.3rem;">
+                  <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <div>
+                  <h3 style="font-size:1rem; margin:0;">Profil Akun Admin</h3>
+                  <span style="font-size:0.75rem; color:var(--text-muted);">Informasi login terdaftar</span>
+                </div>
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:0.75rem; font-size:0.85rem;">
+                <div style="padding:0.75rem; background:var(--slate-50); border-radius:8px; border:1px solid var(--slate-100);">
+                  <div style="font-size:0.7rem; color:var(--slate-500); text-transform:uppercase; font-weight:600;">Username</div>
+                  <div id="setInfoUsername" style="font-weight:600; color:var(--slate-900); margin-top:2px;">admin</div>
+                </div>
+                <div style="padding:0.75rem; background:var(--slate-50); border-radius:8px; border:1px solid var(--slate-100);">
+                  <div style="font-size:0.7rem; color:var(--slate-500); text-transform:uppercase; font-weight:600;">Email Terdaftar</div>
+                  <div id="setInfoEmail" style="font-weight:600; color:var(--slate-900); margin-top:2px;">icmawasailulkhair@gmail.com</div>
+                </div>
+                <div style="padding:0.75rem; background:var(--slate-50); border-radius:8px; border:1px solid var(--slate-100);">
+                  <div style="font-size:0.7rem; color:var(--slate-500); text-transform:uppercase; font-weight:600;">Nomor HP (WhatsApp)</div>
+                  <div id="setInfoPhone" style="font-weight:600; color:var(--slate-900); margin-top:2px;">0895393181822</div>
+                </div>
+                <div style="padding:0.75rem; background:var(--slate-50); border-radius:8px; border:1px solid var(--slate-100);">
+                  <div style="font-size:0.7rem; color:var(--slate-500); text-transform:uppercase; font-weight:600;">Status Keamanan</div>
+                  <div style="font-weight:600; color:var(--emerald-600); margin-top:2px;">
+                    <i class="fa-solid fa-circle-check"></i> Multi-Login Aktif (Username, Email & WhatsApp)
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Ubah Username -->
+            <div class="card" style="padding: 1.5rem;">
+              <h3 style="font-size:0.95rem; margin-bottom:0.25rem;">
+                <i class="fa-solid fa-user-gear" style="color:var(--primary-600); margin-right:0.35rem;"></i>
+                Ubah Username
+              </h3>
+              <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">
+                Tentukan username baru untuk kemudahan login ke dashboard.
+              </p>
+
+              <form id="formChangeUsername" onsubmit="handleChangeUsernameSubmit(event)">
+                <div class="form-group mb-3">
+                  <label for="inputNewUsername">Username Baru *</label>
+                  <input type="text" id="inputNewUsername" class="form-control" placeholder="Contoh: admin" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm" style="width:100%;">
+                  <i class="fa-solid fa-check"></i> Simpan Username Baru
+                </button>
+              </form>
+            </div>
+
+            <!-- Card 3: Ubah Email Login -->
+            <div class="card" style="padding: 1.5rem;">
+              <h3 style="font-size:0.95rem; margin-bottom:0.25rem;">
+                <i class="fa-solid fa-envelope" style="color:var(--primary-600); margin-right:0.35rem;"></i>
+                Ubah Alamat Email
+              </h3>
+              <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">
+                Perubahan email membutuhkan verifikasi kode OTP ke email baru via EmailJS.
+              </p>
+
+              <form id="formChangeEmail" onsubmit="handleStartChangeEmail(event)">
+                <div class="form-group mb-3">
+                  <label for="inputNewEmail">Alamat Email Baru *</label>
+                  <input type="email" id="inputNewEmail" class="form-control" placeholder="contoh: icmawasailulkhair@gmail.com" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm" style="width:100%;">
+                  <i class="fa-solid fa-paper-plane"></i> Kirim Kode OTP & Ubah Email
+                </button>
+              </form>
+
+              <!-- OTP input container for email change -->
+              <div id="boxOtpChangeEmail" style="display:none; margin-top:1rem; padding:0.85rem; background:var(--slate-50); border:1px solid var(--slate-200); border-radius:8px;">
+                <label style="font-size:0.75rem; font-weight:600; display:block; margin-bottom:0.35rem;">Masukkan Kode OTP dari Email Baru:</label>
+                <div style="display:flex; gap:0.4rem;">
+                  <input type="text" id="otpChangeEmailInput" class="form-control" placeholder="6 digit" maxlength="6" style="letter-spacing:3px; text-align:center; font-weight:700;">
+                  <button type="button" class="btn btn-success btn-sm" onclick="handleConfirmChangeEmail()">Verifikasi</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4: Ubah Nomor HP (WhatsApp) -->
+            <div class="card" style="padding: 1.5rem;">
+              <h3 style="font-size:0.95rem; margin-bottom:0.25rem;">
+                <i class="fa-brands fa-whatsapp" style="color:var(--emerald-600); margin-right:0.35rem;"></i>
+                Ubah Nomor HP (WhatsApp)
+              </h3>
+              <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">
+                Perubahan nomor HP membutuhkan verifikasi kode OTP via WhatsApp Direct.
+              </p>
+
+              <form id="formChangePhone" onsubmit="handleStartChangePhone(event)">
+                <div class="form-group mb-3">
+                  <label for="inputNewPhone">Nomor WhatsApp Baru *</label>
+                  <input type="text" id="inputNewPhone" class="form-control" placeholder="Contoh: 0895393181822" required>
+                </div>
+                <button type="submit" class="btn btn-emerald btn-sm" style="width:100%; background:var(--emerald-600); color:#fff;">
+                  <i class="fa-brands fa-whatsapp"></i> Kirim OTP WhatsApp & Ubah No. HP
+                </button>
+              </form>
+
+              <!-- OTP input container for phone change -->
+              <div id="boxOtpChangePhone" style="display:none; margin-top:1rem; padding:0.85rem; background:var(--slate-50); border:1px solid var(--slate-200); border-radius:8px;">
+                <label style="font-size:0.75rem; font-weight:600; display:block; margin-bottom:0.35rem;">Masukkan Kode OTP dari WhatsApp Baru:</label>
+                <div style="display:flex; gap:0.4rem;">
+                  <input type="text" id="otpChangePhoneInput" class="form-control" placeholder="6 digit" maxlength="6" style="letter-spacing:3px; text-align:center; font-weight:700;">
+                  <button type="button" class="btn btn-success btn-sm" onclick="handleConfirmChangePhone()">Verifikasi</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 5: Ubah Kata Sandi -->
+            <div class="card" style="padding: 1.5rem;">
+              <h3 style="font-size:0.95rem; margin-bottom:0.25rem;">
+                <i class="fa-solid fa-lock" style="color:var(--amber-600); margin-right:0.35rem;"></i>
+                Ubah Kata Sandi
+              </h3>
+              <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">
+                Masukkan kata sandi lama, lalu tentukan kata sandi baru.
+              </p>
+
+              <form id="formChangePassword" onsubmit="handleChangePasswordSubmit(event)">
+                <div class="form-group mb-2">
+                  <label for="inputCurrentPass">Kata Sandi Saat Ini *</label>
+                  <input type="password" id="inputCurrentPass" class="form-control" placeholder="Kata sandi lama" required>
+                </div>
+                <div class="form-group mb-2">
+                  <label for="inputChangeNewPass">Kata Sandi Baru *</label>
+                  <input type="password" id="inputChangeNewPass" class="form-control" placeholder="Minimal 6 karakter" required>
+                </div>
+                <div class="form-group mb-3">
+                  <label for="inputChangeConfirmPass">Konfirmasi Kata Sandi Baru *</label>
+                  <input type="password" id="inputChangeConfirmPass" class="form-control" placeholder="Ulangi kata sandi baru" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm" style="width:100%;">
+                  <i class="fa-solid fa-shield"></i> Perbarui Kata Sandi
+                </button>
+              </form>
+            </div>
+
+            <!-- Card 5: Konfigurasi EmailJS (Opsional) -->
+            <div class="card" style="padding: 1.5rem; grid-column: span 2;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+                <h3 style="font-size:0.95rem; margin:0;">
+                  <i class="fa-solid fa-gear" style="color:var(--primary-600); margin-right:0.35rem;"></i>
+                  Integrasi EmailJS API (Opsional)
+                </h3>
+                <span class="badge" id="badgeEmailJsStatus" style="background:var(--emerald-50); color:var(--emerald-700); border:1px solid var(--emerald-200);">
+                  Mode Cerdas: Fallback & Simulator Aktif
+                </span>
+              </div>
+              <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem;">
+                Masukkan Public Key, Service ID, dan Template ID dari dashboard EmailJS Anda (gratis di <a href="https://www.emailjs.com" target="_blank" style="color:var(--primary-600); text-decoration:underline;">emailjs.com</a>) jika ingin email OTP terkirim ke inbox sungguhan. Jika dikosongkan, sistem menyediakan dialog simulasi instan kode OTP.
+              </p>
+
+              <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:0.75rem; margin-bottom:1rem;">
+                <div class="form-group">
+                  <label for="cfgEmailJsPublicKey">Public Key (User ID)</label>
+                  <input type="text" id="cfgEmailJsPublicKey" class="form-control" placeholder="contoh: user_xxxxx">
+                </div>
+                <div class="form-group">
+                  <label for="cfgEmailJsServiceId">Service ID</label>
+                  <input type="text" id="cfgEmailJsServiceId" class="form-control" placeholder="contoh: service_gmail">
+                </div>
+                <div class="form-group">
+                  <label for="cfgEmailJsTemplateId">Template ID</label>
+                  <input type="text" id="cfgEmailJsTemplateId" class="form-control" placeholder="contoh: template_otp">
+                </div>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="saveEmailJsConfig()">
+                <i class="fa-solid fa-floppy-disk"></i> Simpan Konfigurasi EmailJS
+              </button>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL 1: Form Pencatatan Donasi (Hanya ID/Nama Search, Nominal, Tanggal, Tujuan, Metode, Catatan - TANPA Alamat) -->
+  <div class="modal-overlay" id="donationModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalTitle">Pencatatan Donasi Baru</h3>
+        <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="donationForm">
+        <div class="modal-body">
+          <input type="hidden" id="donationId">
+
+          <div class="form-grid">
+            <!-- Autocomplete Live Search Donatur -->
+            <div class="form-group span-2">
+              <label for="donasiSearchDonorInput">Cari ID Donatur / Nama Donatur *</label>
+              <input type="text" id="donasiSearchDonorInput" class="form-control" placeholder="Ketik ID (misal: DNR-007) atau Nama Donatur (misal: Sukiman)..." autocomplete="off" required>
+              
+              <!-- Dropdown suggestions list -->
+              <div id="donorSuggestionsList" class="donor-autocomplete-list" style="display:none;"></div>
+            </div>
+
+            <!-- Selected Donor Badge Display -->
+            <div class="form-group span-2" id="selectedDonorBadgeContainer" style="display:none;"></div>
+
+            <div class="form-group">
+              <label for="donasiJumlah">Jumlah Nominal Donasi (Rp) *</label>
+              <input type="number" id="donasiJumlah" class="form-control" placeholder="Contoh: 500000" min="1" required>
+            </div>
+
+            <div class="form-group">
+              <label for="donasiTanggal">Tanggal Donasi *</label>
+              <input type="date" id="donasiTanggal" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label for="donasiTujuan">Tujuan Donasi *</label>
+              <select id="donasiTujuan" class="form-control" required>
+                <option value="Wakaf Jariyah">1. Wakaf Jariyah</option>
+                <option value="Zakat">2. Zakat</option>
+                <option value="Infaq">3. Infaq</option>
+                <option value="Shodaqoh">4. Shodaqoh</option>
+                <option value="Dana Riba">5. Dana Riba</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="donasiMetode">Metode Pembayaran *</label>
+              <select id="donasiMetode" class="form-control" required>
+                <option value="Transfer">Transfer Bank</option>
+                <option value="Tunai">Tunai</option>
+              </select>
+            </div>
+
+            <div class="form-group span-2">
+              <label for="donasiCatatan">Catatan / Doa Donatur (Opsional)</label>
+              <input type="text" id="donasiCatatan" class="form-control" placeholder="Contoh: Doa untuk keluarga / peruntukan masjid...">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal()">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Transaksi Donasi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Form Tambah / Edit Donatur (Identitas Donatur & Wilayah Jawa Tengah / DIY) -->
+  <div class="modal-overlay" id="donaturModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalDonaturTitle">Tambah Data Donatur Baru</h3>
+        <button class="modal-close" onclick="closeDonaturModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="donaturForm">
+        <div class="modal-body">
+          <input type="hidden" id="donaturId">
+
+          <div class="form-grid">
+            <div class="form-group span-2">
+              <label for="donaturNama">Nama Donatur Lengkap *</label>
+              <input type="text" id="donaturNama" class="form-control" placeholder="Contoh: Bpk Sukiman / Ibu Lulu" required>
+            </div>
+
+            <div class="form-group span-2">
+              <label for="donaturPhone">Nomor WhatsApp *</label>
+              <input type="text" id="donaturPhone" class="form-control" placeholder="Contoh: 081234567890 (otomatis wa.me)" required>
+            </div>
+
+            <!-- Cascading Dropdown Wilayah Jawa Tengah / DIY -->
+            <div class="form-group">
+              <label for="donaturProvinsi">Provinsi *</label>
+              <select id="donaturProvinsi" class="form-control" required></select>
+            </div>
+
+            <div class="form-group">
+              <label for="donaturKabupaten">Kabupaten / Kota *</label>
+              <select id="donaturKabupaten" class="form-control" required></select>
+            </div>
+
+            <div class="form-group">
+              <label for="donaturKecamatan">Kecamatan *</label>
+              <select id="donaturKecamatan" class="form-control" required></select>
+            </div>
+
+            <div class="form-group">
+              <label for="donaturKelurahan">Kelurahan *</label>
+              <select id="donaturKelurahan" class="form-control" required></select>
+            </div>
+
+            <div class="form-group span-2">
+              <label for="donaturAlamat">Alamat Detail (Jalan, RT/RW, No. Rumah) *</label>
+              <textarea id="donaturAlamat" class="form-control" rows="2" placeholder="Nama jalan, RT/RW, nomor rumah..." required></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeDonaturModal()">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Data Donatur</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Form Pencatatan Kas (Uang Masuk / Uang Keluar) -->
+  <div class="modal-overlay" id="kasModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalKasTitle">Catat Mutasi Kas</h3>
+        <button class="modal-close" onclick="closeKasModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="kasForm">
+        <div class="modal-body">
+          <input type="hidden" id="kasId">
+
+          <div class="form-grid">
+            <div class="form-group span-2">
+              <label>Jenis Mutasi Kas *</label>
+              <div style="display:flex; gap:0.5rem;">
+                <button type="button" id="btnKasTypeMasuk" class="btn btn-sm" style="flex:1; border:1px solid var(--emerald-600); background:var(--emerald-50); color:var(--emerald-700); font-weight:600;" onclick="setKasModalType('Masuk')">
+                  <i class="fa-solid fa-arrow-down"></i> Uang Masuk (Pemasukan)
+                </button>
+                <button type="button" id="btnKasTypeKeluar" class="btn btn-sm" style="flex:1; border:1px solid var(--slate-200); background:#fff; color:var(--slate-600); font-weight:500;" onclick="setKasModalType('Keluar')">
+                  <i class="fa-solid fa-arrow-up"></i> Uang Keluar (Pengeluaran)
+                </button>
+              </div>
+              <input type="hidden" id="kasType" value="Masuk">
+            </div>
+
+            <div class="form-group">
+              <label for="kasTanggal">Tanggal Transaksi *</label>
+              <input type="date" id="kasTanggal" class="form-control" required>
+            </div>
+
+            <div class="form-group" id="kasKategoriGroup">
+              <label for="kasKategori">Pos Dana / Kategori Donasi *</label>
+              <select id="kasKategori" class="form-control" required>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="kasJumlah">Jumlah Nominal (Rp) *</label>
+              <input type="number" id="kasJumlah" class="form-control" placeholder="Contoh: 500000" min="1" required>
+            </div>
+
+            <div class="form-group">
+              <label for="kasMetode">Metode Pembayaran *</label>
+              <select id="kasMetode" class="form-control" required>
+                <option value="Transfer">Transfer Bank</option>
+                <option value="Tunai">Tunai</option>
+              </select>
+            </div>
+
+            <div class="form-group span-2" id="kasPihakGroup">
+              <label for="kasPihak" id="kasPihakLabel">Sumber / Donatur / Pihak Pembayar *</label>
+              <input type="text" id="kasPihak" class="form-control" placeholder="Contoh: Donatur Hamba Allah / Hasil Usaha..." required>
+            </div>
+
+            <div class="form-group span-2">
+              <label for="kasCatatan">Keterangan / Rincian Keperluan *</label>
+              <input type="text" id="kasCatatan" class="form-control" placeholder="Contoh: Untuk operasional kantor / santunan dhuafa..." required>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeKasModal()">Batal</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveKas">Simpan Transaksi Kas</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Kelola Kategori Custom (Tambah, Edit, Hapus Kategori) -->
+  <div class="modal-overlay" id="manageCategoriesModal">
+    <div class="modal-box" style="max-width: 540px;">
+      <div class="modal-header">
+        <h3 style="font-size:0.95rem; font-weight:600;"><i class="fa-solid fa-tags" style="color:var(--primary-600); margin-right:0.4rem;"></i> Kelola Pos Dana / Kategori Donasi</h3>
+        <button class="modal-close" onclick="closeManageCategoriesModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body" style="padding:1.15rem 1.35rem;">
+        <!-- Add Category Form -->
+        <form id="addCategoryForm" style="display:flex; gap:0.5rem; margin-bottom:1.15rem;" onsubmit="handleAddNewCategory(event)">
+          <input type="text" id="newCategoryInput" class="form-control" placeholder="Tulis nama pos dana baru..." required>
+          <button type="submit" class="btn btn-primary" style="white-space:nowrap;">
+            <i class="fa-solid fa-plus"></i> Tambah
+          </button>
+        </form>
+
+        <!-- Category List Table -->
+        <div style="font-size:0.72rem; font-weight:600; color:var(--slate-500); text-transform:uppercase; margin-bottom:0.4rem; letter-spacing:0.04em;">
+          Daftar Kategori Aktif
+        </div>
+        <div class="table-responsive" style="max-height: 260px; overflow-y:auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 35px; text-align: center;">No</th>
+                <th>Nama Kategori</th>
+                <th style="width: 90px; text-align: center;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="manageCategoriesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="padding:0.75rem 1.35rem;">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="closeManageCategoriesModal()">Selesai & Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Drill-Down Rincian Jenis Donasi -->
+  <div class="modal-overlay" id="drillDownModal">
+    <div class="modal-box" style="max-width: 860px;">
+      <div class="modal-header">
+        <h3 id="drillDownTitle">Rincian Daftar Donasi</h3>
+        <button class="modal-close" onclick="closeDrillDownModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <div id="drillDownSummaryText" style="margin-bottom:1rem; padding:0.75rem; background:#eff6ff; border-radius:8px; border:1px solid #bfdbfe;"></div>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 40px; text-align: center;">No</th>
+                <th style="min-width: 150px;">ID & Nama Donatur</th>
+                <th style="width: 95px;">Tanggal</th>
+                <th style="width: 120px;">Nominal (Rp)</th>
+                <th style="width: 90px;">Metode</th>
+                <th style="min-width: 130px;">Wilayah / Alamat</th>
+                <th style="width: 70px; text-align: center;">Invoice</th>
+              </tr>
+            </thead>
+            <tbody id="drillDownTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeDrillDownModal()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: Cetak & Preview Invoice Bukti Donasi -->
+  <div class="modal-overlay" id="invoiceModal">
+    <div class="modal-box" style="max-width: 760px;">
+      <div class="modal-header">
+        <h3>Preview Invoice Bukti Penerimaan Donasi</h3>
+        <button class="modal-close" onclick="closeInvoiceModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body" id="invoicePrintContent"></div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeInvoiceModal()">Tutup</button>
+        <button type="button" class="btn btn-warning" onclick="downloadInvoiceJPG()">
+          <i class="fa-solid fa-file-image"></i> Unduh JPG
+        </button>
+        <button type="button" class="btn btn-danger" onclick="downloadInvoicePDF()">
+          <i class="fa-solid fa-file-pdf"></i> Unduh PDF
+        </button>
+        <button type="button" class="btn btn-primary" onclick="printInvoice()">
+          <i class="fa-solid fa-print"></i> Cetak Kwitansi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 5: Popup Unduh Rekap Excel Fleksibel -->
+  <div class="modal-overlay" id="exportModal">
+    <div class="modal-box" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 style="font-size:0.95rem; font-weight:600;">
+          <i class="fa-solid fa-file-excel" style="color:var(--emerald-600); margin-right:0.4rem;"></i>
+          Unduh Rekap Laporan Excel (.xlsx)
+        </h3>
+        <button class="modal-close" onclick="closeExportModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body" style="padding:1.25rem 1.4rem;">
+        <!-- Jenis Laporan -->
+        <div class="form-group" style="margin-bottom:1.15rem;">
+          <label style="font-weight:600; font-size:0.8rem; color:var(--slate-700); margin-bottom:0.35rem; display:block;">
+            Pilih Jenis Data Laporan:
+          </label>
+          <select id="exportDataType" class="form-control">
+            <option value="all">1. Semua Mutasi Kas (Uang Masuk & Uang Keluar)</option>
+            <option value="masuk">2. Hanya Donasi Masuk (Lengkap Data Donatur)</option>
+            <option value="keluar">3. Hanya Pengeluaran Kas (Beban & Penyaluran)</option>
+          </select>
+        </div>
+
+        <!-- Filter Periode Waktu -->
+        <div class="form-group" style="margin-bottom:0.5rem;">
+          <label style="font-weight:600; font-size:0.8rem; color:var(--slate-700); margin-bottom:0.35rem; display:block;">
+            Pilih Filter Waktu / Periode:
+          </label>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.4rem; margin-bottom:0.75rem;">
+            <button type="button" id="btnExpMode_all" class="btn btn-sm btn-exp-mode active" style="border:1px solid var(--primary-600); background:var(--primary-50); color:var(--primary-700); font-weight:600;" onclick="setExportPeriodMode('all')">
+              <i class="fa-solid fa-infinity"></i> Semua Data
+            </button>
+            <button type="button" id="btnExpMode_single" class="btn btn-sm btn-exp-mode" style="border:1px solid var(--slate-200); background:#fff; color:var(--slate-600);" onclick="setExportPeriodMode('single')">
+              <i class="fa-regular fa-calendar-check"></i> Tanggal Tertentu
+            </button>
+            <button type="button" id="btnExpMode_range" class="btn btn-sm btn-exp-mode" style="border:1px solid var(--slate-200); background:#fff; color:var(--slate-600);" onclick="setExportPeriodMode('range')">
+              <i class="fa-solid fa-arrows-left-right"></i> Rentang Tanggal
+            </button>
+            <button type="button" id="btnExpMode_month" class="btn btn-sm btn-exp-mode" style="border:1px solid var(--slate-200); background:#fff; color:var(--slate-600);" onclick="setExportPeriodMode('month')">
+              <i class="fa-regular fa-calendar-days"></i> Bulan Tertentu
+            </button>
+            <button type="button" id="btnExpMode_year" class="btn btn-sm btn-exp-mode span-2" style="border:1px solid var(--slate-200); background:#fff; color:var(--slate-600); grid-column:span 2;" onclick="setExportPeriodMode('year')">
+              <i class="fa-regular fa-calendar"></i> 1 Tahun Penuh
+            </button>
+          </div>
+
+          <!-- Dynamic Period Inputs -->
+          <div id="expInput_single" class="exp-period-panel" style="display:none; padding:0.75rem; background:#f8fafc; border-radius:8px; border:1px solid var(--slate-200);">
+            <label style="font-size:0.75rem; font-weight:600; color:var(--slate-600); display:block; margin-bottom:0.25rem;">Pilih Tanggal:</label>
+            <input type="date" id="exportSingleDate" class="form-control">
+          </div>
+
+          <div id="expInput_range" class="exp-period-panel" style="display:none; padding:0.75rem; background:#f8fafc; border-radius:8px; border:1px solid var(--slate-200);">
+            <div style="display:flex; gap:0.5rem;">
+              <div style="flex:1;">
+                <label style="font-size:0.75rem; font-weight:600; color:var(--slate-600); display:block; margin-bottom:0.25rem;">Dari Tanggal:</label>
+                <input type="date" id="exportStartDate" class="form-control">
+              </div>
+              <div style="flex:1;">
+                <label style="font-size:0.75rem; font-weight:600; color:var(--slate-600); display:block; margin-bottom:0.25rem;">Sampai Tanggal:</label>
+                <input type="date" id="exportEndDate" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div id="expInput_month" class="exp-period-panel" style="display:none; padding:0.75rem; background:#f8fafc; border-radius:8px; border:1px solid var(--slate-200);">
+            <div style="display:flex; gap:0.5rem;">
+              <div style="flex:1.2;">
+                <label style="font-size:0.75rem; font-weight:600; color:var(--slate-600); display:block; margin-bottom:0.25rem;">Bulan:</label>
+                <select id="exportMonth" class="form-control">
+                  <option value="01">Januari</option><option value="02">Februari</option>
+                  <option value="03">Maret</option><option value="04">April</option>
+                  <option value="05">Mei</option><option value="06">Juni</option>
+                  <option value="07">Juli</option><option value="08" selected>Agustus</option>
+                  <option value="09">September</option><option value="10">Oktober</option>
+                  <option value="11">November</option><option value="12">Desember</option>
+                </select>
+              </div>
+              <div style="flex:1;">
+                <label style="font-size:0.75rem; font-weight:600; color:var(--slate-600); display:block; margin-bottom:0.25rem;">Tahun:</label>
+                <select id="exportMonthYear" class="form-control">
+                  <option value="2026" selected>2026</option>
+                  <option value="2025">2025</option>
+                  <option value="2024">2024</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="expInput_year" class="exp-period-panel" style="display:none; padding:0.75rem; background:#f8fafc; border-radius:8px; border:1px solid var(--slate-200);">
+            <label style="font-size:0.75rem; font-weight:600; color:var(--slate-600); display:block; margin-bottom:0.25rem;">Pilih Tahun:</label>
+            <select id="exportYear" class="form-control">
+              <option value="2026" selected>2026</option>
+              <option value="2025">2025</option>
+              <option value="2024">2024</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="padding:0.85rem 1.4rem;">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="closeExportModal()">Batal</button>
+        <button type="button" class="btn btn-success btn-sm" onclick="executeExcelExport()">
+          <i class="fa-solid fa-file-excel"></i> Unduh File Excel (.xlsx)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Pemulihan Akun -->
+  <div class="modal-overlay" id="recoveryModal">
+    <div class="modal-box" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 id="recoveryModalTitle">
+          <i class="fa-solid fa-shield-halved" style="color:var(--primary-600); margin-right:0.4rem;"></i>
+          Pemulihan Akun Admin
+        </h3>
+        <button class="modal-close" onclick="closeRecoveryModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body" style="padding: 1.25rem 1.5rem;">
+
+        <!-- STEP 0: Pilih Jenis Pemulihan -->
+        <div id="recStep0">
+          <p style="font-size:0.8rem; color:var(--slate-600); margin-bottom:1rem;">
+            Pilih masalah yang Anda alami:
+          </p>
+          <div style="display:flex; flex-direction:column; gap:0.6rem;">
+            <button type="button" class="rec-option-btn" onclick="startRecovery('email')">
+              <div class="rec-option-icon" style="background:var(--emerald-50); color:var(--emerald-600);"><i class="fa-brands fa-whatsapp"></i></div>
+              <div class="rec-option-text">
+                <span class="rec-option-title">Lupa Email</span>
+                <span class="rec-option-desc">Kirim OTP ke WhatsApp untuk melihat alamat email terdaftar</span>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color:var(--slate-400);"></i>
+            </button>
+            <button type="button" class="rec-option-btn" onclick="startRecovery('phone')">
+              <div class="rec-option-icon" style="background:var(--primary-50); color:var(--primary-600);"><i class="fa-solid fa-envelope"></i></div>
+              <div class="rec-option-text">
+                <span class="rec-option-title">Lupa Nomor HP</span>
+                <span class="rec-option-desc">Kirim OTP ke Gmail untuk melihat nomor WhatsApp terdaftar</span>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color:var(--slate-400);"></i>
+            </button>
+            <button type="button" class="rec-option-btn" onclick="startRecovery('password')">
+              <div class="rec-option-icon" style="background:var(--amber-50); color:var(--amber-600);"><i class="fa-solid fa-key"></i></div>
+              <div class="rec-option-text">
+                <span class="rec-option-title">Lupa Kata Sandi</span>
+                <span class="rec-option-desc">Verifikasi via Email / WhatsApp lalu buat sandi baru</span>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color:var(--slate-400);"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 1: LUPA EMAIL (verifikasi OTP dikirim ke WhatsApp) -->
+        <div id="recStepEmail" style="display:none;">
+          <button type="button" class="rec-back-btn" onclick="backToRecStep0()"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+          <h4 style="font-size:0.95rem; margin:0.75rem 0 0.5rem;"><i class="fa-brands fa-whatsapp" style="color:var(--emerald-600); margin-right:0.3rem;"></i> Lupa Email</h4>
+          <p style="font-size:0.78rem; color:var(--slate-500); margin-bottom:1rem;">Masukkan nomor WhatsApp Anda. Kode OTP verifikasi akan dikirimkan ke WhatsApp Anda.</p>
+
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label for="recEmailStepPhoneInput">Nomor WhatsApp Terdaftar *</label>
+            <input type="text" id="recEmailStepPhoneInput" class="form-control" placeholder="Contoh: 0895393181822">
+          </div>
+          <button type="button" class="btn btn-primary" style="width:100%; background:var(--emerald-600);" onclick="handleSendRecEmailOtp()">
+            <i class="fa-brands fa-whatsapp"></i> Kirim Kode OTP ke WhatsApp
+          </button>
+
+          <div id="recEmailOtpBox" class="rec-otp-box" style="display:none;">
+            <label style="font-weight:600; font-size:0.8rem; display:block; margin-bottom:0.35rem;">Masukkan Kode OTP 6 Digit dari WhatsApp:</label>
+            <div style="display:flex; gap:0.5rem;">
+              <input type="text" id="recEmailOtpInput" class="form-control" placeholder="6 digit" maxlength="6" style="letter-spacing:4px; font-weight:700; text-align:center; font-size:1.1rem;">
+              <button type="button" class="btn btn-success" onclick="handleVerifyRecEmailOtp()" style="white-space:nowrap;"><i class="fa-solid fa-check"></i> Verifikasi</button>
+            </div>
+            <p style="font-size:0.72rem; color:var(--slate-500); margin:0.5rem 0 0;">Berlaku 5 menit.</p>
+          </div>
+
+          <!-- Result: show email & login -->
+          <div id="recEmailResult" style="display:none;" class="rec-result-box">
+            <div style="font-weight:700; font-size:0.85rem; color:var(--emerald-800); margin-bottom:0.5rem;">
+              <i class="fa-solid fa-circle-check"></i> Alamat Email Anda Ditemukan:
+            </div>
+            <div id="recEmailFoundValue" style="font-size:1rem; font-weight:700; color:var(--slate-900); margin-bottom:0.75rem; padding:0.5rem; background:var(--slate-50); border-radius:6px; text-align:center;"></div>
+            <button type="button" class="btn btn-primary" style="width:100%;" onclick="handleDirectLoginFromRecovery()">
+              <i class="fa-solid fa-right-to-bracket"></i> Langsung Masuk ke Dashboard
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: LUPA NOMOR HP (verifikasi OTP dikirim ke Gmail) -->
+        <div id="recStepPhone" style="display:none;">
+          <button type="button" class="rec-back-btn" onclick="backToRecStep0()"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+          <h4 style="font-size:0.95rem; margin:0.75rem 0 0.5rem;"><i class="fa-solid fa-envelope" style="color:var(--primary-600); margin-right:0.3rem;"></i> Lupa Nomor HP</h4>
+          <p style="font-size:0.78rem; color:var(--slate-500); margin-bottom:1rem;">Masukkan alamat Gmail terdaftar Anda. Kode OTP verifikasi akan dikirimkan ke Gmail Anda.</p>
+
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label for="recPhoneStepEmailInput">Email (Gmail) Terdaftar *</label>
+            <input type="email" id="recPhoneStepEmailInput" class="form-control" placeholder="Contoh: icmawasailulkhair@gmail.com">
+          </div>
+          <button type="button" class="btn btn-primary" style="width:100%;" onclick="handleSendRecPhoneOtp()">
+            <i class="fa-solid fa-paper-plane"></i> Kirim Kode OTP ke Gmail
+          </button>
+
+          <div id="recPhoneOtpBox" class="rec-otp-box" style="display:none;">
+            <label style="font-weight:600; font-size:0.8rem; display:block; margin-bottom:0.35rem;">Masukkan Kode OTP 6 Digit dari Gmail:</label>
+            <div style="display:flex; gap:0.5rem;">
+              <input type="text" id="recPhoneOtpInput" class="form-control" placeholder="6 digit" maxlength="6" style="letter-spacing:4px; font-weight:700; text-align:center; font-size:1.1rem;">
+              <button type="button" class="btn btn-success" onclick="handleVerifyRecPhoneOtp()" style="white-space:nowrap;"><i class="fa-solid fa-check"></i> Verifikasi</button>
+            </div>
+            <p style="font-size:0.72rem; color:var(--slate-500); margin:0.5rem 0 0;">Berlaku 5 menit.</p>
+          </div>
+
+          <!-- Result: show phone & login -->
+          <div id="recPhoneResult" style="display:none;" class="rec-result-box">
+            <div style="font-weight:700; font-size:0.85rem; color:var(--emerald-800); margin-bottom:0.5rem;">
+              <i class="fa-solid fa-circle-check"></i> Nomor WhatsApp Anda Ditemukan:
+            </div>
+            <div id="recPhoneFoundValue" style="font-size:1rem; font-weight:700; color:var(--slate-900); margin-bottom:0.75rem; padding:0.5rem; background:var(--slate-50); border-radius:6px; text-align:center;"></div>
+            <button type="button" class="btn btn-primary" style="width:100%;" onclick="handleDirectLoginFromRecovery()">
+              <i class="fa-solid fa-right-to-bracket"></i> Langsung Masuk ke Dashboard
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 3: LUPA KATA SANDI -->
+        <div id="recStepPassword" style="display:none;">
+          <button type="button" class="rec-back-btn" onclick="backToRecStep0()"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+          <h4 style="font-size:0.95rem; margin:0.75rem 0 0.5rem;"><i class="fa-solid fa-key" style="color:var(--amber-600); margin-right:0.3rem;"></i> Lupa Kata Sandi</h4>
+
+          <!-- Sub-step A: Pilih metode verifikasi -->
+          <div id="recPassSubA">
+            <p style="font-size:0.78rem; color:var(--slate-500); margin-bottom:0.75rem;">Pilih metode verifikasi identitas Anda:</p>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-bottom:1rem;">
+              <label class="rec-method-card active" id="cardPassMethodEmail" onclick="selectPassVerifyMethod('email')">
+                <input type="radio" name="passVerifyMethod" value="email" checked style="display:none;">
+                <i class="fa-solid fa-envelope" style="color:var(--primary-600); font-size:1.1rem; margin-bottom:0.25rem;"></i>
+                <span style="font-weight:600; font-size:0.8rem;">Via Email</span>
+                <span style="font-size:0.7rem; color:var(--slate-500);">EmailJS OTP</span>
+              </label>
+              <label class="rec-method-card" id="cardPassMethodWA" onclick="selectPassVerifyMethod('whatsapp')">
+                <input type="radio" name="passVerifyMethod" value="whatsapp" style="display:none;">
+                <i class="fa-brands fa-whatsapp" style="color:var(--emerald-600); font-size:1.1rem; margin-bottom:0.25rem;"></i>
+                <span style="font-weight:600; font-size:0.8rem;">Via WhatsApp</span>
+                <span style="font-size:0.7rem; color:var(--slate-500);">Direct Verification</span>
+              </label>
+            </div>
+
+            <div class="form-group" style="margin-bottom:1rem;">
+              <label id="lblPassVerifyInput" for="recPassVerifyInput">Email Terdaftar *</label>
+              <input type="text" id="recPassVerifyInput" class="form-control" placeholder="Contoh: icmawasailulkhair@gmail.com">
+            </div>
+
+            <button type="button" class="btn btn-primary" style="width:100%;" onclick="handleSendPassResetOtp()">
+              <i class="fa-solid fa-paper-plane"></i> Kirim Kode Verifikasi
+            </button>
+
+            <div id="recPassOtpBox" class="rec-otp-box" style="display:none;">
+              <label style="font-weight:600; font-size:0.8rem; display:block; margin-bottom:0.35rem;">Masukkan Kode OTP 6 Digit:</label>
+              <div style="display:flex; gap:0.5rem;">
+                <input type="text" id="recPassOtpInput" class="form-control" placeholder="6 digit" maxlength="6" style="letter-spacing:4px; font-weight:700; text-align:center; font-size:1.1rem;">
+                <button type="button" class="btn btn-success" onclick="handleVerifyPassResetOtp()" style="white-space:nowrap;"><i class="fa-solid fa-check"></i> Verifikasi</button>
+              </div>
+              <p style="font-size:0.72rem; color:var(--slate-500); margin:0.5rem 0 0;">Berlaku 5 menit.</p>
+            </div>
+          </div>
+
+          <!-- Sub-step B: Form kata sandi baru (after OTP verified) -->
+          <div id="recPassSubB" style="display:none;">
+            <div style="padding:0.75rem; background:var(--emerald-50); border:1px solid var(--emerald-200); border-radius:8px; margin-bottom:1rem; color:var(--emerald-800); font-size:0.8rem;">
+              <i class="fa-solid fa-circle-check"></i> Identitas terverifikasi! Buat kata sandi baru.
+            </div>
+
+            <div class="form-group" style="margin-bottom:0.85rem;">
+              <label for="newPassInput">Kata Sandi Baru *</label>
+              <input type="password" id="newPassInput" class="form-control" placeholder="Minimal 6 karakter">
+            </div>
+            <div class="form-group" style="margin-bottom:1.25rem;">
+              <label for="newPassConfirmInput">Konfirmasi Kata Sandi Baru *</label>
+              <input type="password" id="newPassConfirmInput" class="form-control" placeholder="Ulangi kata sandi baru">
+            </div>
+
+            <button type="button" class="btn btn-primary" style="width:100%;" onclick="handleSaveNewPassword()">
+              <i class="fa-solid fa-save"></i> Simpan Kata Sandi Baru
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer" style="padding:0.75rem 1.4rem;">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="closeRecoveryModal()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="invoicePrintArea" style="display:none;"></div>
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/app.js"></script>
+
+</body>
+</html>
