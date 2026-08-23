@@ -248,7 +248,7 @@ if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
 }
 
-function scrollToTop() {
+function scrollToTop(activeTargetEl) {
   try {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   } catch (e) {
@@ -256,6 +256,10 @@ function scrollToTop() {
   }
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
+  if (document.scrollingElement) {
+    document.scrollingElement.scrollTop = 0;
+    document.scrollingElement.scrollLeft = 0;
+  }
 
   const selectors = [
     "html",
@@ -283,6 +287,14 @@ function scrollToTop() {
       }
     });
   });
+
+  if (activeTargetEl && typeof activeTargetEl.scrollIntoView === "function") {
+    try {
+      activeTargetEl.scrollIntoView({ block: "start", inline: "nearest", behavior: "instant" });
+    } catch (e) {
+      try { activeTargetEl.scrollIntoView(true); } catch(e2) {}
+    }
+  }
 }
 
 function checkAuth() {
@@ -401,10 +413,10 @@ function switchView(viewName) {
   else if (viewName === "detailJenisDonasi") renderDetailJenisDonasiView();
   else if (viewName === "pengaturan") renderPengaturanView();
 
-  scrollToTop();
-  requestAnimationFrame(() => scrollToTop());
-  setTimeout(() => scrollToTop(), 20);
-  setTimeout(() => scrollToTop(), 80);
+  scrollToTop(activeView);
+  requestAnimationFrame(() => scrollToTop(activeView));
+  setTimeout(() => scrollToTop(activeView), 30);
+  setTimeout(() => scrollToTop(activeView), 100);
 }
 
 // Render Dashboard View
