@@ -146,6 +146,7 @@ function initStore() {
   trash = storedTrash ? JSON.parse(storedTrash) : [];
 
   saveToStorage();
+  initTheme();
 }
 
 function saveToStorage() {
@@ -457,6 +458,37 @@ function renderDashboard() {
 function renderDashboardCharts() {
   setTimeout(() => {
     const canvasTrend = document.getElementById("chartTrend");
+    const activeTheme = document.body.getAttribute("data-theme") || "navy";
+    let chartPrimary = "#2563eb";
+    let chartFillStart = "rgba(37, 99, 235, 0.22)";
+    let chartGrid = "#f1f5f9";
+    let chartTick = "#64748b";
+    let chartDonutBorder = "#ffffff";
+    let chartLegendColor = "#475569";
+
+    if (activeTheme === "dark") {
+      chartPrimary = "#3b82f6";
+      chartFillStart = "rgba(59, 130, 246, 0.25)";
+      chartGrid = "#1f2d47";
+      chartTick = "#94a3b8";
+      chartDonutBorder = "#131c2e";
+      chartLegendColor = "#cbd5e1";
+    } else if (activeTheme === "cream") {
+      chartPrimary = "#ea580c";
+      chartFillStart = "rgba(234, 88, 12, 0.22)";
+      chartGrid = "#eddcc8";
+      chartTick = "#8c6d53";
+      chartDonutBorder = "#ffffff";
+      chartLegendColor = "#61432d";
+    } else if (activeTheme === "sky") {
+      chartPrimary = "#0284c7";
+      chartFillStart = "rgba(2, 132, 199, 0.22)";
+      chartGrid = "#e0f2fe";
+      chartTick = "#0369a1";
+      chartDonutBorder = "#ffffff";
+      chartLegendColor = "#0369a1";
+    }
+
     if (canvasTrend && typeof Chart !== "undefined") {
       const ctxTrend = canvasTrend.getContext("2d");
       if (ctxTrend) {
@@ -495,8 +527,8 @@ function renderDashboardCharts() {
 
         // Create gradient fill
         const gradient = ctxTrend.createLinearGradient(0, 0, 0, 240);
-        gradient.addColorStop(0, 'rgba(37, 99, 235, 0.22)');
-        gradient.addColorStop(1, 'rgba(37, 99, 235, 0.00)');
+        gradient.addColorStop(0, chartFillStart);
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0.00)');
 
         currentChartTrend = new Chart(ctxTrend, {
           type: 'line',
@@ -505,7 +537,7 @@ function renderDashboardCharts() {
             datasets: [{
               label: 'Pemasukan Donasi (Rp)',
               data: dataValues,
-              borderColor: '#2563eb',
+              borderColor: chartPrimary,
               backgroundColor: gradient,
               fill: true,
               tension: 0.35,
@@ -513,7 +545,7 @@ function renderDashboardCharts() {
               pointRadius: 4,
               pointHoverRadius: 6,
               pointBackgroundColor: '#ffffff',
-              pointBorderColor: '#2563eb',
+              pointBorderColor: chartPrimary,
               pointBorderWidth: 2
             }]
           },
@@ -538,14 +570,14 @@ function renderDashboardCharts() {
             scales: {
               x: {
                 grid: { display: false },
-                ticks: { font: { family: "'Poppins', sans-serif", size: 10 }, color: '#64748b', maxRotation: 45 }
+                ticks: { font: { family: "'Poppins', sans-serif", size: 10 }, color: chartTick, maxRotation: 45 }
               },
               y: {
                 beginAtZero: true,
-                grid: { color: '#f1f5f9' },
+                grid: { color: chartGrid },
                 ticks: {
                   font: { family: "'Poppins', sans-serif", size: 10 },
-                  color: '#64748b',
+                  color: chartTick,
                   callback: v => {
                     if (v >= 1000000000) return 'Rp ' + (v / 1000000000).toFixed(1) + ' M';
                     if (v >= 1000000) return 'Rp ' + (v / 1000000).toFixed(0) + ' Jt';
@@ -577,15 +609,19 @@ function renderDashboardCharts() {
           }
         });
 
+        const pieColors = activeTheme === "cream"
+          ? ['#ea580c', '#059669', '#d97706', '#9333ea', '#e11d48', '#f97316']
+          : ['#2563eb', '#059669', '#d97706', '#9333ea', '#e11d48', '#0284c7'];
+
         currentChartPurpose = new Chart(ctxPurpose, {
           type: 'doughnut',
           data: {
             labels: Object.keys(purposeCounts),
             datasets: [{
               data: Object.values(purposeCounts),
-              backgroundColor: ['#2563eb', '#059669', '#d97706', '#9333ea', '#e11d48', '#0284c7'],
+              backgroundColor: pieColors,
               borderWidth: 2,
-              borderColor: '#ffffff',
+              borderColor: chartDonutBorder,
               hoverOffset: 6
             }]
           },
@@ -598,7 +634,7 @@ function renderDashboardCharts() {
                 position: 'bottom',
                 labels: {
                   font: { family: "'Poppins', sans-serif", size: 10, weight: '500' },
-                  color: '#475569',
+                  color: chartLegendColor,
                   usePointStyle: true,
                   pointStyle: 'circle',
                   padding: 10
@@ -3550,4 +3586,89 @@ function renderSignaturePreview() {
     if (btnDelete) btnDelete.style.display = "none";
   }
 }
+
+// ==========================================================================
+// THEME MANAGEMENT (NAVY, DARK, CREAM/AMBER, SKY BLUE)
+// ==========================================================================
+const THEME_NAMES = {
+  navy: "Dongker & Putih",
+  dark: "Mode Gelap",
+  cream: "Krem & Coklat Oranye",
+  sky: "Biru Muda & Putih"
+};
+
+const THEME_SHORT_NAMES = {
+  navy: "Dongker",
+  dark: "Gelap",
+  cream: "Krem",
+  sky: "Biru Muda"
+};
+
+function initTheme() {
+  const savedTheme = localStorage.getItem("icma_app_theme") || "navy";
+  setAppTheme(savedTheme, false);
+}
+
+function toggleThemeDropdown(e) {
+  if (e) {
+    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    if (typeof e.preventDefault === 'function') e.preventDefault();
+  }
+  const menu = document.getElementById("themeDropdownMenu");
+  if (!menu) return;
+  menu.classList.toggle("active");
+}
+
+function setAppTheme(theme, showToastNotice = true) {
+  if (!THEME_NAMES[theme]) theme = "navy";
+
+  document.body.setAttribute("data-theme", theme);
+  localStorage.setItem("icma_app_theme", theme);
+
+  // Update header button title
+  const headerTitle = document.getElementById("themeActiveTitle");
+  if (headerTitle) headerTitle.innerText = THEME_SHORT_NAMES[theme] || "Tema";
+
+  // Update dropdown items active state
+  document.querySelectorAll(".theme-menu-item").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.theme === theme);
+  });
+
+  // Update settings cards active state
+  document.querySelectorAll(".theme-card-choice").forEach(card => {
+    card.classList.toggle("active", card.dataset.theme === theme);
+  });
+
+  // Close dropdown menu
+  const menu = document.getElementById("themeDropdownMenu");
+  if (menu) menu.classList.remove("active");
+
+  // Re-render chart colors according to active theme
+  if (typeof renderDashboardCharts === "function") {
+    renderDashboardCharts();
+  }
+
+  if (showToastNotice) {
+    showToast(`Tema tampilan berhasil diubah ke: ${THEME_NAMES[theme]}`, "success");
+  }
+}
+
+// Close theme dropdown when clicking anywhere outside
+document.addEventListener("click", (e) => {
+  const menu = document.getElementById("themeDropdownMenu");
+  const btn = document.getElementById("btnThemeSwitcher");
+  if (menu && menu.classList.contains("active")) {
+    if (!menu.contains(e.target) && !btn?.contains(e.target)) {
+      menu.classList.remove("active");
+    }
+  }
+});
+
+// Run initial theme immediately on parse
+(function() {
+  try {
+    const saved = localStorage.getItem("icma_app_theme") || "navy";
+    document.body.setAttribute("data-theme", saved);
+  } catch(e) {}
+})();
 

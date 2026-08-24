@@ -1,58 +1,11 @@
 /* ==========================================================================
-   ICMA Sinergi Kebaikan Abadi - Modern Clean SaaS Design System
+   ICMA Sinergi Kebaikan Abadi - Modern Clean SaaS Design System & Multi-Theme
    ========================================================================== */
 
 :root {
   /* Layout Dimensions */
   --sidebar-w: 240px;
   --topbar-h: 60px;
-
-  /* Neutral Slate Palette */
-  --slate-50: #f8fafc;
-  --slate-100: #f1f5f9;
-  --slate-200: #e2e8f0;
-  --slate-300: #cbd5e1;
-  --slate-400: #94a3b8;
-  --slate-500: #64748b;
-  --slate-600: #475569;
-  --slate-700: #334155;
-  --slate-800: #1e293b;
-  --slate-900: #0f172a;
-  --slate-950: #020617;
-
-  /* Brand SaaS Primary (Electric Indigo / Sapphire) */
-  --primary-50: #eff6ff;
-  --primary-100: #dbeafe;
-  --primary-200: #bfdbfe;
-  --primary-500: #3b82f6;
-  --primary-600: #2563eb;
-  --primary-700: #1d4ed8;
-  --primary-800: #1e40af;
-  --primary-900: #172554;
-
-  /* Semantic Accents */
-  --emerald-50: #ecfdf5;
-  --emerald-600: #059669;
-  --emerald-700: #047857;
-  --amber-50: #fffbeb;
-  --amber-600: #d97706;
-  --amber-700: #b45309;
-  --purple-50: #faf5ff;
-  --purple-600: #9333ea;
-  --rose-50: #fff1f2;
-  --rose-600: #e11d48;
-
-  /* Theme Surfaces & Texts */
-  --bg-app: #f8fafc;
-  --bg-card: #ffffff;
-  --bg-surface: #ffffff;
-  --border-subtle: #e2e8f0;
-  --border-focus: #3b82f6;
-
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-  --text-inverse: #ffffff;
 
   /* Elevation & Shadows (SaaS Soft Diffusion) */
   --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
@@ -80,6 +33,220 @@
   --fs-lg: 0.95rem;    /* 15.2px */
   --fs-xl: 1.05rem;    /* 16.8px */
   --fs-2xl: 1.2rem;    /* 19.2px */
+
+  /* Neutral Slate Defaults */
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+  --slate-950: #020617;
+
+  /* Semantic Accents */
+  --emerald-50: #ecfdf5;
+  --emerald-600: #059669;
+  --emerald-700: #047857;
+  --amber-50: #fffbeb;
+  --amber-600: #d97706;
+  --amber-700: #b45309;
+  --purple-50: #faf5ff;
+  --purple-600: #9333ea;
+  --rose-50: #fff1f2;
+  --rose-600: #e11d48;
+}
+
+/* ==========================================================================
+   4 TEMA WARNA PILIHAN (DONGKER, GELAP, KREM/ORANYE, BIRU MUDA)
+   ========================================================================== */
+
+/* 1. TEMA DONGKER & PUTIH (DEFAULT) */
+:root, body[data-theme="navy"] {
+  --bg-app: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-surface: #ffffff;
+  --border-subtle: #e2e8f0;
+  --border-focus: #2563eb;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+
+  --primary-50: #eff6ff;
+  --primary-100: #dbeafe;
+  --primary-200: #bfdbfe;
+  --primary-500: #3b82f6;
+  --primary-600: #1e40af;
+  --primary-700: #1d4ed8;
+  --primary-800: #172554;
+  --primary-900: #0f172a;
+
+  --topbar-bg: #ffffff;
+  --topbar-border: #e2e8f0;
+  --sidebar-bg: #0f172a;
+  --sidebar-border: #1e293b;
+  --sidebar-text: #94a3b8;
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
+  --sidebar-active-bg: #1e40af;
+  --sidebar-active-text: #ffffff;
+  --sidebar-footer-bg: #0b1120;
+
+  --table-th-bg: #f8fafc;
+  --table-hover-bg: #f1f5f9;
+  --input-bg: #ffffff;
+  --input-border: #cbd5e1;
+}
+
+/* 2. TEMA MODE GELAP (DARK MINIMALIST) */
+body[data-theme="dark"] {
+  --bg-app: #090d16;
+  --bg-card: #131c2e;
+  --bg-surface: #192338;
+  --border-subtle: #22304a;
+  --border-focus: #3b82f6;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+  --primary-50: #19253c;
+  --primary-100: #1e3052;
+  --primary-200: #294578;
+  --primary-500: #3b82f6;
+  --primary-600: #2563eb;
+  --primary-700: #60a5fa;
+  --primary-800: #93c5fd;
+  --primary-900: #bfdbfe;
+
+  --slate-50: #101726;
+  --slate-100: #162033;
+  --slate-200: #1f2d47;
+  --slate-300: #2d3e5f;
+  --slate-400: #64748b;
+  --slate-500: #94a3b8;
+  --slate-600: #cbd5e1;
+  --slate-700: #e2e8f0;
+  --slate-800: #f1f5f9;
+  --slate-900: #ffffff;
+
+  --topbar-bg: #0e1626;
+  --topbar-border: #1f2c44;
+  --sidebar-bg: #070b12;
+  --sidebar-border: #172237;
+  --sidebar-text: #8e9cb2;
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
+  --sidebar-active-bg: #2563eb;
+  --sidebar-active-text: #ffffff;
+  --sidebar-footer-bg: #05080e;
+
+  --table-th-bg: #0f1726;
+  --table-hover-bg: #19253a;
+  --input-bg: #0d1422;
+  --input-border: #24334f;
+}
+
+/* 3. TEMA KREM & COKLAT ORANYE (WARM CREAM & AMBER - PALET KHUSUS) */
+body[data-theme="cream"] {
+  --bg-app: #fbf7f0;
+  --bg-card: #ffffff;
+  --bg-surface: #fffdf9;
+  --border-subtle: #eddcc8;
+  --border-focus: #ea580c;
+
+  --text-primary: #382314;
+  --text-secondary: #61432d;
+  --text-muted: #8c6d53;
+  --text-inverse: #ffffff;
+
+  --primary-50: #fff7ed;
+  --primary-100: #ffedd5;
+  --primary-200: #fed7aa;
+  --primary-500: #f97316;
+  --primary-600: #ea580c;
+  --primary-700: #c2410c;
+  --primary-800: #9a3412;
+  --primary-900: #7c2d12;
+
+  --slate-50: #fdfaf6;
+  --slate-100: #f7ede2;
+  --slate-200: #eddcc8;
+  --slate-300: #dec5aa;
+  --slate-400: #a88b72;
+  --slate-500: #8c6d53;
+  --slate-600: #61432d;
+  --slate-700: #4a301e;
+  --slate-800: #382314;
+  --slate-900: #26160b;
+
+  --topbar-bg: #fffcf8;
+  --topbar-border: #eddcc8;
+  --sidebar-bg: #2b1a10;
+  --sidebar-border: #3d2618;
+  --sidebar-text: #fed7aa;
+  --sidebar-hover-bg: rgba(254, 215, 170, 0.08);
+  --sidebar-active-bg: #ea580c;
+  --sidebar-active-text: #ffffff;
+  --sidebar-footer-bg: #1e110a;
+
+  --table-th-bg: #fdf8f2;
+  --table-hover-bg: #fcf1e4;
+  --input-bg: #ffffff;
+  --input-border: #eddcc8;
+}
+
+/* 4. TEMA BIRU MUDA & PUTIH (SKY BLUE & CLEAN WHITE) */
+body[data-theme="sky"] {
+  --bg-app: #f0f9ff;
+  --bg-card: #ffffff;
+  --bg-surface: #f8fcff;
+  --border-subtle: #bae6fd;
+  --border-focus: #0284c7;
+
+  --text-primary: #082f49;
+  --text-secondary: #0369a1;
+  --text-muted: #0284c7;
+  --text-inverse: #ffffff;
+
+  --primary-50: #e0f2fe;
+  --primary-100: #bae6fd;
+  --primary-200: #7dd3fc;
+  --primary-500: #0ea5e9;
+  --primary-600: #0284c7;
+  --primary-700: #0369a1;
+  --primary-800: #075985;
+  --primary-900: #0c4a6e;
+
+  --slate-50: #f0f9ff;
+  --slate-100: #e0f2fe;
+  --slate-200: #bae6fd;
+  --slate-300: #7dd3fc;
+  --slate-400: #38bdf8;
+  --slate-500: #0284c7;
+  --slate-600: #0369a1;
+  --slate-700: #075985;
+  --slate-800: #0c4a6e;
+  --slate-900: #082f49;
+
+  --topbar-bg: #ffffff;
+  --topbar-border: #bae6fd;
+  --sidebar-bg: #0c4a6e;
+  --sidebar-border: #075985;
+  --sidebar-text: #e0f2fe;
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.08);
+  --sidebar-active-bg: #0284c7;
+  --sidebar-active-text: #ffffff;
+  --sidebar-footer-bg: #082f49;
+
+  --table-th-bg: #f0f9ff;
+  --table-hover-bg: #e0f2fe;
+  --input-bg: #ffffff;
+  --input-border: #bae6fd;
 }
 
 /* Reset & Global */
@@ -102,6 +269,7 @@ body {
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 input, button, select, textarea, optgroup {
@@ -133,9 +301,9 @@ input, button, select, textarea, optgroup {
 /* ===== SIDEBAR ===== */
 .sidebar {
   width: var(--sidebar-w);
-  background-color: #0f172a; /* Deep Slate SaaS Look */
-  border-right: 1px solid #1e293b;
-  color: #cbd5e1;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  color: var(--sidebar-text);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -143,7 +311,7 @@ input, button, select, textarea, optgroup {
   bottom: 0;
   left: 0;
   z-index: 40;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
 }
 
 .sidebar.collapsed {
@@ -337,8 +505,8 @@ input, button, select, textarea, optgroup {
 /* ===== TOP NAVBAR (DESKTOP & SMARTPHONE) ===== */
 .top-navbar {
   height: var(--topbar-h);
-  background-color: #ffffff;
-  border-bottom: 1px solid var(--border-subtle);
+  background-color: var(--topbar-bg);
+  border-bottom: 1px solid var(--topbar-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -347,6 +515,7 @@ input, button, select, textarea, optgroup {
   top: 0;
   z-index: 30;
   gap: 1rem;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .top-navbar-left {
@@ -392,18 +561,141 @@ input, button, select, textarea, optgroup {
 .top-brand-text .brand-title {
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--slate-900);
+  color: var(--text-primary);
   line-height: 1.2;
 }
 .top-brand-text .brand-sub {
   font-size: 0.65rem;
-  color: var(--slate-500);
+  color: var(--text-muted);
 }
 
 .top-navbar-right {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+/* ===== THEME SWITCHER DROPDOWN ===== */
+.theme-switcher-wrap {
+  position: relative;
+}
+
+.btn-theme-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-theme-switcher:hover {
+  background: var(--primary-50);
+  border-color: var(--primary-500);
+  color: var(--primary-700);
+}
+
+.btn-theme-switcher i.fa-palette {
+  color: var(--primary-600);
+}
+
+.theme-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  padding: 0.5rem;
+  width: 220px;
+  z-index: 100;
+  display: none;
+  flex-direction: column;
+  gap: 0.25rem;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.theme-dropdown-menu.active {
+  display: flex;
+}
+
+.theme-menu-header {
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  padding: 0.35rem 0.5rem 0.2rem;
+}
+
+.theme-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.theme-menu-item:hover {
+  background: var(--primary-50);
+  color: var(--primary-700);
+}
+
+.theme-menu-item.active {
+  background: var(--primary-50);
+  color: var(--primary-700);
+  font-weight: 600;
+}
+
+.theme-preview-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.theme-preview-dot.dot-navy {
+  background: linear-gradient(135deg, #1e40af 50%, #ffffff 50%);
+  border: 1px solid #94a3b8;
+}
+.theme-preview-dot.dot-dark {
+  background: linear-gradient(135deg, #090d16 50%, #3b82f6 50%);
+  border: 1px solid #475569;
+}
+.theme-preview-dot.dot-cream {
+  background: linear-gradient(135deg, #ea580c 50%, #fed7aa 50%);
+  border: 1px solid #f97316;
+}
+.theme-preview-dot.dot-sky {
+  background: linear-gradient(135deg, #0284c7 50%, #e0f2fe 50%);
+  border: 1px solid #38bdf8;
+}
+
+.theme-item-check {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--primary-600);
+  opacity: 0;
+}
+
+.theme-menu-item.active .theme-item-check {
+  opacity: 1;
 }
 
 .header-user-badge {
@@ -429,7 +721,7 @@ input, button, select, textarea, optgroup {
 .header-user-info .user-role-label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--slate-700);
+  color: var(--text-secondary);
 }
 
 .btn-quick-add {
@@ -480,9 +772,13 @@ input, button, select, textarea, optgroup {
   opacity: 1;
   visibility: visible;
 }
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-subtle);
-  background: #ffffff;
+  background: var(--bg-card);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2160,5 +2456,90 @@ textarea.form-control {
   .detail-stats {
     grid-template-columns: 1fr !important;
   }
+}
+
+/* ===== THEME SELECTION CARDS (SETTINGS VIEW) ===== */
+.theme-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.theme-card-choice {
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  cursor: pointer;
+  background: var(--bg-card);
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.theme-card-choice:hover {
+  border-color: var(--primary-500);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.theme-card-choice.active {
+  border-color: var(--primary-600);
+  background: var(--primary-50);
+}
+
+.theme-choice-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.theme-choice-badge {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-sm);
+}
+
+.theme-choice-icon {
+  font-size: 1.15rem;
+  color: var(--border-subtle);
+  transition: color 0.15s ease;
+}
+
+.theme-card-choice.active .theme-choice-icon {
+  color: var(--primary-600);
+}
+
+.theme-choice-preview {
+  border-radius: var(--radius-md);
+  padding: 0.5rem;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.preview-navy { background: #f8fafc; }
+.preview-dark { background: #090d16; }
+.preview-cream { background: #fbf7f0; }
+.preview-sky { background: #f0f9ff; }
+
+.swatch-bar {
+  display: flex;
+  height: 22px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.swatch-bar span {
+  flex: 1;
+  height: 100%;
+}
+
+.theme-choice-desc {
+  font-size: var(--fs-2xs);
+  color: var(--text-muted);
+  line-height: 1.45;
 }
 

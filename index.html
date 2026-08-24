@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=3.3.1">
+  <link rel="stylesheet" href="css/styles.css?v=3.4.0">
 
   <!-- External Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -148,6 +148,38 @@
         </div>
 
         <div class="top-navbar-right">
+          <!-- Theme Switcher Dropdown -->
+          <div class="theme-switcher-wrap" id="themeSwitcherWrap">
+            <button type="button" class="btn-theme-switcher" id="btnThemeSwitcher" onclick="toggleThemeDropdown(event)" title="Pilih Tema Warna Aplikasi">
+              <i class="fa-solid fa-palette"></i>
+              <span class="theme-active-title" id="themeActiveTitle">Dongker</span>
+              <i class="fa-solid fa-chevron-down" style="font-size:0.6rem; opacity:0.7;"></i>
+            </button>
+            <div class="theme-dropdown-menu" id="themeDropdownMenu" onclick="event.stopPropagation()">
+              <div class="theme-menu-header">Pilih Tema Aplikasi</div>
+              <button type="button" class="theme-menu-item active" data-theme="navy" onclick="setAppTheme('navy')">
+                <span class="theme-preview-dot dot-navy"></span>
+                <span class="theme-item-label">Dongker & Putih</span>
+                <i class="fa-solid fa-check theme-item-check"></i>
+              </button>
+              <button type="button" class="theme-menu-item" data-theme="dark" onclick="setAppTheme('dark')">
+                <span class="theme-preview-dot dot-dark"></span>
+                <span class="theme-item-label">Mode Gelap</span>
+                <i class="fa-solid fa-check theme-item-check"></i>
+              </button>
+              <button type="button" class="theme-menu-item" data-theme="cream" onclick="setAppTheme('cream')">
+                <span class="theme-preview-dot dot-cream"></span>
+                <span class="theme-item-label">Krem & Coklat Oranye</span>
+                <i class="fa-solid fa-check theme-item-check"></i>
+              </button>
+              <button type="button" class="theme-menu-item" data-theme="sky" onclick="setAppTheme('sky')">
+                <span class="theme-preview-dot dot-sky"></span>
+                <span class="theme-item-label">Biru Muda & Putih</span>
+                <i class="fa-solid fa-check theme-item-check"></i>
+              </button>
+            </div>
+          </div>
+
           <div class="header-user-badge">
             <div class="header-user-avatar">
               <i class="fa-solid fa-user-shield"></i>
@@ -862,6 +894,97 @@
 
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
             
+            <!-- Card 0: Pilihan Tema Tampilan Web -->
+            <div class="card" style="padding: 1.5rem; grid-column: 1 / -1;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.85rem; flex-wrap:wrap; gap:0.5rem;">
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                  <div style="width:40px; height:40px; border-radius:10px; background:var(--primary-50); color:var(--primary-600); display:flex; align-items:center; justify-content:center; font-size:1.15rem;">
+                    <i class="fa-solid fa-palette"></i>
+                  </div>
+                  <div>
+                    <h3 style="font-size:1rem; margin:0;">Pilihan Tema Warna Tampilan</h3>
+                    <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.15rem;">
+                      Pilih skema visual aplikasi. Tampilan tetap minimalis dan tersimpan otomatis.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="theme-selection-grid">
+                <!-- Tema 1: Dongker & Putih -->
+                <div class="theme-card-choice active" data-theme="navy" onclick="setAppTheme('navy')">
+                  <div class="theme-choice-header">
+                    <span class="theme-choice-badge" style="background:#1e40af; color:#fff;">Dongker & Putih</span>
+                    <i class="fa-solid fa-circle-check theme-choice-icon"></i>
+                  </div>
+                  <div class="theme-choice-preview preview-navy">
+                    <div class="swatch-bar">
+                      <span style="background:#0f172a;"></span>
+                      <span style="background:#1e40af;"></span>
+                      <span style="background:#3b82f6;"></span>
+                      <span style="background:#eff6ff;"></span>
+                      <span style="background:#ffffff;"></span>
+                    </div>
+                  </div>
+                  <div class="theme-choice-desc">Nuansa biru dongker profesional dan putih bersih (Default).</div>
+                </div>
+
+                <!-- Tema 2: Mode Gelap -->
+                <div class="theme-card-choice" data-theme="dark" onclick="setAppTheme('dark')">
+                  <div class="theme-choice-header">
+                    <span class="theme-choice-badge" style="background:#090d16; color:#60a5fa; border:1px solid #334155;">Mode Gelap</span>
+                    <i class="fa-solid fa-circle-check theme-choice-icon"></i>
+                  </div>
+                  <div class="theme-choice-preview preview-dark">
+                    <div class="swatch-bar">
+                      <span style="background:#070b12;"></span>
+                      <span style="background:#090d16;"></span>
+                      <span style="background:#131c2e;"></span>
+                      <span style="background:#3b82f6;"></span>
+                      <span style="background:#f8fafc;"></span>
+                    </div>
+                  </div>
+                  <div class="theme-choice-desc">Gelap elegan kontras tinggi, nyaman di mata saat minim cahaya.</div>
+                </div>
+
+                <!-- Tema 3: Krem & Coklat Oranye -->
+                <div class="theme-card-choice" data-theme="cream" onclick="setAppTheme('cream')">
+                  <div class="theme-choice-header">
+                    <span class="theme-choice-badge" style="background:#ea580c; color:#fff;">Krem & Oranye</span>
+                    <i class="fa-solid fa-circle-check theme-choice-icon"></i>
+                  </div>
+                  <div class="theme-choice-preview preview-cream">
+                    <div class="swatch-bar">
+                      <span style="background:#2b1a10;"></span>
+                      <span style="background:#ea580c;"></span>
+                      <span style="background:#f97316;"></span>
+                      <span style="background:#fed7aa;"></span>
+                      <span style="background:#fbf7f0;"></span>
+                    </div>
+                  </div>
+                  <div class="theme-choice-desc">Palet warna hangat krem pastel & aksen amber coklat oranye.</div>
+                </div>
+
+                <!-- Tema 4: Biru Muda & Putih -->
+                <div class="theme-card-choice" data-theme="sky" onclick="setAppTheme('sky')">
+                  <div class="theme-choice-header">
+                    <span class="theme-choice-badge" style="background:#0284c7; color:#fff;">Biru Muda</span>
+                    <i class="fa-solid fa-circle-check theme-choice-icon"></i>
+                  </div>
+                  <div class="theme-choice-preview preview-sky">
+                    <div class="swatch-bar">
+                      <span style="background:#0c4a6e;"></span>
+                      <span style="background:#0284c7;"></span>
+                      <span style="background:#38bdf8;"></span>
+                      <span style="background:#e0f2fe;"></span>
+                      <span style="background:#ffffff;"></span>
+                    </div>
+                  </div>
+                  <div class="theme-choice-desc">Segar cerah bernuansa biru langit modern dengan latar putih.</div>
+                </div>
+              </div>
+            </div>
+
             <!-- Card 1: Profil Akun Saat Ini -->
             <div class="card" style="padding: 1.5rem;">
               <div style="display:flex; align-items:center; gap:0.85rem; margin-bottom:1.25rem;">
@@ -1721,7 +1844,7 @@
   <div id="invoicePrintArea" style="display:none;"></div>
   <div class="toast-container" id="toastContainer"></div>
 
-  <script src="js/app.js?v=3.3.1"></script>
+  <script src="js/app.js?v=3.4.0"></script>
 
 </body>
 </html>
