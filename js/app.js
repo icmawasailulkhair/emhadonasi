@@ -2733,7 +2733,7 @@ function toggleMobileSidebar(open) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  initStore(); checkAuth(); populateAllCategorySelects();
+  initStore(); checkAuth(); populateAllCategorySelects(); initTheme(); initProfilePhoto();
 
   // Mobile Hamburger Toggle
   const mobileMenuBtn = document.getElementById("mobileMenuBtn");
@@ -3346,6 +3346,7 @@ function renderPengaturanView() {
   if (elPhone) elPhone.innerText = acc.phone;
 
   renderSignaturePreview();
+  applyProfilePhoto(getStoredProfilePhoto());
 
   const cfg = getEmailJsConfig();
   const elPub = document.getElementById("cfgEmailJsPublicKey");
@@ -3671,4 +3672,111 @@ document.addEventListener("click", (e) => {
     document.body.setAttribute("data-theme", saved);
   } catch(e) {}
 })();
+
+// ==========================================
+// FOTO PROFIL / LOGO AKUN MANAGEMENT
+// ==========================================
+const PROFILE_PHOTO_STORAGE_KEY = "icma_profile_photo";
+const DEFAULT_PROFILE_PHOTO_SRC = "images/logoicma.png";
+
+function getStoredProfilePhoto() {
+  try {
+    return localStorage.getItem(PROFILE_PHOTO_STORAGE_KEY) || DEFAULT_PROFILE_PHOTO_SRC;
+  } catch(e) {
+    return DEFAULT_PROFILE_PHOTO_SRC;
+  }
+}
+
+function applyProfilePhoto(photoSrc) {
+  const src = photoSrc || DEFAULT_PROFILE_PHOTO_SRC;
+
+  // 1. Login Screen Brand Logo
+  const loginBrandImg = document.getElementById("loginBrandImg");
+  if (loginBrandImg) loginBrandImg.src = src;
+
+  // 2. Sidebar Brand Logo (Header)
+  const sidebarLogoImg = document.getElementById("sidebarLogoImg");
+  if (sidebarLogoImg) sidebarLogoImg.src = src;
+
+  // 3. Sidebar User Avatar (Footer)
+  const sidebarUserAvatarImg = document.getElementById("sidebarUserAvatarImg");
+  if (sidebarUserAvatarImg) {
+    sidebarUserAvatarImg.src = src;
+    sidebarUserAvatarImg.style.display = "block";
+  }
+
+  // 4. Top Navbar Brand Logo
+  const topBrandLogoImg = document.getElementById("topBrandLogoImg");
+  if (topBrandLogoImg) topBrandLogoImg.src = src;
+
+  // 5. Top Navbar Header User Avatar
+  const headerUserAvatarImg = document.getElementById("headerUserAvatarImg");
+  if (headerUserAvatarImg) {
+    headerUserAvatarImg.src = src;
+    headerUserAvatarImg.style.display = "block";
+  }
+
+  // 6. Settings Page Preview
+  const previewImg = document.getElementById("previewProfilePhoto");
+  if (previewImg) previewImg.src = src;
+}
+
+function initProfilePhoto() {
+  const photo = getStoredProfilePhoto();
+  applyProfilePhoto(photo);
+}
+
+function handleUploadProfilePhoto(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  // Validate file type
+  const validTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+  if (!validTypes.includes(file.type.toLowerCase())) {
+    showToast("Format file tidak didukung! Gunakan format PNG, JPG, JPEG, atau WEBP.", "danger");
+    event.target.value = "";
+    return;
+  }
+
+  // Validate file size (max 3MB)
+  if (file.size > 3 * 1024 * 1024) {
+    showToast("Ukuran foto terlalu besar! Maksimal 3MB.", "danger");
+    event.target.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const dataUrl = e.target.result;
+    try {
+      localStorage.setItem(PROFILE_PHOTO_STORAGE_KEY, dataUrl);
+      applyProfilePhoto(dataUrl);
+      showToast("Foto profil & logo berhasil diperbarui!", "success");
+    } catch(err) {
+      showToast("Gagal menyimpan foto ke memori peramban (kuota penyimpanan penuh).", "danger");
+    }
+  };
+  reader.onerror = function() {
+    showToast("Gagal membaca file gambar.", "danger");
+  };
+  reader.readAsDataURL(file);
+  event.target.value = "";
+}
+
+function handleResetProfilePhoto() {
+  try {
+    localStorage.removeItem(PROFILE_PHOTO_STORAGE_KEY);
+  } catch(e) {}
+  applyProfilePhoto(DEFAULT_PROFILE_PHOTO_SRC);
+  showToast("Foto profil telah dikembalikan ke logo bawaan.", "success");
+}
+
+// Run initial profile photo immediately on parse
+(function() {
+  try {
+    const photo = localStorage.getItem(PROFILE_PHOTO_STORAGE_KEY) || DEFAULT_PROFILE_PHOTO_SRC;
+    applyProfilePhoto(photo);
+  } catch(e) {}
+})();
+
 

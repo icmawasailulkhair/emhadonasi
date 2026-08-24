@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=3.5.0">
+  <link rel="stylesheet" href="css/styles.css?v=3.6.0">
 
   <!-- External Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -32,7 +32,7 @@
   <div class="login-screen" id="loginScreen">
     <div class="login-card">
       <div class="login-brand">
-        <img src="images/logoicma.png" alt="ICMA Sinergi Kebaikan Abadi" class="login-logo-img">
+        <img src="images/logoicma.png" alt="ICMA Sinergi Kebaikan Abadi" class="login-logo-img" id="loginBrandImg">
         <h2>ICMA Sinergi Kebaikan Abadi</h2>
         <p>Sistem Pencatatan Donasi & Laporan Keuangan</p>
       </div>
@@ -67,7 +67,7 @@
     <aside class="sidebar" id="appSidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo-container">
-          <img src="images/logoicma.png" alt="ICMA Logo" class="sidebar-logo-img">
+          <img src="images/logoicma.png" alt="ICMA Logo" class="sidebar-logo-img" id="sidebarLogoImg">
         </div>
         <div class="logo-text">
           <h1>ICMA</h1>
@@ -116,7 +116,9 @@
 
       <div class="sidebar-footer">
         <div class="user-profile-badge">
-          <div class="user-avatar">B</div>
+          <div class="user-avatar" id="sidebarUserAvatar">
+            <img id="sidebarUserAvatarImg" src="images/logoicma.png" alt="Avatar" style="width:100%; height:100%; object-fit:cover; border-radius:50%; display:block;">
+          </div>
           <div class="user-info">
             <div class="name">Administrator</div>
             <div class="role">Bendahara ICMA</div>
@@ -139,7 +141,7 @@
             <i class="fa-solid fa-bars"></i>
           </button>
           <div class="top-brand">
-            <img src="images/logoicma.png" alt="ICMA Logo" class="top-brand-logo">
+            <img src="images/logoicma.png" alt="ICMA Logo" class="top-brand-logo" id="topBrandLogoImg">
             <div class="top-brand-text">
               <span class="brand-title">ICMA Sinergi</span>
               <span class="brand-sub">Sistem Donasi & Kas</span>
@@ -181,8 +183,8 @@
           </div>
 
           <div class="header-user-badge">
-            <div class="header-user-avatar">
-              <i class="fa-solid fa-user-shield"></i>
+            <div class="header-user-avatar" id="headerUserAvatar">
+              <img id="headerUserAvatarImg" src="images/logoicma.png" alt="Avatar" style="width:100%; height:100%; object-fit:cover; border-radius:50%; display:block;">
             </div>
             <div class="header-user-info">
               <span class="user-role-label">Bendahara ICMA</span>
@@ -990,6 +992,44 @@
                     </div>
                   </div>
                   <div class="theme-choice-desc">Segar cerah bernuansa biru langit modern dengan latar putih.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card: Ganti Foto Profil & Logo Lembaga (Tampil di Login & Sidebar) -->
+            <div class="card" style="padding: 1.5rem; grid-column: span 2;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.15rem; flex-wrap:wrap; gap:0.5rem;">
+                <div>
+                  <h3 style="font-size:0.95rem; margin:0; color:var(--text-primary);">
+                    <i class="fa-solid fa-camera" style="color:var(--primary-600); margin-right:0.35rem;"></i>
+                    Foto Profil & Logo Akun
+                  </h3>
+                  <span style="font-size:0.75rem; color:var(--text-muted);">
+                    Ganti foto profil yang otomatis diterapkan pada halaman login, sidebar navigasi, dan header aplikasi.
+                  </span>
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="handleResetProfilePhoto()" title="Kembalikan ke foto bawaan awal">
+                  <i class="fa-solid fa-rotate-left"></i> Reset Foto Bawaan
+                </button>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:1.25rem; flex-wrap:wrap;">
+                <!-- Avatar Preview Container -->
+                <div style="position:relative; width:88px; height:88px; border-radius:18px; border:2px solid var(--border-subtle); background:var(--bg-surface); padding:4px; box-shadow:var(--shadow-sm); flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                  <img id="previewProfilePhoto" src="images/logoicma.png" alt="Preview Foto Profil" style="width:100%; height:100%; object-fit:contain; border-radius:14px;">
+                </div>
+
+                <!-- Action & File Uploader -->
+                <div style="flex:1; min-width:240px;">
+                  <input type="file" id="inputProfilePhoto" accept="image/png, image/jpeg, image/jpg, image/webp" style="display:none;" onchange="handleUploadProfilePhoto(event)">
+                  <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.5rem;">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('inputProfilePhoto').click()">
+                      <i class="fa-solid fa-cloud-arrow-up"></i> Unggah Foto Profil Baru
+                    </button>
+                  </div>
+                  <p style="font-size:0.72rem; color:var(--text-muted); margin:0;">
+                    <i class="fa-solid fa-circle-info" style="color:var(--primary-500); margin-right:2px;"></i> Format didukung: <strong>PNG, JPG, JPEG, WEBP</strong> (Maksimal 3MB). Foto tersimpan aman secara lokal di peramban Anda.
+                  </p>
                 </div>
               </div>
             </div>
@@ -1853,7 +1893,7 @@
   <div id="invoicePrintArea" style="display:none;"></div>
   <div class="toast-container" id="toastContainer"></div>
 
-  <script src="js/app.js?v=3.5.0"></script>
+  <script src="js/app.js?v=3.6.0"></script>
 
 </body>
 </html>
