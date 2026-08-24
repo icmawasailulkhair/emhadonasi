@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=3.3.0">
+  <link rel="stylesheet" href="css/styles.css?v=3.3.1">
 
   <!-- External Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1147,15 +1147,37 @@
 
             <div class="form-group">
               <label for="donasiMetode">Metode Pembayaran *</label>
-              <select id="donasiMetode" class="form-control" required>
+              <select id="donasiMetode" class="form-control" onchange="toggleBuktiTransferVisibility()" required>
                 <option value="Transfer">Transfer Bank</option>
                 <option value="Tunai">Tunai</option>
               </select>
             </div>
 
+            <!-- Upload Bukti Transfer (Khusus Metode Transfer) -->
+            <div class="form-group span-2" id="donasiBuktiTransferGroup" style="display:block;">
+              <label for="donasiBuktiTransfer">Upload Bukti Transfer (Opsional / Gambar)</label>
+              <input type="file" id="donasiBuktiTransfer" class="form-control" accept="image/*" onchange="handleBuktiTransferChange(event)">
+              <input type="hidden" id="donasiBuktiTransferData">
+              <div id="donasiBuktiTransferPreview" style="margin-top:0.6rem; display:none;">
+                <div style="display:flex; align-items:flex-start; gap:0.75rem;">
+                  <img id="donasiBuktiTransferImg" src="" alt="Preview Bukti Transfer" style="max-height:120px; border-radius:8px; border:1px solid var(--slate-200); box-shadow:0 2px 6px rgba(0,0,0,0.06);">
+                  <button type="button" class="btn btn-danger btn-sm" onclick="clearBuktiTransfer()" style="padding:0.35rem 0.65rem;">
+                    <i class="fa-solid fa-trash-can"></i> Hapus Bukti
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Catatan (Opsional) -->
             <div class="form-group span-2">
-              <label for="donasiCatatan">Catatan / Doa Donatur (Opsional)</label>
-              <input type="text" id="donasiCatatan" class="form-control" placeholder="Contoh: Doa untuk keluarga / peruntukan masjid...">
+              <label for="donasiCatatan">Catatan / Peruntukan Donasi (Opsional)</label>
+              <input type="text" id="donasiCatatan" class="form-control" placeholder="Contoh: Wakaf pembangunan Masjid Bp Salim Subari dan keluarga">
+            </div>
+
+            <!-- Doa Donatur (Opsional) -->
+            <div class="form-group span-2">
+              <label for="donasiDoa">Doa Donatur (Opsional)</label>
+              <input type="text" id="donasiDoa" class="form-control" placeholder="Contoh: Robbana Taqobbal Minna, Semoga Alloh catat sebagai bagian dari Amal Shalih terbaik kita. Baarokalloh Fiikum Wa Jazakumullohu Khoiro">
             </div>
           </div>
         </div>
@@ -1699,7 +1721,7 @@
   <div id="invoicePrintArea" style="display:none;"></div>
   <div class="toast-container" id="toastContainer"></div>
 
-  <script src="js/app.js?v=3.3.0"></script>
+  <script src="js/app.js?v=3.3.1"></script>
 
 </body>
 </html>

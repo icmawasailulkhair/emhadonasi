@@ -1399,6 +1399,39 @@ textarea.form-control {
   line-height: 1.55;
 }
 
+/* Bukti Transfer di Kwitansi */
+.inv-proof-container {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.inv-proof-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+  text-transform: capitalize;
+}
+
+.inv-proof-frame {
+  display: inline-block;
+  background: #f8fafc;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  max-width: 100%;
+}
+
+.inv-proof-img {
+  max-height: 250px;
+  max-width: 100%;
+  border-radius: 6px;
+  display: block;
+  object-fit: contain;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
 /* ===== TOAST NOTIFICATIONS ===== */
 .toast-container {
   position: fixed;

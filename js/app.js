@@ -1448,13 +1448,81 @@ function clearSelectedDonor() {
   updateSelectedDonorBadge();
 }
 
+function toggleBuktiTransferVisibility() {
+  const metodeSel = document.getElementById("donasiMetode");
+  const group = document.getElementById("donasiBuktiTransferGroup");
+  if (!metodeSel || !group) return;
+  group.style.display = metodeSel.value === "Transfer" ? "block" : "none";
+}
+
+function handleBuktiTransferChange(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    showToast("Pilih berkas gambar bukti transfer (JPG, PNG, WEBP)!", "danger");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement("canvas");
+      let width = img.width;
+      let height = img.height;
+      const maxDim = 850;
+      if (width > maxDim || height > maxDim) {
+        if (width > height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+
+      const hiddenData = document.getElementById("donasiBuktiTransferData");
+      if (hiddenData) hiddenData.value = dataUrl;
+
+      const previewEl = document.getElementById("donasiBuktiTransferPreview");
+      const imgEl = document.getElementById("donasiBuktiTransferImg");
+      if (previewEl && imgEl) {
+        imgEl.src = dataUrl;
+        previewEl.style.display = "block";
+      }
+    };
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearBuktiTransfer() {
+  const fileInput = document.getElementById("donasiBuktiTransfer");
+  if (fileInput) fileInput.value = "";
+  const dataInput = document.getElementById("donasiBuktiTransferData");
+  if (dataInput) dataInput.value = "";
+  const previewEl = document.getElementById("donasiBuktiTransferPreview");
+  if (previewEl) previewEl.style.display = "none";
+  const imgEl = document.getElementById("donasiBuktiTransferImg");
+  if (imgEl) imgEl.src = "";
+}
+
 function openAddModal() {
   document.getElementById("donationForm").reset();
   document.getElementById("donationId").value = "";
   selectedDonorForDonation = null;
   updateSelectedDonorBadge();
+  clearBuktiTransfer();
   document.getElementById("modalTitle").innerText = "Pencatatan Donasi Baru";
   document.getElementById("donasiTanggal").value = new Date().toISOString().split('T')[0];
+  document.getElementById("donasiMetode").value = "Transfer";
+  toggleBuktiTransferVisibility();
   document.getElementById("donationModal").classList.add("active");
 }
 
@@ -1472,7 +1540,20 @@ function openEditModal(id) {
   document.getElementById("donasiTujuan").value = item.tujuan;
   document.getElementById("donasiMetode").value = item.metode || "Transfer";
   document.getElementById("donasiCatatan").value = item.catatan || "";
+  document.getElementById("donasiDoa").value = item.doa || "";
 
+  clearBuktiTransfer();
+  if (item.buktiTransfer) {
+    document.getElementById("donasiBuktiTransferData").value = item.buktiTransfer;
+    const previewEl = document.getElementById("donasiBuktiTransferPreview");
+    const imgEl = document.getElementById("donasiBuktiTransferImg");
+    if (previewEl && imgEl) {
+      imgEl.src = item.buktiTransfer;
+      previewEl.style.display = "block";
+    }
+  }
+
+  toggleBuktiTransferVisibility();
   document.getElementById("modalTitle").innerText = "Edit Data Donasi (" + item.id + ")";
   document.getElementById("donationModal").classList.add("active");
 }
@@ -1497,16 +1578,18 @@ function handleDonationSubmit(e) {
   const tujuan = document.getElementById("donasiTujuan").value;
   const metode = document.getElementById("donasiMetode").value;
   const catatan = document.getElementById("donasiCatatan").value.trim();
+  const doa = document.getElementById("donasiDoa").value.trim();
+  const buktiTransfer = document.getElementById("donasiBuktiTransferData").value || "";
 
   if (id) {
     const index = donations.findIndex(d => d.id === id);
     if (index !== -1) {
-      donations[index] = { ...donations[index], donorId, nama, tanggal, jumlah, tujuan, metode, catatan };
+      donations[index] = { ...donations[index], donorId, nama, tanggal, jumlah, tujuan, metode, catatan, doa, buktiTransfer };
       showToast("Data donasi berhasil diperbarui!");
     }
   } else {
     const newId = `DON-${tanggal.replace(/-/g, '')}-${String(donations.length + 1).padStart(3, '0')}`;
-    donations.unshift({ id: newId, donorId, nama, tanggal, jumlah, tujuan, metode, catatan });
+    donations.unshift({ id: newId, donorId, nama, tanggal, jumlah, tujuan, metode, catatan, doa, buktiTransfer });
     showToast("Donasi baru berhasil dicatat!");
   }
 
@@ -2168,11 +2251,16 @@ function viewInvoiceModal(id) {
   }
   if (!addressDisplay) addressDisplay = "Berbah. Sleman. D.I.Yogyakarta";
 
-  // Format catatan & Doa
-  const defaultDoa = "[Robbana Taqobbal Minna, Semoga Alloh catat sebagai bagian dari Amal Shalih terbaik kita. Baarokalloh Fiikum Wa Jazakumullohu Khoiro]";
-  let fullNote = item.catatan || `${item.tujuan || 'Donasi'} pembangunan program ICMA`;
-  if (!fullNote.includes("Robbana Taqobbal Minna") && !fullNote.includes("Jazakumulloh")) {
-    fullNote = `${fullNote} ${defaultDoa}`;
+  // Format catatan & Doa (Terpisah, tanpa label "doa:")
+  let catatanContentHtml = "";
+  if (item.catatan && item.catatan.trim()) {
+    catatanContentHtml += `<div>${item.catatan.trim()}</div>`;
+  }
+  if (item.doa && item.doa.trim()) {
+    catatanContentHtml += `<div style="${item.catatan && item.catatan.trim() ? 'margin-top:0.35rem;' : ''} color:#475569;">${item.doa.trim()}</div>`;
+  }
+  if (!catatanContentHtml) {
+    catatanContentHtml = "-";
   }
 
   const invoiceNo = item.id.startsWith("INV-") ? item.id : `INV-${item.id.replace(/[^a-zA-Z0-9]/g, '')}`;
@@ -2234,9 +2322,19 @@ function viewInvoiceModal(id) {
         </div>
         <div class="inv-detail-row">
           <div class="inv-detail-label">catatan</div>
-          <div class="inv-detail-val inv-note-text">${fullNote}</div>
+          <div class="inv-detail-val inv-note-text">${catatanContentHtml}</div>
         </div>
       </div>
+
+      <!-- Bukti Transfer (Ditampilkan jika ada) -->
+      ${item.buktiTransfer ? `
+        <div class="inv-proof-container">
+          <div class="inv-proof-title">Bukti Transfer :</div>
+          <div class="inv-proof-frame">
+            <img src="${item.buktiTransfer}" alt="Bukti Transfer Pembayaran" class="inv-proof-img">
+          </div>
+        </div>
+      ` : ''}
     </div>
   `;
 
