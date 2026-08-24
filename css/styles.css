@@ -343,23 +343,24 @@ input, button, select, textarea, optgroup {
 }
 
 .sidebar-logo-container {
-  width: 42px;
-  height: 42px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
-  padding: 3px;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-xs);
+  overflow: hidden;
   flex-shrink: 0;
 }
 .sidebar-logo-img, .sidebar-svg {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
+  border-radius: 12px;
 }
 
 .logo-badge {
@@ -581,9 +582,11 @@ input, button, select, textarea, optgroup {
   gap: 0.6rem;
 }
 .top-brand-logo {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
+  width: 34px;
+  height: 34px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
 }
 .top-brand-text {
   display: flex;
@@ -1558,10 +1561,13 @@ textarea.form-control {
   display: block;
 }
 .login-logo-img {
-  max-height: 90px;
-  width: auto;
-  object-fit: contain;
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  border-radius: 18px;
   margin-bottom: 0.75rem;
+  box-shadow: var(--shadow-sm);
+  display: inline-block;
 }
 .invoice-logo-img {
   height: 52px;

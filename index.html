@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ICMA Sinergi Kebaikan Abadi - Sistem Pencatatan Donasi & Laporan Keuangan</title>
-  <meta name="description" content="Sistem Informasi Pencatatan Donasi, Kelola Donatur, dan Laporan Keuangan SaaS ICMA Sinergi Kebaikan Abadi.">
+  <title>EMHA Mutiara Hikmah - Sistem Pencatatan Donasi & Laporan Keuangan</title>
+  <meta name="description" content="Sistem Informasi Pencatatan Donasi, Kelola Donatur, dan Laporan Keuangan SaaS EMHA Mutiara Hikmah.">
   <link rel="icon" type="image/png" href="images/logoicma.png">
 
   <!-- Google Fonts -->
@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=3.6.0">
+  <link rel="stylesheet" href="css/styles.css?v=3.7.0">
 
   <!-- External Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -32,8 +32,8 @@
   <div class="login-screen" id="loginScreen">
     <div class="login-card">
       <div class="login-brand">
-        <img src="images/logoicma.png" alt="ICMA Sinergi Kebaikan Abadi" class="login-logo-img" id="loginBrandImg">
-        <h2>ICMA Sinergi Kebaikan Abadi</h2>
+        <img src="images/logoicma.png" alt="EMHA Mutiara Hikmah" class="login-logo-img" id="loginBrandImg">
+        <h2>EMHA Mutiara Hikmah</h2>
         <p>Sistem Pencatatan Donasi & Laporan Keuangan</p>
       </div>
 
@@ -67,11 +67,11 @@
     <aside class="sidebar" id="appSidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo-container">
-          <img src="images/logoicma.png" alt="ICMA Logo" class="sidebar-logo-img" id="sidebarLogoImg">
+          <img src="images/logoicma.png" alt="EMHA Logo" class="sidebar-logo-img" id="sidebarLogoImg">
         </div>
         <div class="logo-text">
-          <h1>ICMA</h1>
-          <span>Sinergi Kebaikan Abadi</span>
+          <h1>EMHA</h1>
+          <span>Mutiara Hikmah</span>
         </div>
         <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Tutup Sidebar" title="Tutup Menu">
           <i class="fa-solid fa-xmark"></i>
@@ -121,7 +121,7 @@
           </div>
           <div class="user-info">
             <div class="name">Administrator</div>
-            <div class="role">Bendahara ICMA</div>
+            <div class="role">Bendahara EMHA</div>
           </div>
           <button class="btn-logout" id="logoutBtn" title="Logout">
             <i class="fa-solid fa-power-off"></i>
@@ -141,10 +141,10 @@
             <i class="fa-solid fa-bars"></i>
           </button>
           <div class="top-brand">
-            <img src="images/logoicma.png" alt="ICMA Logo" class="top-brand-logo" id="topBrandLogoImg">
+            <img src="images/logoicma.png" alt="EMHA Logo" class="top-brand-logo" id="topBrandLogoImg">
             <div class="top-brand-text">
-              <span class="brand-title">ICMA Sinergi</span>
-              <span class="brand-sub">Sistem Donasi & Kas</span>
+              <span class="brand-title">EMHA</span>
+              <span class="brand-sub">Mutiara Hikmah</span>
             </div>
           </div>
         </div>
@@ -187,7 +187,7 @@
               <img id="headerUserAvatarImg" src="images/logoicma.png" alt="Avatar" style="width:100%; height:100%; object-fit:cover; border-radius:50%; display:block;">
             </div>
             <div class="header-user-info">
-              <span class="user-role-label">Bendahara ICMA</span>
+              <span class="user-role-label">Bendahara EMHA</span>
             </div>
           </div>
           <button class="btn btn-primary btn-sm btn-quick-add" onclick="openAddModal()" title="Catat Donasi Baru">
@@ -202,7 +202,7 @@
         <section id="dashboardView">
           <div class="page-header">
             <div class="page-title">
-              <h2>Dashboard ICMA</h2>
+              <h2>Dashboard EMHA</h2>
               <p>Ringkasan real-time pencatatan donasi & statistik donatur.</p>
             </div>
             <div class="page-actions">
@@ -1154,13 +1154,13 @@
               </div>
             </div>
 
-            <!-- Card: Tanda Tangan Resmi Bendahara ICMA (Upload File PNG) -->
+            <!-- Card: Tanda Tangan Resmi Bendahara EMHA (Upload File PNG) -->
             <div class="card" style="padding: 1.5rem; grid-column: span 2;">
               <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
                 <div>
                   <h3 style="font-size:0.95rem; margin:0;">
                     <i class="fa-solid fa-signature" style="color:var(--primary-600); margin-right:0.35rem;"></i>
-                    Tanda Tangan Resmi Bendahara ICMA (File PNG)
+                    Tanda Tangan Resmi Bendahara EMHA (File PNG)
                   </h3>
                   <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;">
                     Upload file tanda tangan asli format PNG (transparan disarankan) untuk digunakan otomatis pada Bukti Donasi & Kwitansi Resmi.
@@ -1187,7 +1187,7 @@
                   <div class="form-group mb-3">
                     <label for="inputBendaharaName">Nama / Jabatan Penandatangan di Kwitansi</label>
                     <div style="display:flex; gap:0.5rem;">
-                      <input type="text" id="inputBendaharaName" class="form-control" placeholder="Contoh: Bendahara ICMA" value="Bendahara ICMA">
+                      <input type="text" id="inputBendaharaName" class="form-control" placeholder="Contoh: Bendahara EMHA" value="Bendahara EMHA">
                       <button type="button" class="btn btn-primary btn-sm" onclick="handleSaveBendaharaName(event)" style="white-space:nowrap;">
                         <i class="fa-solid fa-save"></i> Simpan Nama
                       </button>
@@ -1896,7 +1896,7 @@
   <div id="invoicePrintArea" style="display:none;"></div>
   <div class="toast-container" id="toastContainer"></div>
 
-  <script src="js/app.js?v=3.6.0"></script>
+  <script src="js/app.js?v=3.7.0"></script>
 
 </body>
 </html>

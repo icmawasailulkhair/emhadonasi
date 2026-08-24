@@ -760,7 +760,7 @@ function renderDonaturTable() {
     tbody.innerHTML = paginatedData.map((d, index) => {
       const fullAddress = `${d.alamat}, ${d.kelurahan}, ${d.kecamatan}, ${d.kabupaten}, ${d.provinsi}`;
       const cleanPhone = d.phone ? d.phone.replace(/[^0-9]/g, '') : '';
-      const waUrl = cleanPhone ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent('Assalamu\'alaikum Bpk/Ibu ' + d.nama + ', dari ICMA Sinergi Kebaikan Abadi.')}` : '#';
+      const waUrl = cleanPhone ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent('Assalamu\'alaikum Bpk/Ibu ' + d.nama + ', dari EMHA Mutiara Hikmah.')}` : '#';
 
       return `
         <tr>
@@ -2307,10 +2307,10 @@ function viewInvoiceModal(id) {
       <!-- Header 3 Kolom -->
       <div class="inv-header">
         <div class="inv-brand-logo">
-          <img src="images/logoicma.png" alt="ICMA Logo" onerror="this.style.display='none'">
+          <img src="${getStoredProfilePhoto()}" alt="EMHA Logo" onerror="this.style.display='none'">
         </div>
         <div class="inv-brand-info">
-          <h2>ICMA Sinergi Kebaikan Abadi</h2>
+          <h2>EMHA Mutiara Hikmah</h2>
           <p>Berbah, Sleman, D.I. Yogyakarta</p>
           <div class="inv-hotline">Hotline Service : 0895-3931-81822</div>
         </div>
@@ -2411,7 +2411,7 @@ function downloadInvoicePDF() {
   showToast("Membuat PDF invoice...", "warning");
   const opt = {
     margin: 0.5,
-    filename: `Invoice_ICMA_${activeInvoiceData.id}.pdf`,
+    filename: `Invoice_EMHA_${activeInvoiceData.id}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 2 },
     jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
@@ -2428,7 +2428,7 @@ function downloadInvoiceJPG() {
   if (window.html2canvas) {
     window.html2canvas(element, { scale: 2 }).then(canvas => {
       const link = document.createElement('a');
-      link.download = `Invoice_ICMA_${activeInvoiceData.id}.jpg`;
+      link.download = `Invoice_EMHA_${activeInvoiceData.id}.jpg`;
       link.href = canvas.toDataURL('image/jpeg', 0.95);
       link.click();
     });
@@ -2687,7 +2687,7 @@ function executeExcelExport() {
 
   // SHEET 5: RINGKASAN EKSEKUTIF
   const summaryData = [
-    { "Keterangan": "Lembaga", "Nilai": "ICMA SINERGI KEBAIKAN ABADI" },
+    { "Keterangan": "Lembaga", "Nilai": "EMHA MUTIARA HIKMAH" },
     { "Keterangan": "Filter Periode Laporan", "Nilai": filterDesc },
     { "Keterangan": "Tanggal Download", "Nilai": new Date().toLocaleString("id-ID") },
     { "Keterangan": "Total Penerimaan (Uang Masuk)", "Nilai": totalIn },
@@ -2711,7 +2711,7 @@ function executeExcelExport() {
     window.XLSX.utils.book_append_sheet(workbook, window.XLSX.utils.json_to_sheet(summaryData), "Ringkasan");
   }
 
-  const fileName = `Laporan_Keuangan_ICMA_${filePeriodName}.xlsx`;
+  const fileName = `Laporan_Keuangan_EMHA_${filePeriodName}.xlsx`;
   window.XLSX.writeFile(workbook, fileName);
   closeExportModal();
   showToast(`File Excel (${filterDesc}) berhasil diunduh!`, "success");
@@ -2899,7 +2899,7 @@ document.addEventListener("DOMContentLoaded", () => {
           saveAdminAccount(acc);
         }
         checkAuth();
-        showToast("Selamat datang kembali, " + (acc.name || acc.username || "Bendahara ICMA") + "!");
+        showToast("Selamat datang kembali, " + (acc.name || acc.username || "Bendahara EMHA") + "!");
         switchView("dashboard");
       } else {
         showToast("Username, Email / Nomor WhatsApp, atau Kata Sandi salah!", "danger");
@@ -2928,7 +2928,7 @@ const DEFAULT_ADMIN_ACCOUNT = {
   email: "icmawasailulkhair@gmail.com",
   phone: "0895393181822",
   password: "12icmaiwk34",
-  name: "Bendahara ICMA"
+  name: "Bendahara EMHA"
 };
 
 function getAdminAccount() {
@@ -2997,7 +2997,7 @@ function saveEmailJsConfig() {
   renderPengaturanView();
 }
 
-function sendVerificationOtpEmail(toEmail, otpCode, purposeTitle = "Pemulihan Akun ICMA") {
+function sendVerificationOtpEmail(toEmail, otpCode, purposeTitle = "Pemulihan Akun EMHA") {
   const cfg = getEmailJsConfig();
   if (cfg.publicKey && cfg.serviceId && cfg.templateId && window.emailjs) {
     try {
@@ -3012,7 +3012,7 @@ function sendVerificationOtpEmail(toEmail, otpCode, purposeTitle = "Pemulihan Ak
       }).catch(err => {
         console.warn("EmailJS error:", err);
         showToast(`Gagal kirim via EmailJS (${err.text || 'API Error'}). Kode OTP Simulasi: ${otpCode}`, "warning");
-        alert(`[KODE VERIFIKASI OTP ICMA]\n\nKeperluan: ${purposeTitle}\nKode OTP: ${otpCode}\n\n(Pesan EmailJS gagal/belum aktif, gunakan kode di atas untuk verifikasi).`);
+        alert(`[KODE VERIFIKASI OTP EMHA]\n\nKeperluan: ${purposeTitle}\nKode OTP: ${otpCode}\n\n(Pesan EmailJS gagal/belum aktif, gunakan kode di atas untuk verifikasi).`);
       });
       return;
     } catch (e) {
@@ -3023,7 +3023,7 @@ function sendVerificationOtpEmail(toEmail, otpCode, purposeTitle = "Pemulihan Ak
   // Fallback / Simulator: tampilkan dialog langsung di layar
   showToast(`Kode OTP verifikasi Anda: ${otpCode}`, "success");
   setTimeout(() => {
-    alert(`[KODE VERIFIKASI OTP ICMA]\n\nKeperluan: ${purposeTitle}\nKode OTP: ${otpCode}\n\nMasukkan 6 digit kode ini pada kotak verifikasi.`);
+    alert(`[KODE VERIFIKASI OTP EMHA]\n\nKeperluan: ${purposeTitle}\nKode OTP: ${otpCode}\n\nMasukkan 6 digit kode ini pada kotak verifikasi.`);
   }, 100);
 
   // Helper tampilan kode di form ganti email jika ada
@@ -3033,9 +3033,9 @@ function sendVerificationOtpEmail(toEmail, otpCode, purposeTitle = "Pemulihan Ak
   }
 }
 
-function sendVerificationOtpWhatsApp(toPhone, otpCode, purposeTitle = "Pemulihan Akun ICMA") {
+function sendVerificationOtpWhatsApp(toPhone, otpCode, purposeTitle = "Pemulihan Akun EMHA") {
   const clean = formatPhoneWhatsApp(toPhone);
-  const text = `*KODE VERIFIKASI KEAMANAN ICMA*\n\nKeperluan: ${purposeTitle}\nKode Verifikasi: *${otpCode}*\n\n(Berlaku 5 menit. Jangan berikan kode ini kepada siapapun).`;
+  const text = `*KODE VERIFIKASI KEAMANAN EMHA*\n\nKeperluan: ${purposeTitle}\nKode Verifikasi: *${otpCode}*\n\n(Berlaku 5 menit. Jangan berikan kode ini kepada siapapun).`;
   const url = `https://wa.me/${clean}?text=${encodeURIComponent(text)}`;
   
   window.open(url, "_blank");
@@ -3220,7 +3220,7 @@ function handleDirectLoginFromRecovery() {
   closeRecoveryModal();
   localStorage.setItem("icma_is_logged_in_v3", "true");
   checkAuth();
-  showToast("Selamat datang kembali, Admin ICMA!");
+  showToast("Selamat datang kembali, Admin EMHA!");
   switchView("dashboard");
 }
 
@@ -3541,8 +3541,8 @@ function handleSignatureFileSelect(event) {
 function handleSaveBendaharaName(e) {
   if (e) e.preventDefault();
   const nameInput = document.getElementById("inputBendaharaName");
-  const name = nameInput ? nameInput.value.trim() : "Bendahara ICMA";
-  localStorage.setItem("icma_bendahara_name", name || "Bendahara ICMA");
+  const name = nameInput ? nameInput.value.trim() : "Bendahara EMHA";
+  localStorage.setItem("icma_bendahara_name", name || "Bendahara EMHA");
   showToast("Nama/Jabatan penandatangan berhasil diperbarui!", "success");
 }
 
@@ -3559,7 +3559,7 @@ function renderSignaturePreview() {
   const previewBox = document.getElementById("signaturePreviewBox");
   const btnDelete = document.getElementById("btnDeleteSignature");
   const sig = localStorage.getItem("icma_bendahara_signature");
-  const name = localStorage.getItem("icma_bendahara_name") || "Bendahara ICMA";
+  const name = localStorage.getItem("icma_bendahara_name") || "Bendahara EMHA";
   const nameInp = document.getElementById("inputBendaharaName");
   if (nameInp) nameInp.value = name;
 
