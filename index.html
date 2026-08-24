@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=3.4.0">
+  <link rel="stylesheet" href="css/styles.css?v=3.5.0">
 
   <!-- External Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -550,12 +550,12 @@
           </div>
 
           <!-- Modern Laporan Filter Bar with Calendar Dropdown Popover -->
-          <div class="card" style="margin-bottom: 1.15rem; padding: 0.75rem 1rem; border: 1px solid var(--slate-200); background:#fff; overflow: visible !important; position: relative;">
+          <div class="card" style="margin-bottom: 1.15rem; padding: 0.75rem 1rem; border: 1px solid var(--border-subtle); background:var(--bg-card); overflow: visible !important; position: relative;">
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem;">
               
               <!-- Search Box -->
               <div style="flex:1; min-width:220px; max-width:380px; position:relative;">
-                <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--slate-400); font-size:0.8rem;"></i>
+                <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:0.8rem;"></i>
                 <input type="text" id="laporanSearch" class="form-control" style="padding-left:2.1rem; height:36px; border-radius:10px; font-size:0.8rem;" placeholder="Cari kategori / donatur / catatan...">
               </div>
 
@@ -571,117 +571,126 @@
                   </button>
                 </div>
 
-                <!-- Metode Pembayaran Filter -->
-                <div class="detail-select-wrap">
-                  <select id="laporanFilterMetode" class="detail-select">
-                    <option value="">Semua Metode</option>
-                    <option value="Transfer">Transfer</option>
-                    <option value="Tunai">Tunai</option>
-                  </select>
-                </div>
-
-                <!-- Calendar Trigger & Popover -->
+                <!-- Custom Calendar Toggle Button -->
                 <div class="detail-cal-wrap">
-                  <button id="lapDateToggleBtn" class="detail-cal-btn" onclick="toggleLapDatePanel(event)" title="Filter Periode / Tanggal">
-                    <i class="fa-regular fa-calendar"></i>
+                  <button type="button" class="detail-cal-btn" id="lapDateToggleBtn" onclick="toggleLapDatePanel(event)" title="Pilih Tanggal / Bulan / Tahun">
+                    <i class="fa-regular fa-calendar-days"></i>
                   </button>
 
-                  <!-- Popover Dropdown Panel (Matches Attached Calendar Design) -->
-                  <div id="lapDatePanel" class="detail-date-panel" onclick="event.stopPropagation()">
+                  <!-- Popover Panel Kalender -->
+                  <div class="detail-date-panel" id="lapDatePanel">
+                    
+                    <!-- Tabs -->
                     <div class="detail-date-tabs">
-                      <button type="button" class="lap-date-tab active" data-mode="single" onclick="setLapDateMode('single')">
-                        <i class="fa-regular fa-calendar-check"></i> Tanggal
+                      <button type="button" class="lap-date-tab active" data-tab="single" onclick="switchLapDateTab('single')">
+                        <i class="fa-regular fa-calendar-check"></i> Hari
                       </button>
-                      <button type="button" class="lap-date-tab" data-mode="range" onclick="setLapDateMode('range')">
+                      <button type="button" class="lap-date-tab" data-tab="range" onclick="switchLapDateTab('range')">
                         <i class="fa-solid fa-arrows-left-right"></i> Rentang
                       </button>
-                      <button type="button" class="lap-date-tab" data-mode="month" onclick="setLapDateMode('month')">
-                        <i class="fa-regular fa-calendar-days"></i> Bulan
+                      <button type="button" class="lap-date-tab" data-tab="month" onclick="switchLapDateTab('month')">
+                        <i class="fa-regular fa-calendar"></i> Bulan
                       </button>
-                      <button type="button" class="lap-date-tab" data-mode="year" onclick="setLapDateMode('year')">
-                        <i class="fa-regular fa-calendar"></i> Tahun
+                      <button type="button" class="lap-date-tab" data-tab="year" onclick="switchLapDateTab('year')">
+                        <i class="fa-solid fa-calendar-check"></i> Tahun
                       </button>
                     </div>
 
-                    <!-- Mode 1: Tanggal Tunggal -->
-                    <div id="lapDateMode_single" class="lap-date-mode-panel detail-date-body">
-                      <label class="detail-date-label">PILIH TANGGAL</label>
-                      <input type="date" id="lapSingleDate" class="form-control">
+                    <!-- Body Single -->
+                    <div class="detail-date-body" id="lapTabBody_single">
+                      <label class="detail-date-label">Pilih Tanggal Spesifik</label>
+                      <input type="date" id="lapDateSingle" class="form-control">
                       <div class="detail-date-actions">
-                        <button type="button" class="btn btn-primary btn-sm" style="flex:1" onclick="applyLapDateFilter()">Terapkan</button>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="setLapDatePreset('today')">Hari Ini</button>
+                        <button type="button" class="btn btn-primary btn-sm" style="flex:1;" onclick="applyLapDateSingle()">Terapkan</button>
                       </div>
                     </div>
 
-                    <!-- Mode 2: Rentang Tanggal -->
-                    <div id="lapDateMode_range" class="lap-date-mode-panel detail-date-body" style="display:none">
-                      <div style="display:flex;gap:0.6rem;margin-bottom:0.5rem">
-                        <div style="flex:1">
-                          <label class="detail-date-label">DARI TANGGAL</label>
-                          <input type="date" id="lapStartDate" class="form-control">
+                    <!-- Body Range -->
+                    <div class="detail-date-body" id="lapTabBody_range" style="display:none;">
+                      <label class="detail-date-label">Mulai Tanggal</label>
+                      <input type="date" id="lapDateRangeStart" class="form-control" style="margin-bottom:0.4rem;">
+                      <label class="detail-date-label">Sampai Tanggal</label>
+                      <input type="date" id="lapDateRangeEnd" class="form-control">
+                      <div class="detail-date-actions">
+                        <button type="button" class="btn btn-primary btn-sm" style="flex:1;" onclick="applyLapDateRange()">Terapkan</button>
+                      </div>
+                    </div>
+
+                    <!-- Body Month -->
+                    <div class="detail-date-body" id="lapTabBody_month" style="display:none;">
+                      <div style="display:flex; gap:0.4rem; margin-bottom:0.4rem;">
+                        <div style="flex:1.3;">
+                          <label class="detail-date-label">Bulan</label>
+                          <select id="lapDateMonth" class="form-control">
+                            <option value="01">Januari</option><option value="02">Februari</option>
+                            <option value="03">Maret</option><option value="04">April</option>
+                            <option value="05">Mei</option><option value="06">Juni</option>
+                            <option value="07">Juli</option><option value="08">Agustus</option>
+                            <option value="09">September</option><option value="10">Oktober</option>
+                            <option value="11">November</option><option value="12">Desember</option>
+                          </select>
                         </div>
-                        <div style="flex:1">
-                          <label class="detail-date-label">HINGGA TANGGAL</label>
-                          <input type="date" id="lapEndDate" class="form-control">
+                        <div style="flex:1;">
+                          <label class="detail-date-label">Tahun</label>
+                          <select id="lapDateMonthYear" class="form-control">
+                            <option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option>
+                          </select>
                         </div>
                       </div>
-                      <button type="button" class="btn btn-primary btn-sm" style="width:100%" onclick="applyLapDateFilter()">Terapkan</button>
+                      <div class="detail-date-actions">
+                        <button type="button" class="btn btn-primary btn-sm" style="flex:1;" onclick="applyLapDateMonth()">Terapkan</button>
+                      </div>
                     </div>
 
-                    <!-- Mode 3: Bulan Tertentu -->
-                    <div id="lapDateMode_month" class="lap-date-mode-panel detail-date-body" style="display:none">
-                      <label class="detail-date-label">BULAN</label>
-                      <select id="lapMonth" class="form-control" style="margin-bottom:0.5rem">
-                        <option value="01">Januari</option><option value="02">Februari</option>
-                        <option value="03">Maret</option><option value="04">April</option>
-                        <option value="05">Mei</option><option value="06">Juni</option>
-                        <option value="07">Juli</option><option value="08" selected>Agustus</option>
-                        <option value="09">September</option><option value="10">Oktober</option>
-                        <option value="11">November</option><option value="12">Desember</option>
+                    <!-- Body Year -->
+                    <div class="detail-date-body" id="lapTabBody_year" style="display:none;">
+                      <label class="detail-date-label">Pilih Tahun</label>
+                      <select id="lapDateYear" class="form-control">
+                        <option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option>
                       </select>
-                      <label class="detail-date-label">TAHUN</label>
-                      <select id="lapMonthYear" class="form-control" style="margin-bottom:0.75rem">
-                        <option value="2026" selected>2026</option><option value="2025">2025</option><option value="2024">2024</option>
-                      </select>
-                      <button type="button" class="btn btn-primary btn-sm" style="width:100%" onclick="applyLapDateFilter()">Terapkan</button>
+                      <div class="detail-date-actions">
+                        <button type="button" class="btn btn-primary btn-sm" style="flex:1;" onclick="applyLapDateYear()">Terapkan</button>
+                      </div>
                     </div>
 
-                    <!-- Mode 4: 1 Tahun Penuh -->
-                    <div id="lapDateMode_year" class="lap-date-mode-panel detail-date-body" style="display:none">
-                      <label class="detail-date-label">TAHUN</label>
-                      <select id="lapYear" class="form-control" style="margin-bottom:0.75rem">
-                        <option value="2026" selected>2026</option><option value="2025">2025</option><option value="2024">2024</option>
-                      </select>
-                      <button type="button" class="btn btn-primary btn-sm" style="width:100%" onclick="applyLapDateFilter()">Terapkan</button>
-                    </div>
-
+                    <!-- Footer -->
                     <div class="detail-date-footer">
-                      <span id="lapDatePanelStatus">Semua Data</span>
-                      <button type="button" class="detail-date-reset" onclick="resetLapDateFilters()">
-                        <i class="fa-solid fa-rotate-left"></i> Reset
-                      </button>
+                      <span>Gunakan filter untuk audit</span>
+                      <button type="button" class="detail-date-reset" onclick="resetLapDateFilters()">Reset Semua</button>
                     </div>
+
                   </div>
+                </div>
+
+                <!-- Metode Pembayaran Dropdown -->
+                <div class="detail-select-wrap">
+                  <select id="laporanFilterMetode" class="detail-select" title="Filter Metode Pembayaran">
+                    <option value="">Semua Metode</option>
+                    <option value="Tunai">Tunai</option>
+                    <option value="Transfer">Transfer</option>
+                  </select>
                 </div>
 
               </div>
             </div>
           </div>
 
-          <!-- Master Table: LAPORAN KEUANGAN KONSOLIDASI PER SETIAP JENIS DONASI -->
-          <div class="card" style="margin-bottom: 1.25rem;">
+          <!-- Matriks Ringkasan Pos Dana & Arus Kas Lengkap -->
+          <div class="card">
             <div class="card-header">
-              <div style="display:flex; align-items:center; gap:0.5rem;">
-                <span class="badge badge-transfer" style="font-size:0.75rem;"><i class="fa-solid fa-scale-balanced"></i> POS DANA</span>
-                <h3 style="font-size:0.95rem; font-weight:600; color:var(--slate-800); margin:0;">Laporan Posisi Kas per Setiap Jenis Donasi (Standar Nirlaba / PSAK)</h3>
+              <div>
+                <h3>Ringkasan Saldo Berdasarkan Pos Dana</h3>
+                <span style="font-size:0.75rem; color:var(--text-muted);">Klik baris untuk melihat rincian riwayat donasi & mutasi kas masuk/keluar.</span>
               </div>
-              <small style="color:var(--primary-600); font-weight:600;"><i class="fa-solid fa-arrow-pointer"></i> Klik baris jenis donasi untuk rincian mutasi</small>
+              <button class="btn btn-secondary btn-sm" onclick="exportMatriksToExcel()" title="Unduh Matriks ke Excel">
+                <i class="fa-solid fa-file-excel"></i> Unduh Rekap Pos Dana (XLS)
+              </button>
             </div>
             <div class="table-responsive">
               <table class="table">
                 <thead>
                   <tr>
-                    <th style="width: 35px; text-align: center;">No</th>
+                    <th style="width: 45px; text-align: center;">No</th>
                     <th style="min-width: 150px;">Pos / Jenis Donasi</th>
                     <th style="width: 125px; text-align: right;">Uang Masuk (Rp)</th>
                     <th style="width: 125px; text-align: right;">Uang Keluar (Rp)</th>
@@ -692,12 +701,12 @@
                 </thead>
                 <tbody id="laporanMatriksBody"></tbody>
                 <tfoot>
-                  <tr style="background:#f1f5f9; font-weight:800;">
-                    <td colspan="2" style="color:var(--slate-800);">TOTAL KESELURUHAN DANA</td>
+                  <tr style="background:var(--table-th-bg); font-weight:800;">
+                    <td colspan="2" style="color:var(--text-primary);">TOTAL KESELURUHAN DANA</td>
                     <td id="lapMatriksTotalMasuk" class="text-right" style="color:var(--emerald-600);">Rp 0</td>
                     <td id="lapMatriksTotalKeluar" class="text-right" style="color:var(--rose-600);">Rp 0</td>
                     <td id="lapMatriksTotalSaldo" class="text-right" style="color:var(--primary-700); font-size:0.95rem;">Rp 0</td>
-                    <td colspan="2" id="lapMatriksStatusSummary" style="text-align:center; font-size:0.75rem; color:var(--slate-600);">-</td>
+                    <td colspan="2" id="lapMatriksStatusSummary" style="text-align:center; font-size:0.75rem; color:var(--text-muted);">-</td>
                   </tr>
                 </tfoot>
               </table>
@@ -992,26 +1001,26 @@
                   <i class="fa-solid fa-user-shield"></i>
                 </div>
                 <div>
-                  <h3 style="font-size:1rem; margin:0;">Profil Akun Admin</h3>
+                  <h3 style="font-size:1rem; margin:0; color:var(--text-primary);">Profil Akun Admin</h3>
                   <span style="font-size:0.75rem; color:var(--text-muted);">Informasi login terdaftar</span>
                 </div>
               </div>
 
               <div style="display:flex; flex-direction:column; gap:0.75rem; font-size:0.85rem;">
-                <div style="padding:0.75rem; background:var(--slate-50); border-radius:8px; border:1px solid var(--slate-100);">
-                  <div style="font-size:0.7rem; color:var(--slate-500); text-transform:uppercase; font-weight:600;">Username</div>
-                  <div id="setInfoUsername" style="font-weight:600; color:var(--slate-900); margin-top:2px;">admin</div>
+                <div style="padding:0.75rem; background:var(--bg-surface); border-radius:8px; border:1px solid var(--border-subtle);">
+                  <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Username</div>
+                  <div id="setInfoUsername" style="font-weight:600; color:var(--text-primary); margin-top:2px;">admin</div>
                 </div>
-                <div style="padding:0.75rem; background:var(--slate-50); border-radius:8px; border:1px solid var(--slate-100);">
-                  <div style="font-size:0.7rem; color:var(--slate-500); text-transform:uppercase; font-weight:600;">Email Terdaftar</div>
-                  <div id="setInfoEmail" style="font-weight:600; color:var(--slate-900); margin-top:2px;">icmawasailulkhair@gmail.com</div>
+                <div style="padding:0.75rem; background:var(--bg-surface); border-radius:8px; border:1px solid var(--border-subtle);">
+                  <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Email Terdaftar</div>
+                  <div id="setInfoEmail" style="font-weight:600; color:var(--text-primary); margin-top:2px;">icmawasailulkhair@gmail.com</div>
                 </div>
-                <div style="padding:0.75rem; background:var(--slate-50); border-radius:8px; border:1px solid var(--slate-100);">
-                  <div style="font-size:0.7rem; color:var(--slate-500); text-transform:uppercase; font-weight:600;">Nomor HP (WhatsApp)</div>
-                  <div id="setInfoPhone" style="font-weight:600; color:var(--slate-900); margin-top:2px;">0895393181822</div>
+                <div style="padding:0.75rem; background:var(--bg-surface); border-radius:8px; border:1px solid var(--border-subtle);">
+                  <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Nomor HP (WhatsApp)</div>
+                  <div id="setInfoPhone" style="font-weight:600; color:var(--text-primary); margin-top:2px;">0895393181822</div>
                 </div>
-                <div style="padding:0.75rem; background:var(--slate-50); border-radius:8px; border:1px solid var(--slate-100);">
-                  <div style="font-size:0.7rem; color:var(--slate-500); text-transform:uppercase; font-weight:600;">Status Keamanan</div>
+                <div style="padding:0.75rem; background:var(--bg-surface); border-radius:8px; border:1px solid var(--border-subtle);">
+                  <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Status Keamanan</div>
                   <div style="font-weight:600; color:var(--emerald-600); margin-top:2px;">
                     <i class="fa-solid fa-circle-check"></i> Multi-Login Aktif (Username, Email & WhatsApp)
                   </div>
@@ -1021,7 +1030,7 @@
 
             <!-- Card 2: Ubah Username -->
             <div class="card" style="padding: 1.5rem;">
-              <h3 style="font-size:0.95rem; margin-bottom:0.25rem;">
+              <h3 style="font-size:0.95rem; margin-bottom:0.25rem; color:var(--text-primary);">
                 <i class="fa-solid fa-user-gear" style="color:var(--primary-600); margin-right:0.35rem;"></i>
                 Ubah Username
               </h3>
@@ -1042,7 +1051,7 @@
 
             <!-- Card 3: Ubah Email Login -->
             <div class="card" style="padding: 1.5rem;">
-              <h3 style="font-size:0.95rem; margin-bottom:0.25rem;">
+              <h3 style="font-size:0.95rem; margin-bottom:0.25rem; color:var(--text-primary);">
                 <i class="fa-solid fa-envelope" style="color:var(--primary-600); margin-right:0.35rem;"></i>
                 Ubah Alamat Email
               </h3>
@@ -1061,8 +1070,8 @@
               </form>
 
               <!-- OTP input container for email change -->
-              <div id="boxOtpChangeEmail" style="display:none; margin-top:1rem; padding:0.85rem; background:var(--slate-50); border:1px solid var(--slate-200); border-radius:8px;">
-                <label style="font-size:0.75rem; font-weight:600; display:block; margin-bottom:0.35rem;">Masukkan Kode OTP dari Email Baru:</label>
+              <div id="boxOtpChangeEmail" style="display:none; margin-top:1rem; padding:0.85rem; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:8px;">
+                <label style="font-size:0.75rem; font-weight:600; display:block; margin-bottom:0.35rem; color:var(--text-secondary);">Masukkan Kode OTP dari Email Baru:</label>
                 <div style="display:flex; gap:0.4rem;">
                   <input type="text" id="otpChangeEmailInput" class="form-control" placeholder="6 digit" maxlength="6" style="letter-spacing:3px; text-align:center; font-weight:700;">
                   <button type="button" class="btn btn-success btn-sm" onclick="handleConfirmChangeEmail()">Verifikasi</button>
@@ -1073,7 +1082,7 @@
 
             <!-- Card 4: Ubah Nomor HP (WhatsApp) -->
             <div class="card" style="padding: 1.5rem;">
-              <h3 style="font-size:0.95rem; margin-bottom:0.25rem;">
+              <h3 style="font-size:0.95rem; margin-bottom:0.25rem; color:var(--text-primary);">
                 <i class="fa-brands fa-whatsapp" style="color:var(--emerald-600); margin-right:0.35rem;"></i>
                 Ubah Nomor HP (WhatsApp)
               </h3>
@@ -1092,8 +1101,8 @@
               </form>
 
               <!-- OTP input container for phone change -->
-              <div id="boxOtpChangePhone" style="display:none; margin-top:1rem; padding:0.85rem; background:var(--slate-50); border:1px solid var(--slate-200); border-radius:8px;">
-                <label style="font-size:0.75rem; font-weight:600; display:block; margin-bottom:0.35rem;">Masukkan Kode OTP dari WhatsApp Baru:</label>
+              <div id="boxOtpChangePhone" style="display:none; margin-top:1rem; padding:0.85rem; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:8px;">
+                <label style="font-size:0.75rem; font-weight:600; display:block; margin-bottom:0.35rem; color:var(--text-secondary);">Masukkan Kode OTP dari WhatsApp Baru:</label>
                 <div style="display:flex; gap:0.4rem;">
                   <input type="text" id="otpChangePhoneInput" class="form-control" placeholder="6 digit" maxlength="6" style="letter-spacing:3px; text-align:center; font-weight:700;">
                   <button type="button" class="btn btn-success btn-sm" onclick="handleConfirmChangePhone()">Verifikasi</button>
@@ -1391,7 +1400,7 @@
                 <button type="button" id="btnKasTypeMasuk" class="btn btn-sm" style="flex:1; border:1px solid var(--emerald-600); background:var(--emerald-50); color:var(--emerald-700); font-weight:600;" onclick="setKasModalType('Masuk')">
                   <i class="fa-solid fa-arrow-down"></i> Uang Masuk (Pemasukan)
                 </button>
-                <button type="button" id="btnKasTypeKeluar" class="btn btn-sm" style="flex:1; border:1px solid var(--slate-200); background:#fff; color:var(--slate-600); font-weight:500;" onclick="setKasModalType('Keluar')">
+                <button type="button" id="btnKasTypeKeluar" class="btn btn-sm" style="flex:1; border:1px solid var(--border-subtle); background:var(--bg-surface); color:var(--text-secondary); font-weight:500;" onclick="setKasModalType('Keluar')">
                   <i class="fa-solid fa-arrow-up"></i> Uang Keluar (Pengeluaran)
                 </button>
               </div>
@@ -1570,50 +1579,50 @@
 
         <!-- Filter Periode Waktu -->
         <div class="form-group" style="margin-bottom:0.5rem;">
-          <label style="font-weight:600; font-size:0.8rem; color:var(--slate-700); margin-bottom:0.35rem; display:block;">
+          <label style="font-weight:600; font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.35rem; display:block;">
             Pilih Filter Waktu / Periode:
           </label>
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.4rem; margin-bottom:0.75rem;">
             <button type="button" id="btnExpMode_all" class="btn btn-sm btn-exp-mode active" style="border:1px solid var(--primary-600); background:var(--primary-50); color:var(--primary-700); font-weight:600;" onclick="setExportPeriodMode('all')">
               <i class="fa-solid fa-infinity"></i> Semua Data
             </button>
-            <button type="button" id="btnExpMode_single" class="btn btn-sm btn-exp-mode" style="border:1px solid var(--slate-200); background:#fff; color:var(--slate-600);" onclick="setExportPeriodMode('single')">
+            <button type="button" id="btnExpMode_single" class="btn btn-sm btn-exp-mode" style="border:1px solid var(--border-subtle); background:var(--bg-surface); color:var(--text-secondary);" onclick="setExportPeriodMode('single')">
               <i class="fa-regular fa-calendar-check"></i> Tanggal Tertentu
             </button>
-            <button type="button" id="btnExpMode_range" class="btn btn-sm btn-exp-mode" style="border:1px solid var(--slate-200); background:#fff; color:var(--slate-600);" onclick="setExportPeriodMode('range')">
+            <button type="button" id="btnExpMode_range" class="btn btn-sm btn-exp-mode" style="border:1px solid var(--border-subtle); background:var(--bg-surface); color:var(--text-secondary);" onclick="setExportPeriodMode('range')">
               <i class="fa-solid fa-arrows-left-right"></i> Rentang Tanggal
             </button>
-            <button type="button" id="btnExpMode_month" class="btn btn-sm btn-exp-mode" style="border:1px solid var(--slate-200); background:#fff; color:var(--slate-600);" onclick="setExportPeriodMode('month')">
+            <button type="button" id="btnExpMode_month" class="btn btn-sm btn-exp-mode" style="border:1px solid var(--border-subtle); background:var(--bg-surface); color:var(--text-secondary);" onclick="setExportPeriodMode('month')">
               <i class="fa-regular fa-calendar-days"></i> Bulan Tertentu
             </button>
-            <button type="button" id="btnExpMode_year" class="btn btn-sm btn-exp-mode span-2" style="border:1px solid var(--slate-200); background:#fff; color:var(--slate-600); grid-column:span 2;" onclick="setExportPeriodMode('year')">
+            <button type="button" id="btnExpMode_year" class="btn btn-sm btn-exp-mode span-2" style="border:1px solid var(--border-subtle); background:var(--bg-surface); color:var(--text-secondary); grid-column:span 2;" onclick="setExportPeriodMode('year')">
               <i class="fa-regular fa-calendar"></i> 1 Tahun Penuh
             </button>
           </div>
 
           <!-- Dynamic Period Inputs -->
-          <div id="expInput_single" class="exp-period-panel" style="display:none; padding:0.75rem; background:#f8fafc; border-radius:8px; border:1px solid var(--slate-200);">
-            <label style="font-size:0.75rem; font-weight:600; color:var(--slate-600); display:block; margin-bottom:0.25rem;">Pilih Tanggal:</label>
+          <div id="expInput_single" class="exp-period-panel" style="display:none; padding:0.75rem; background:var(--bg-surface); border-radius:8px; border:1px solid var(--border-subtle);">
+            <label style="font-size:0.75rem; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:0.25rem;">Pilih Tanggal:</label>
             <input type="date" id="exportSingleDate" class="form-control">
           </div>
 
-          <div id="expInput_range" class="exp-period-panel" style="display:none; padding:0.75rem; background:#f8fafc; border-radius:8px; border:1px solid var(--slate-200);">
+          <div id="expInput_range" class="exp-period-panel" style="display:none; padding:0.75rem; background:var(--bg-surface); border-radius:8px; border:1px solid var(--border-subtle);">
             <div style="display:flex; gap:0.5rem;">
               <div style="flex:1;">
-                <label style="font-size:0.75rem; font-weight:600; color:var(--slate-600); display:block; margin-bottom:0.25rem;">Dari Tanggal:</label>
+                <label style="font-size:0.75rem; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:0.25rem;">Dari Tanggal:</label>
                 <input type="date" id="exportStartDate" class="form-control">
               </div>
               <div style="flex:1;">
-                <label style="font-size:0.75rem; font-weight:600; color:var(--slate-600); display:block; margin-bottom:0.25rem;">Sampai Tanggal:</label>
+                <label style="font-size:0.75rem; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:0.25rem;">Sampai Tanggal:</label>
                 <input type="date" id="exportEndDate" class="form-control">
               </div>
             </div>
           </div>
 
-          <div id="expInput_month" class="exp-period-panel" style="display:none; padding:0.75rem; background:#f8fafc; border-radius:8px; border:1px solid var(--slate-200);">
+          <div id="expInput_month" class="exp-period-panel" style="display:none; padding:0.75rem; background:var(--bg-surface); border-radius:8px; border:1px solid var(--border-subtle);">
             <div style="display:flex; gap:0.5rem;">
               <div style="flex:1.2;">
-                <label style="font-size:0.75rem; font-weight:600; color:var(--slate-600); display:block; margin-bottom:0.25rem;">Bulan:</label>
+                <label style="font-size:0.75rem; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:0.25rem;">Bulan:</label>
                 <select id="exportMonth" class="form-control">
                   <option value="01">Januari</option><option value="02">Februari</option>
                   <option value="03">Maret</option><option value="04">April</option>
@@ -1624,7 +1633,7 @@
                 </select>
               </div>
               <div style="flex:1;">
-                <label style="font-size:0.75rem; font-weight:600; color:var(--slate-600); display:block; margin-bottom:0.25rem;">Tahun:</label>
+                <label style="font-size:0.75rem; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:0.25rem;">Tahun:</label>
                 <select id="exportMonthYear" class="form-control">
                   <option value="2026" selected>2026</option>
                   <option value="2025">2025</option>
@@ -1634,8 +1643,8 @@
             </div>
           </div>
 
-          <div id="expInput_year" class="exp-period-panel" style="display:none; padding:0.75rem; background:#f8fafc; border-radius:8px; border:1px solid var(--slate-200);">
-            <label style="font-size:0.75rem; font-weight:600; color:var(--slate-600); display:block; margin-bottom:0.25rem;">Pilih Tahun:</label>
+          <div id="expInput_year" class="exp-period-panel" style="display:none; padding:0.75rem; background:var(--bg-surface); border-radius:8px; border:1px solid var(--border-subtle);">
+            <label style="font-size:0.75rem; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:0.25rem;">Pilih Tahun:</label>
             <select id="exportYear" class="form-control">
               <option value="2026" selected>2026</option>
               <option value="2025">2025</option>
@@ -1844,7 +1853,7 @@
   <div id="invoicePrintArea" style="display:none;"></div>
   <div class="toast-container" id="toastContainer"></div>
 
-  <script src="js/app.js?v=3.4.0"></script>
+  <script src="js/app.js?v=3.5.0"></script>
 
 </body>
 </html>

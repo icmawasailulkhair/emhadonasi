@@ -1123,9 +1123,9 @@ function setKasModalType(type) {
       btnMasuk.style.fontWeight = "600";
     }
     if (btnKeluar) {
-      btnKeluar.style.background = "#fff";
-      btnKeluar.style.borderColor = "var(--slate-200)";
-      btnKeluar.style.color = "var(--slate-600)";
+      btnKeluar.style.background = "var(--bg-surface)";
+      btnKeluar.style.borderColor = "var(--border-subtle)";
+      btnKeluar.style.color = "var(--text-secondary)";
       btnKeluar.style.fontWeight = "500";
     }
     if (pihakGroup) pihakGroup.style.display = "block";
@@ -1147,9 +1147,9 @@ function setKasModalType(type) {
       btnKeluar.style.fontWeight = "600";
     }
     if (btnMasuk) {
-      btnMasuk.style.background = "#fff";
-      btnMasuk.style.borderColor = "var(--slate-200)";
-      btnMasuk.style.color = "var(--slate-600)";
+      btnMasuk.style.background = "var(--bg-surface)";
+      btnMasuk.style.borderColor = "var(--border-subtle)";
+      btnMasuk.style.color = "var(--text-secondary)";
       btnMasuk.style.fontWeight = "500";
     }
     // HAPUS / SEMBUNYIKAN PIHAK & KATEGORI UNTUK UANG KELUAR (TERWAKILI DENGAN KETERANGAN)
@@ -2496,9 +2496,9 @@ function setExportPeriodMode(mode) {
       btn.style.color = "var(--primary-700)";
       btn.style.fontWeight = "600";
     } else {
-      btn.style.borderColor = "var(--slate-200)";
-      btn.style.background = "#fff";
-      btn.style.color = "var(--slate-600)";
+      btn.style.borderColor = "var(--border-subtle)";
+      btn.style.background = "var(--bg-surface)";
+      btn.style.color = "var(--text-secondary)";
       btn.style.fontWeight = "400";
     }
   });
