@@ -2136,72 +2136,135 @@ function viewInvoiceModal(id) {
   const printArea = document.getElementById("invoicePrintContent");
   if (!printArea) return;
 
-  const terbilangStr = terbilang(item.jumlah);
-  const bendaharaSig = localStorage.getItem("icma_bendahara_signature");
-  const bendaharaName = localStorage.getItem("icma_bendahara_name") || "Bendahara ICMA";
+  const bendaharaName = localStorage.getItem("icma_bendahara_name") || "Admin";
 
-  const signatureHtml = bendaharaSig
-    ? `<img src="${bendaharaSig}" alt="TTD Bendahara" style="max-height:60px; max-width:160px; object-fit:contain; display:block; margin:0 auto;">`
-    : `<svg width="120" height="45" viewBox="0 0 200 80" fill="none" style="display:block; margin:0 auto;">
-         <path d="M10 50 Q 50 10 90 50 T 170 30" stroke="#1d4ed8" stroke-width="4" fill="none"/>
-         <path d="M40 60 Q 90 20 140 60" stroke="#1d4ed8" stroke-width="2" fill="none"/>
-       </svg>`;
+  // Format date DD/MM/YYYY HH:mm:ss
+  let formattedDateTime = item.tanggal || "-";
+  if (item.tanggal && item.tanggal.includes("-")) {
+    const parts = item.tanggal.split("-");
+    const day = parts[2].padStart(2, "0");
+    const month = parts[1].padStart(2, "0");
+    const year = parts[0];
+    const timeStr = item.waktu || "14:04:08";
+    formattedDateTime = `${day}/${month}/${year} ${timeStr}`;
+  }
+
+  // Format phone
+  let phoneDisplay = "-";
+  if (donor.phone && donor.phone !== "-") {
+    let p = donor.phone.toString().trim();
+    if (!p.startsWith("+")) {
+      if (p.startsWith("0")) p = "+62 " + p.substring(1);
+      else if (p.startsWith("62")) p = "+62 " + p.substring(2);
+      else p = "+" + p;
+    }
+    phoneDisplay = p;
+  }
+
+  // Format address
+  let addressDisplay = donor.alamat || "";
+  if (!addressDisplay && (donor.kecamatan || donor.kabupaten)) {
+    addressDisplay = `${donor.kecamatan || ''}. ${donor.kabupaten || ''}. ${donor.provinsi || ''}`.replace(/^[\.\s]+|[\.\s]+$/g, '');
+  }
+  if (!addressDisplay) addressDisplay = "Berbah. Sleman. D.I.Yogyakarta";
+
+  // Format catatan & Doa
+  const defaultDoa = "[Robbana Taqobbal Minna, Semoga Alloh catat sebagai bagian dari Amal Shalih terbaik kita. Baarokalloh Fiikum Wa Jazakumullohu Khoiro]";
+  let fullNote = item.catatan || `${item.tujuan || 'Donasi'} pembangunan program ICMA`;
+  if (!fullNote.includes("Robbana Taqobbal Minna") && !fullNote.includes("Jazakumulloh")) {
+    fullNote = `${fullNote} ${defaultDoa}`;
+  }
+
+  const invoiceNo = item.id.startsWith("INV-") ? item.id : `INV-${item.id.replace(/[^a-zA-Z0-9]/g, '')}`;
 
   printArea.innerHTML = `
     <div class="invoice-card" id="printableReceipt">
-      <div class="invoice-header">
-        <div class="invoice-brand">
-          <img src="images/logoicma.png" alt="ICMA Logo" class="invoice-logo-img">
-          <div class="invoice-org-info">
-            <h2>ICMA SINERGI KEBAIKAN ABADI</h2>
-            <p>Lembaga Pengelola Wakaf, Zakat, Infaq, Shodaqoh & Keuangan Syariah</p>
-            <p style="font-size:0.725rem; color:#64748b;">Berbah, Sleman, D.I. Yogyakarta | WA: +62 895-3931-81822</p>
-          </div>
+      <!-- Header 3 Kolom -->
+      <div class="inv-header">
+        <div class="inv-brand-logo">
+          <img src="images/logoicma.png" alt="ICMA Logo" onerror="this.style.display='none'">
         </div>
-        <div class="invoice-meta">
-          <h3>BUKTI DONASI</h3>
-          <p><strong>No. Ref:</strong> ${item.id}</p>
-          <p><strong>Tanggal:</strong> ${formatDateID(item.tanggal)}</p>
+        <div class="inv-brand-info">
+          <h2>ICMA Sinergi Kebaikan Abadi</h2>
+          <p>Berbah, Sleman, D.I. Yogyakarta</p>
+          <div class="inv-hotline">Hotline Service : 0895-3931-81822</div>
         </div>
-      </div>
-
-      <table class="invoice-table">
-        <tr><td width="30%"><strong>ID & Nama Donatur</strong></td><td width="5%">:</td><td><strong>[${donor.id}] ${donor.nama}</strong> ${donor.phone && donor.phone !== '-' ? `(+${donor.phone})` : ''}</td></tr>
-        <tr><td><strong>Tujuan Donasi</strong></td><td>:</td><td><span class="badge ${getPurposeBadgeClass(item.tujuan)}">${item.tujuan}</span></td></tr>
-        <tr><td><strong>Alamat Donatur</strong></td><td>:</td><td>${donor.alamat} (${donor.kelurahan}, ${donor.kecamatan}, ${donor.kabupaten}, ${donor.provinsi})</td></tr>
-        <tr><td><strong>Metode Pembayaran</strong></td><td>:</td><td><span class="badge ${item.metode === 'Transfer' ? 'badge-transfer' : 'badge-tunai'}">${item.metode}</span></td></tr>
-        <tr><td><strong>Catatan / Peruntukan</strong></td><td>:</td><td>${item.catatan || "Untuk Program ICMA"}</td></tr>
-      </table>
-
-      <div class="amount-box">
-        <div>
-          <span style="font-size:0.75rem; text-transform:uppercase; color:#1e40af; font-weight:700;">Jumlah Penerimaan Donasi:</span>
-          <div class="amount-number">${formatRupiah(item.jumlah)}</div>
-        </div>
-        <div style="text-align:right;">
-          <span style="font-size:0.75rem; text-transform:uppercase; color:#1e40af; font-weight:700;">Terbilang:</span>
-          <div class="terbilang-text">"${terbilangStr}"</div>
+        <div class="inv-qr-wrap">
+          <div id="invoiceQrCode"></div>
         </div>
       </div>
 
-      <div class="invoice-signatures">
-        <div class="stamp-box">
-          <div class="stamp-official">LUNAS<br>ICMA</div>
-          <span>Stempel Resmi</span>
+      <!-- Nomor Kwitansi & Subtitle -->
+      <div class="inv-meta-section">
+        <div class="inv-kwitansi-no">No kwitansi: ${invoiceNo}</div>
+        <div class="inv-receipt-intro">Telah di terima donasi dari :</div>
+      </div>
+
+      <div class="inv-sep-line"></div>
+
+      <!-- Detail Donasi Grid 2 Kolom -->
+      <div class="inv-details-list">
+        <div class="inv-detail-row">
+          <div class="inv-detail-label">Nama Donatur</div>
+          <div class="inv-detail-val">${donor.nama || item.nama}</div>
         </div>
-        <div class="sig-box">
-          <p>Sleman, ${formatDateID(item.tanggal)}</p>
-          <p style="margin-bottom:0.25rem;">Pengelola / Bendahara ICMA,</p>
-          <div class="sig-space" style="display:flex; align-items:center; justify-content:center; min-height:55px;">
-            ${signatureHtml}
-          </div>
-          <div class="sig-name">${bendaharaName}</div>
+        <div class="inv-detail-row">
+          <div class="inv-detail-label">No Telepon</div>
+          <div class="inv-detail-val">${phoneDisplay}</div>
+        </div>
+        <div class="inv-detail-row">
+          <div class="inv-detail-label">Alamat</div>
+          <div class="inv-detail-val">${addressDisplay}</div>
+        </div>
+        <div class="inv-detail-row">
+          <div class="inv-detail-label">Jenis Donasi</div>
+          <div class="inv-detail-val" style="text-transform: lowercase;">${item.tujuan || 'wakaf'}</div>
+        </div>
+        <div class="inv-detail-row">
+          <div class="inv-detail-label">Jumlah Donasi</div>
+          <div class="inv-detail-val inv-amount-highlight">Rp. ${Number(item.jumlah || 0).toLocaleString('id-ID')}</div>
+        </div>
+        <div class="inv-detail-row">
+          <div class="inv-detail-label">Penerima</div>
+          <div class="inv-detail-val">${bendaharaName}</div>
+        </div>
+        <div class="inv-detail-row">
+          <div class="inv-detail-label">Tanggal Donasi</div>
+          <div class="inv-detail-val">${formattedDateTime}</div>
+        </div>
+        <div class="inv-detail-row">
+          <div class="inv-detail-label">catatan</div>
+          <div class="inv-detail-val inv-note-text">${fullNote}</div>
         </div>
       </div>
     </div>
   `;
 
   document.getElementById("invoiceModal").classList.add("active");
+
+  // Render QR Code secara dinamis
+  setTimeout(() => {
+    const qrContainer = document.getElementById("invoiceQrCode");
+    if (qrContainer) {
+      qrContainer.innerHTML = "";
+      if (window.QRCode) {
+        try {
+          new QRCode(qrContainer, {
+            text: `https://icma.or.id/verify/${item.id}`,
+            width: 78,
+            height: 78,
+            colorDark: "#1e293b",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.M
+          });
+        } catch (e) {
+          qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=78x78&data=${encodeURIComponent(item.id)}" alt="QR" width="78" height="78">`;
+        }
+      } else {
+        qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=78x78&data=${encodeURIComponent(item.id)}" alt="QR" width="78" height="78">`;
+      }
+    }
+  }, 50);
 }
 
 function closeInvoiceModal() { document.getElementById("invoiceModal").classList.remove("active"); }

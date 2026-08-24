@@ -1247,119 +1247,156 @@ textarea.form-control {
 }
 
 /* ===== INVOICE / RECEIPT ===== */
+/* ===== INVOICE / RECEIPT (FORMAT KWITANSI RESMI ICMA) ===== */
 .invoice-card {
   background-color: #ffffff;
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 2.25rem;
+  border-radius: 14px;
+  padding: 2.25rem 2.25rem 2.5rem 2.25rem;
   position: relative;
-  color: var(--text-primary);
+  color: #334155;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
 }
-.invoice-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  border-bottom: 2px solid var(--slate-900);
-  padding-bottom: 1.25rem;
-  margin-bottom: 1.5rem;
+
+/* Blue top-left accent ribbon */
+.invoice-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 52px;
+  background: #3b82f6;
+  border-top-left-radius: 14px;
+  border-bottom-right-radius: 4px;
 }
-.invoice-brand {
+
+.inv-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding-bottom: 0.5rem;
 }
-.invoice-logo-icon {
-  width: 48px;
-  height: 48px;
-  background: #0f172a;
-  color: #ffffff;
-  font-weight: 800;
-  font-size: 1.35rem;
-  border-radius: var(--radius-md);
+
+.inv-brand-logo {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.inv-brand-logo img {
+  max-height: 50px;
+  max-width: 130px;
+  object-fit: contain;
+}
+
+.inv-brand-info {
+  flex: 1 1 auto;
+  text-align: center;
+  padding: 0 0.5rem;
+}
+
+.inv-brand-info h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 0 0 0.2rem 0;
+  letter-spacing: -0.01em;
+}
+
+.inv-brand-info p {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0 0 0.15rem 0;
+  font-weight: 400;
+}
+
+.inv-brand-info .inv-hotline {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 400;
+}
+
+.inv-qr-wrap {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 82px;
+  height: 82px;
+  background: #ffffff;
 }
-.invoice-meta {
-  text-align: right;
+
+.inv-qr-wrap canvas,
+.inv-qr-wrap img {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
-.invoice-meta h3 {
-  font-size: 1.2rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  color: var(--slate-900);
+
+.inv-meta-section {
+  margin-top: 1rem;
 }
-.invoice-table {
+
+.inv-kwitansi-no {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 0.3rem;
+}
+
+.inv-receipt-intro {
+  font-size: 0.88rem;
+  color: #64748b;
+  font-weight: 400;
+}
+
+.inv-sep-line {
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 0.85rem 0 1.25rem 0;
   width: 100%;
-  margin: 1.25rem 0;
-  border-collapse: collapse;
-}
-.invoice-table th {
-  background-color: var(--slate-100);
-  color: var(--slate-800);
-  padding: 0.65rem 0.85rem;
-  font-size: var(--fs-sm);
-}
-.invoice-table td {
-  padding: 0.75rem 0.85rem;
-  border-bottom: 1px solid var(--slate-100);
-  font-size: var(--fs-sm);
 }
 
-.amount-box {
-  background-color: var(--slate-50);
-  border: 1px dashed var(--slate-300);
-  padding: 1.15rem 1.25rem;
-  border-radius: var(--radius-md);
-  margin: 1.25rem 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-.amount-number {
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: var(--slate-900);
-}
-.terbilang-text {
-  font-style: italic;
-  font-weight: 600;
-  color: var(--slate-700);
-  font-size: var(--fs-sm);
-}
-
-.invoice-signatures {
-  margin-top: 2rem;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-}
-.stamp-box {
-  width: 110px;
-  height: 75px;
-  border: 2px dashed var(--slate-300);
-  border-radius: var(--radius-sm);
+.inv-details-list {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: var(--slate-400);
-  font-size: var(--fs-2xs);
-  position: relative;
+  gap: 0.85rem;
 }
-.stamp-official {
-  border: 2px solid var(--primary-600);
-  color: var(--primary-600);
-  font-weight: 800;
-  text-transform: uppercase;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  transform: rotate(-10deg);
-  position: absolute;
-  font-size: var(--fs-2xs);
-  letter-spacing: 0.05em;
+
+.inv-detail-row {
+  display: flex;
+  align-items: flex-start;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.inv-detail-label {
+  width: 145px;
+  min-width: 145px;
+  color: #8896a6;
+  font-weight: 400;
+}
+
+.inv-detail-val {
+  flex: 1 1 auto;
+  color: #334155;
+  font-weight: 500;
+}
+
+.inv-amount-highlight {
+  font-size: 0.96rem;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+}
+
+.inv-note-text {
+  color: #475569;
+  font-size: 0.83rem;
+  line-height: 1.55;
 }
 
 /* ===== TOAST NOTIFICATIONS ===== */
@@ -1397,14 +1434,22 @@ textarea.form-control {
   body * {
     visibility: hidden;
   }
-  #invoicePrintArea, #invoicePrintArea * {
+  #invoicePrintContent, #invoicePrintContent *, #printableReceipt, #printableReceipt * {
     visibility: visible;
   }
-  #invoicePrintArea {
+  #invoicePrintContent {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
+    margin: 0;
+    padding: 0;
+    background: transparent !important;
+  }
+  .invoice-card {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 1.5rem !important;
   }
 }
 
@@ -2024,26 +2069,29 @@ textarea.form-control {
   .invoice-card {
     padding: 1.25rem 1rem !important;
   }
-  .invoice-header {
-    flex-direction: column !important;
-    align-items: flex-start !important;
+  .inv-header {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    text-align: center !important;
     gap: 0.75rem !important;
   }
-  .invoice-meta {
-    text-align: left !important;
+  .inv-brand-info {
+    order: 1 !important;
+    width: 100% !important;
   }
-  .amount-box {
+  .inv-brand-logo {
+    order: 0 !important;
+  }
+  .inv-qr-wrap {
+    order: 2 !important;
+  }
+  .inv-detail-row {
     flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 0.75rem !important;
+    gap: 0.15rem !important;
   }
-  .amount-box div:last-child {
-    text-align: left !important;
-  }
-  .invoice-signatures {
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 1.25rem !important;
+  .inv-detail-label {
+    width: 100% !important;
+    min-width: 100% !important;
   }
 }
 
