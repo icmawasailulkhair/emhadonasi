@@ -1014,9 +1014,12 @@
               </div>
 
               <div style="display:flex; align-items:center; gap:1.25rem; flex-wrap:wrap;">
-                <!-- Avatar Preview Container -->
-                <div style="position:relative; width:88px; height:88px; border-radius:18px; border:2px solid var(--border-subtle); background:var(--bg-surface); padding:4px; box-shadow:var(--shadow-sm); flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                <!-- Avatar Preview Container with Hover Click -->
+                <div onclick="document.getElementById('inputProfilePhoto').click()" style="position:relative; width:92px; height:92px; border-radius:18px; border:2px solid var(--border-subtle); background:var(--bg-surface); padding:4px; box-shadow:var(--shadow-sm); flex-shrink:0; display:flex; align-items:center; justify-content:center; overflow:hidden; cursor:pointer;" title="Klik untuk mengganti foto profil">
                   <img id="previewProfilePhoto" src="images/logoicma.png" alt="Preview Foto Profil" style="width:100%; height:100%; object-fit:contain; border-radius:14px;">
+                  <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.55); color:#ffffff; font-size:0.65rem; text-align:center; padding:3px 0; font-weight:600; backdrop-filter:blur(2px);">
+                    <i class="fa-solid fa-camera"></i> Ubah
+                  </div>
                 </div>
 
                 <!-- Action & File Uploader -->

@@ -299,6 +299,7 @@ function scrollToTop() {
 function checkAuth() {
   const isLoggedIn = localStorage.getItem("icma_is_logged_in_v3") === "true";
   const loginScreen = document.getElementById("loginScreen");
+  applyProfilePhoto(getStoredProfilePhoto());
   if (!isLoggedIn) {
     if (loginScreen) {
       loginScreen.style.display = "flex";
