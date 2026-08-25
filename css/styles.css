@@ -1638,9 +1638,9 @@ textarea.form-control {
 .inv-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 1.25rem;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dashed #cbd5e1;
 }
 
 .inv-brand-logo {
@@ -1650,15 +1650,15 @@ textarea.form-control {
 }
 
 .inv-brand-logo img {
-  max-height: 50px;
-  max-width: 130px;
+  max-height: 56px;
+  max-width: 140px;
   object-fit: contain;
 }
 
 .inv-brand-info {
   flex: 1 1 auto;
-  text-align: center;
-  padding: 0 0.5rem;
+  text-align: left;
+  padding: 0;
 }
 
 .inv-brand-info h2 {
@@ -1680,23 +1680,6 @@ textarea.form-control {
   font-size: 0.8rem;
   color: #64748b;
   font-weight: 400;
-}
-
-.inv-qr-wrap {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 82px;
-  height: 82px;
-  background: #ffffff;
-}
-
-.inv-qr-wrap canvas,
-.inv-qr-wrap img {
-  display: block;
-  max-width: 100%;
-  height: auto;
 }
 
 .inv-meta-section {
@@ -2476,9 +2459,6 @@ textarea.form-control {
   }
   .inv-brand-logo {
     order: 0 !important;
-  }
-  .inv-qr-wrap {
-    order: 2 !important;
   }
   .inv-detail-row {
     flex-direction: column !important;

@@ -2304,7 +2304,7 @@ function viewInvoiceModal(id) {
 
   printArea.innerHTML = `
     <div class="invoice-card" id="printableReceipt">
-      <!-- Header 3 Kolom -->
+      <!-- Header Kwitansi (Logo & Info Lembaga) -->
       <div class="inv-header">
         <div class="inv-brand-logo">
           <img src="${getStoredProfilePhoto()}" alt="EMHA Logo" onerror="this.style.display='none'">
@@ -2313,9 +2313,6 @@ function viewInvoiceModal(id) {
           <h2>EMHA Mutiara Hikmah</h2>
           <p>Berbah, Sleman, D.I. Yogyakarta</p>
           <div class="inv-hotline">Hotline Service : 0895-3931-81822</div>
-        </div>
-        <div class="inv-qr-wrap">
-          <div id="invoiceQrCode"></div>
         </div>
       </div>
 
@@ -2376,30 +2373,6 @@ function viewInvoiceModal(id) {
   `;
 
   document.getElementById("invoiceModal").classList.add("active");
-
-  // Render QR Code secara dinamis
-  setTimeout(() => {
-    const qrContainer = document.getElementById("invoiceQrCode");
-    if (qrContainer) {
-      qrContainer.innerHTML = "";
-      if (window.QRCode) {
-        try {
-          new QRCode(qrContainer, {
-            text: `https://icma.or.id/verify/${item.id}`,
-            width: 78,
-            height: 78,
-            colorDark: "#1e293b",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.M
-          });
-        } catch (e) {
-          qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=78x78&data=${encodeURIComponent(item.id)}" alt="QR" width="78" height="78">`;
-        }
-      } else {
-        qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=78x78&data=${encodeURIComponent(item.id)}" alt="QR" width="78" height="78">`;
-      }
-    }
-  }, 50);
 }
 
 function closeInvoiceModal() { document.getElementById("invoiceModal").classList.remove("active"); }
