@@ -1638,8 +1638,8 @@ textarea.form-control {
 .inv-header {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  padding-bottom: 0.75rem;
+  gap: 1.5rem;
+  padding-bottom: 0.85rem;
   border-bottom: 1px dashed #cbd5e1;
 }
 
@@ -1647,11 +1647,14 @@ textarea.form-control {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .inv-brand-logo img {
-  max-height: 56px;
-  max-width: 140px;
+  max-height: 85px;
+  max-width: 190px;
+  width: auto;
+  height: auto;
   object-fit: contain;
 }
 
