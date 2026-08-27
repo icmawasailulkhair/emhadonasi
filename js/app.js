@@ -3682,7 +3682,7 @@ document.addEventListener("click", (e) => {
 // FOTO PROFIL / LOGO AKUN MANAGEMENT
 // ==========================================
 const PROFILE_PHOTO_STORAGE_KEY = "icma_profile_photo";
-const DEFAULT_PROFILE_PHOTO_SRC = "images/logoemha.png";
+const DEFAULT_PROFILE_PHOTO_SRC = "images/emhalogo.png";
 
 function getStoredProfilePhoto() {
   try {
