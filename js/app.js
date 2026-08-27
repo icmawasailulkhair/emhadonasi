@@ -2873,30 +2873,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
-    loginForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const identifier = document.getElementById("loginIdentifier")?.value.trim().toLowerCase() || "";
-      const pass = document.getElementById("loginPass")?.value.trim() || "";
-      const acc = getAdminAccount();
-
-      const isUsernameMatch = identifier === (acc.username || "admin").toLowerCase() || identifier === "admin";
-      const isEmailMatch = identifier === (acc.email || "").toLowerCase() || identifier === "admin@emhadonasi.com" || identifier === "icmawasailulkhair@gmail.com";
-      const isPhoneMatch = normalizePhone(identifier) === normalizePhone(acc.phone) || normalizePhone(identifier) === "0895393181822";
-      const isPassMatch = (pass === acc.password || pass === "admin123" || pass === "12icmaiwk34");
-
-      if ((isUsernameMatch || isEmailMatch || isPhoneMatch) && isPassMatch) {
-        localStorage.setItem("icma_is_logged_in_v3", "true");
-        if (pass === "admin123" && acc.password !== "admin123") {
-          acc.password = "admin123";
-          saveAdminAccount(acc);
-        }
-        checkAuth();
-        showToast("Selamat datang kembali, " + (acc.name || acc.username || "Bendahara EMHA") + "!", "success");
-        switchView("dashboard");
-      } else {
-        showToast("Username, Email / Nomor WhatsApp, atau Kata Sandi salah! Pastikan masukkan username: admin dan password: admin123", "danger");
-      }
-    });
+    loginForm.addEventListener("submit", handleLoginSubmit);
   }
 
   const logoutBtn = document.getElementById("logoutBtn");
@@ -2914,6 +2891,41 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==========================================
 // AUTHENTICATION, OTP & ACCOUNT MANAGEMENT
 // ==========================================
+
+function handleLoginSubmit(e) {
+  if (e && typeof e.preventDefault === "function") e.preventDefault();
+  const idEl = document.getElementById("loginIdentifier");
+  const passEl = document.getElementById("loginPass");
+  const identifier = (idEl ? idEl.value : "").trim().toLowerCase();
+  const pass = (passEl ? passEl.value : "").trim();
+  const acc = getAdminAccount();
+
+  const isUsernameMatch = (identifier === (acc.username || "admin").toLowerCase() || identifier === "admin" || identifier === "administrator");
+  const isEmailMatch = (identifier === (acc.email || "").toLowerCase() || identifier === "admin@emhadonasi.com" || identifier === "icmawasailulkhair@gmail.com");
+  const isPhoneMatch = (normalizePhone(identifier) === normalizePhone(acc.phone) || normalizePhone(identifier) === "0895393181822");
+  const isPassMatch = (pass === acc.password || pass === "admin123" || pass === "12icmaiwk34");
+
+  if ((isUsernameMatch || isEmailMatch || isPhoneMatch) && isPassMatch) {
+    try {
+      localStorage.setItem("icma_is_logged_in_v3", "true");
+    } catch(err) {}
+
+    const loginScreen = document.getElementById("loginScreen");
+    if (loginScreen) loginScreen.style.display = "none";
+
+    if (pass === "admin123" && acc.password !== "admin123") {
+      acc.password = "admin123";
+      saveAdminAccount(acc);
+    }
+    checkAuth();
+    showToast("Selamat datang kembali, " + (acc.name || acc.username || "Bendahara EMHA") + "!", "success");
+    switchView("dashboard");
+    return false;
+  } else {
+    showToast("Username, Email / Nomor WhatsApp, atau Kata Sandi salah! Pastikan masukkan username: admin dan password: admin123", "danger");
+    return false;
+  }
+}
 
 const DEFAULT_ADMIN_ACCOUNT = {
   username: "admin",

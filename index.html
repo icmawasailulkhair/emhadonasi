@@ -38,7 +38,7 @@
         <p>Sistem Pencatatan Donasi & Laporan Keuangan</p>
       </div>
 
-      <form id="loginForm" autocomplete="off">
+      <form id="loginForm" autocomplete="off" onsubmit="return handleLoginSubmit(event);">
         <div class="form-group mb-3" style="text-align: left; margin-bottom: 1rem;">
           <label for="loginIdentifier">Username / Email / Nomor WhatsApp</label>
           <input type="text" id="loginIdentifier" class="form-control" value="" placeholder="Masukkan email atau no HP" autocomplete="off" required>
