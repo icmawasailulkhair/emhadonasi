@@ -296,6 +296,23 @@ function scrollToTop() {
   setTimeout(() => forceScrollTop(), 150);
 }
 
+function clearLoginFormInputs() {
+  const form = document.getElementById("loginForm");
+  if (form) form.reset();
+  const inpId = document.getElementById("loginIdentifier");
+  const inpPass = document.getElementById("loginPass");
+  if (inpId) inpId.value = "";
+  if (inpPass) inpPass.value = "";
+  setTimeout(() => {
+    if (inpId) inpId.value = "";
+    if (inpPass) inpPass.value = "";
+  }, 100);
+  setTimeout(() => {
+    if (inpId) inpId.value = "";
+    if (inpPass) inpPass.value = "";
+  }, 300);
+}
+
 function checkAuth() {
   const isLoggedIn = localStorage.getItem("icma_is_logged_in_v3") === "true";
   const loginScreen = document.getElementById("loginScreen");
@@ -305,6 +322,7 @@ function checkAuth() {
       loginScreen.style.display = "flex";
       loginScreen.scrollTop = 0;
     }
+    clearLoginFormInputs();
   } else {
     if (loginScreen) loginScreen.style.display = "none";
   }

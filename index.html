@@ -37,15 +37,15 @@
         <p>Sistem Pencatatan Donasi & Laporan Keuangan</p>
       </div>
 
-      <form id="loginForm">
+      <form id="loginForm" autocomplete="off">
         <div class="form-group mb-3" style="text-align: left; margin-bottom: 1rem;">
           <label for="loginIdentifier">Username / Email / Nomor WhatsApp</label>
-          <input type="text" id="loginIdentifier" class="form-control" value="" placeholder="contoh: admin / emhadonasi@gmail.com / 0895393181822" required>
+          <input type="text" id="loginIdentifier" class="form-control" value="" placeholder="contoh: admin / emhadonasi@gmail.com / 0895393181822" autocomplete="off" required>
         </div>
 
         <div class="form-group mb-3" style="text-align: left; margin-bottom: 1.25rem;">
           <label for="loginPass">Password</label>
-          <input type="password" id="loginPass" class="form-control" value="" placeholder="Masukkan kata sandi" required>
+          <input type="password" id="loginPass" class="form-control" value="" placeholder="Masukkan kata sandi" autocomplete="new-password" required>
         </div>
 
         <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.8rem; font-size: 1rem;">
