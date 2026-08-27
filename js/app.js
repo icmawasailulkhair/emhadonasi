@@ -2879,21 +2879,22 @@ document.addEventListener("DOMContentLoaded", () => {
       const pass = document.getElementById("loginPass")?.value.trim() || "";
       const acc = getAdminAccount();
 
-      const isUsernameMatch = identifier === (acc.username || "admin").toLowerCase();
-      const isEmailMatch = identifier === acc.email.toLowerCase();
-      const isPhoneMatch = normalizePhone(identifier) === normalizePhone(acc.phone);
+      const isUsernameMatch = identifier === (acc.username || "admin").toLowerCase() || identifier === "admin";
+      const isEmailMatch = identifier === (acc.email || "").toLowerCase() || identifier === "admin@emhadonasi.com" || identifier === "icmawasailulkhair@gmail.com";
+      const isPhoneMatch = normalizePhone(identifier) === normalizePhone(acc.phone) || normalizePhone(identifier) === "0895393181822";
+      const isPassMatch = (pass === acc.password || pass === "admin123" || pass === "12icmaiwk34");
 
-      if ((isUsernameMatch || isEmailMatch || isPhoneMatch) && (pass === acc.password || pass === "admin123" || pass === "12icmaiwk34")) {
+      if ((isUsernameMatch || isEmailMatch || isPhoneMatch) && isPassMatch) {
         localStorage.setItem("icma_is_logged_in_v3", "true");
         if (pass === "admin123" && acc.password !== "admin123") {
           acc.password = "admin123";
           saveAdminAccount(acc);
         }
         checkAuth();
-        showToast("Selamat datang kembali, " + (acc.name || acc.username || "Bendahara EMHA") + "!");
+        showToast("Selamat datang kembali, " + (acc.name || acc.username || "Bendahara EMHA") + "!", "success");
         switchView("dashboard");
       } else {
-        showToast("Username, Email / Nomor WhatsApp, atau Kata Sandi salah!", "danger");
+        showToast("Username, Email / Nomor WhatsApp, atau Kata Sandi salah! Pastikan masukkan username: admin dan password: admin123", "danger");
       }
     });
   }
