@@ -1,5 +1,5 @@
 /**
- * ICMA Sinergi Kebaikan Abadi - Streamlined Application Core
+ * EMHA Donasi - Streamlined Application Core
  * Rules:
  * 1. Donatur management retains full ID, WhatsApp link, Google Maps link & Wilayah.
  * 2. Donasi Form uses Donor ID / Name live search & autocomplete. No extra address fields!
@@ -78,7 +78,7 @@ const INITIAL_DONORS = [
 
 // Initial 5 Donation Records (1 for each 5 donation categories: Wakaf Jariyah, Zakat, Infaq, Shodaqoh, Dana Riba)
 const INITIAL_DONATIONS = [
-  { id: "DON-20260801-001", donorId: "DNR-001", nama: "H. Mile & Hj. Masita", tanggal: "2026-08-01", jumlah: 1500000, tujuan: "Wakaf Jariyah", metode: "Transfer", catatan: "Wakaf pembangunan gedung ICMA" },
+  { id: "DON-20260801-001", donorId: "DNR-001", nama: "H. Mile & Hj. Masita", tanggal: "2026-08-01", jumlah: 1500000, tujuan: "Wakaf Jariyah", metode: "Transfer", catatan: "Wakaf pembangunan gedung EMHA" },
   { id: "DON-20260802-002", donorId: "DNR-002", nama: "Ibu Lulu", tanggal: "2026-08-02", jumlah: 1000000, tujuan: "Zakat", metode: "Transfer", catatan: "Zakat Maal Penghasilan" },
   { id: "DON-20260803-003", donorId: "DNR-003", nama: "Ibu Siti Rahayu", tanggal: "2026-08-03", jumlah: 250000, tujuan: "Infaq", metode: "Tunai", catatan: "Infaq operasional dakwah" },
   { id: "DON-20260804-004", donorId: "DNR-004", nama: "Bp Sumadi", tanggal: "2026-08-04", jumlah: 500000, tujuan: "Shodaqoh", metode: "Tunai", catatan: "Sedekah subuh berkah" },
@@ -87,7 +87,7 @@ const INITIAL_DONATIONS = [
 
 // Initial 5 Seed Expenses (Uang Keluar / Operasional & Penyaluran 5 Kali)
 const INITIAL_EXPENSES = [
-  { id: "EXP-20260802-001", tanggal: "2026-08-02", kategori: "Operasional Kantor", jumlah: 450000, metode: "Transfer", catatan: "Tagihan Listrik & Air Kantor ICMA" },
+  { id: "EXP-20260802-001", tanggal: "2026-08-02", kategori: "Operasional Kantor", jumlah: 450000, metode: "Transfer", catatan: "Tagihan Listrik & Air Kantor EMHA" },
   { id: "EXP-20260805-002", tanggal: "2026-08-05", kategori: "Penyaluran Santunan", jumlah: 1000000, metode: "Tunai", catatan: "Santunan 10 Anak Yatim & Dhuafa" },
   { id: "EXP-20260810-003", tanggal: "2026-08-10", kategori: "Logistik & Sarana", jumlah: 500000, metode: "Transfer", catatan: "Pengadaan Al-Qur'an & Sound System" },
   { id: "EXP-20260815-004", tanggal: "2026-08-15", kategori: "Penyaluran Wakaf", jumlah: 1200000, metode: "Transfer", catatan: "Bantuan Pengeboran Sumur Air Bersih" },
@@ -2231,7 +2231,7 @@ function deleteDonation(id) {
 }
 
 function resetToInitialData() {
-  if (!confirm("Kembalikan data ke data default ICMA?")) return;
+  if (!confirm("Kembalikan data ke data default EMHA Donasi?")) return;
   donors = [...INITIAL_DONORS];
   donations = [...INITIAL_DONATIONS];
   expenses = [...INITIAL_EXPENSES];
@@ -3105,7 +3105,7 @@ function handleSendRecEmailOtp() {
     payload: null
   };
 
-  sendVerificationOtpWhatsApp(rawInput, code, "Pemulihan Email ICMA");
+  sendVerificationOtpWhatsApp(rawInput, code, "Pemulihan Email EMHA Donasi");
 
   const box = document.getElementById("recEmailOtpBox");
   if (box) box.style.display = "block";
@@ -3159,7 +3159,7 @@ function handleSendRecPhoneOtp() {
     payload: null
   };
 
-  sendVerificationOtpEmail(rawInput, code, "Pemulihan Nomor WhatsApp ICMA");
+  sendVerificationOtpEmail(rawInput, code, "Pemulihan Nomor WhatsApp EMHA Donasi");
 
   const box = document.getElementById("recPhoneOtpBox");
   if (box) box.style.display = "block";
@@ -3251,9 +3251,9 @@ function handleSendPassResetOtp() {
   };
 
   if (currentPassVerifyMethod === "email") {
-    sendVerificationOtpEmail(rawInput, code, "Reset Password ICMA");
+    sendVerificationOtpEmail(rawInput, code, "Reset Password EMHA Donasi");
   } else {
-    sendVerificationOtpWhatsApp(rawInput, code, "Reset Password ICMA");
+    sendVerificationOtpWhatsApp(rawInput, code, "Reset Password EMHA Donasi");
   }
 
   const box = document.getElementById("recPassOtpBox");
@@ -3382,7 +3382,7 @@ function handleStartChangeEmail(e) {
     payload: { newEmail }
   };
 
-  sendVerificationOtpEmail(newEmail, code, "Verifikasi Ganti Email ICMA");
+  sendVerificationOtpEmail(newEmail, code, "Verifikasi Ganti Email EMHA Donasi");
   const box = document.getElementById("boxOtpChangeEmail");
   if (box) box.style.display = "block";
   const inp = document.getElementById("otpChangeEmailInput");
@@ -3426,7 +3426,7 @@ function handleStartChangePhone(e) {
     payload: { newPhone }
   };
 
-  sendVerificationOtpWhatsApp(newPhone, code, "Verifikasi Ganti WhatsApp ICMA");
+  sendVerificationOtpWhatsApp(newPhone, code, "Verifikasi Ganti WhatsApp EMHA Donasi");
   const box = document.getElementById("boxOtpChangePhone");
   if (box) box.style.display = "block";
   const inp = document.getElementById("otpChangePhoneInput");

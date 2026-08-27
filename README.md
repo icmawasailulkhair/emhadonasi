@@ -1,7 +1,7 @@
-# ICMA Sinergi Kebaikan Abadi
+# EMHA Donasi (emhadonasi)
 ## Sistem Pencatatan Donasi & Laporan Keuangan
 
-Proyek web manajemen pencatatan donasi dan laporan keuangan untuk **ICMA Sinergi Kebaikan Abadi** bertema **SaaS Minimalis** dengan latar belakang putih dan aksen biru royal/elektrik.
+Proyek web manajemen pencatatan donasi dan laporan keuangan untuk **EMHA Donasi** bertema **SaaS Minimalis** dengan latar belakang putih dan aksen biru royal/elektrik.
 
 ---
 
