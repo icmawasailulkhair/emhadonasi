@@ -2883,10 +2883,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const isEmailMatch = identifier === acc.email.toLowerCase();
       const isPhoneMatch = normalizePhone(identifier) === normalizePhone(acc.phone);
 
-      if ((isUsernameMatch || isEmailMatch || isPhoneMatch) && (pass === acc.password || pass === "12icmaiwk34" || pass === "admin123")) {
+      if ((isUsernameMatch || isEmailMatch || isPhoneMatch) && (pass === acc.password || pass === "admin123" || pass === "12icmaiwk34")) {
         localStorage.setItem("icma_is_logged_in_v3", "true");
-        if (pass === "12icmaiwk34" && acc.password !== "12icmaiwk34") {
-          acc.password = "12icmaiwk34";
+        if (pass === "admin123" && acc.password !== "admin123") {
+          acc.password = "admin123";
           saveAdminAccount(acc);
         }
         checkAuth();
@@ -2916,9 +2916,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const DEFAULT_ADMIN_ACCOUNT = {
   username: "admin",
-  email: "icmawasailulkhair@gmail.com",
+  email: "admin@emhadonasi.com",
   phone: "0895393181822",
-  password: "12icmaiwk34",
+  password: "admin123",
   name: "Bendahara EMHA"
 };
 
@@ -2928,8 +2928,8 @@ function getAdminAccount() {
     try {
       const parsed = JSON.parse(raw);
       if (!parsed.username) parsed.username = "admin";
-      if (!parsed.password) parsed.password = "12icmaiwk34";
-      if (parsed.email === "admin@icma.org") parsed.email = "icmawasailulkhair@gmail.com";
+      if (!parsed.password || parsed.password === "12icmaiwk34") parsed.password = "admin123";
+      if (parsed.email === "admin@icma.org" || parsed.email === "icmawasailulkhair@gmail.com") parsed.email = "admin@emhadonasi.com";
       if (parsed.phone === "081234567890") parsed.phone = "0895393181822";
       return parsed;
     } catch (e) {}
