@@ -3771,4 +3771,179 @@ function handleResetProfilePhoto() {
   } catch(e) {}
 })();
 
+// ============================================================================
+// REST API MYSQL ONLINE INTEGRATION MODULE
+// ============================================================================
+const API_BASE_URL_KEY = "emha_api_base_url";
+const API_ENABLED_KEY  = "emha_api_enabled";
 
+function getApiBaseUrl() {
+  try {
+    return (localStorage.getItem(API_BASE_URL_KEY) || "").trim().replace(/\/+$/, "");
+  } catch(e) {
+    return "";
+  }
+}
+
+function isApiEnabled() {
+  try {
+    return localStorage.getItem(API_ENABLED_KEY) === "true" && getApiBaseUrl().length > 0;
+  } catch(e) {
+    return false;
+  }
+}
+
+function renderApiConfigUI() {
+  const urlInp = document.getElementById("cfgApiBaseUrl");
+  const badge = document.getElementById("badgeApiDbStatus");
+  const url = getApiBaseUrl();
+  const enabled = isApiEnabled();
+
+  if (urlInp && !urlInp.value) {
+    urlInp.value = url;
+  }
+
+  if (badge) {
+    if (enabled) {
+      badge.style.background = "var(--emerald-50)";
+      badge.style.color = "var(--emerald-700)";
+      badge.style.border = "1px solid var(--emerald-300)";
+      badge.innerHTML = '<i class="fa-solid fa-cloud-bolt"></i> Mode: MySQL Online (Aktif)';
+    } else {
+      badge.style.background = "var(--slate-100)";
+      badge.style.color = "var(--slate-700)";
+      badge.style.border = "1px solid var(--slate-300)";
+      badge.innerHTML = '<i class="fa-solid fa-hard-drive"></i> Mode: LocalStorage (Offline)';
+    }
+  }
+}
+
+async function handleTestApiConnection() {
+  const urlInp = document.getElementById("cfgApiBaseUrl");
+  const url = (urlInp?.value || "").trim().replace(/\/+$/, "");
+  if (!url) {
+    showToast("Masukkan URL endpoint API terlebih dahulu!", "danger");
+    return;
+  }
+
+  showToast("Menghubungi server REST API MySQL...", "info");
+  try {
+    const pingUrl = url.includes("?") ? `${url}&action=ping` : `${url}?action=ping`;
+    const res = await fetch(pingUrl, { method: "GET", headers: { "Accept": "application/json" } });
+    if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+    const json = await res.json();
+    if (json.status === "ok" || json.status === "success") {
+      showToast("Koneksi ke REST API MySQL Berhasil! ✅", "success");
+    } else {
+      showToast("Respon server: " + (json.message || "Gagal"), "warning");
+    }
+  } catch (err) {
+    showToast("Gagal terhubung ke REST API: " + err.message, "danger");
+  }
+}
+
+async function handleSaveApiConfig() {
+  const urlInp = document.getElementById("cfgApiBaseUrl");
+  const url = (urlInp?.value || "").trim().replace(/\/+$/, "");
+  if (!url) {
+    showToast("Harap masukkan URL endpoint API yang valid!", "danger");
+    return;
+  }
+
+  try {
+    localStorage.setItem(API_BASE_URL_KEY, url);
+    localStorage.setItem(API_ENABLED_KEY, "true");
+    renderApiConfigUI();
+    showToast("Konfigurasi disimpan! Mode REST API MySQL Aktif.", "success");
+    // Otomatis tarik data terbaru
+    await handleFetchAllFromMySql(false);
+  } catch (e) {
+    showToast("Gagal menyimpan konfigurasi ke browser: " + e.message, "danger");
+  }
+}
+
+function handleDisableApiMode() {
+  localStorage.setItem(API_ENABLED_KEY, "false");
+  renderApiConfigUI();
+  showToast("Mode MySQL dinonaktifkan. Aplikasi kembali ke penyimpanan LocalStorage.", "info");
+}
+
+async function handleSyncAllToMySql() {
+  const url = getApiBaseUrl();
+  if (!url) {
+    showToast("URL API belum dikonfigurasi! Harap simpan URL API terlebih dahulu.", "danger");
+    return;
+  }
+
+  showToast("Mengunggah seluruh data lokal ke database MySQL...", "info");
+  try {
+    const syncUrl = url.includes("?") ? `${url}&action=sync_all` : `${url}?action=sync_all`;
+    const payload = {
+      donors,
+      donations,
+      expenses,
+      categoriesMasuk,
+      categoriesKeluar,
+      trash
+    };
+
+    const res = await fetch(syncUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    if (json.status === "success" || json.status === "ok") {
+      showToast("Seluruh data lokal berhasil dimigrasikan ke MySQL Hosting! 🎉", "success");
+    } else {
+      showToast("Gagal migrasi: " + (json.message || "Error tidak dikenal"), "danger");
+    }
+  } catch (err) {
+    showToast("Gagal sinkronisasi ke MySQL: " + err.message, "danger");
+  }
+}
+
+async function handleFetchAllFromMySql(notifySuccess = true) {
+  const url = getApiBaseUrl();
+  if (!url) return;
+
+  try {
+    const initUrl = url.includes("?") ? `${url}&action=init_data` : `${url}?action=init_data`;
+    const res = await fetch(initUrl, { method: "GET", headers: { "Accept": "application/json" } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+
+    if (json.status === "success" && json.data) {
+      const d = json.data;
+      if (Array.isArray(d.donors) && d.donors.length > 0) donors = d.donors;
+      if (Array.isArray(d.donations)) donations = d.donations;
+      if (Array.isArray(d.expenses)) expenses = d.expenses;
+      if (Array.isArray(d.categoriesMasuk) && d.categoriesMasuk.length > 0) categoriesMasuk = d.categoriesMasuk;
+      if (Array.isArray(d.categoriesKeluar) && d.categoriesKeluar.length > 0) categoriesKeluar = d.categoriesKeluar;
+      if (Array.isArray(d.trash)) trash = d.trash;
+
+      saveToStorage();
+      renderDashboardOverview();
+      renderDonasiTable();
+      renderDonaturTable();
+      renderKasTable();
+      populateAllCategorySelects();
+
+      if (notifySuccess) {
+        showToast("Data terbaru berhasil ditarik dari database MySQL!", "success");
+      }
+    }
+  } catch (err) {
+    console.warn("Gagal fetch dari MySQL API:", err);
+  }
+}
+
+// Inisialisasi status koneksi API & auto-fetch saat aplikasi dimuat
+document.addEventListener("DOMContentLoaded", () => {
+  renderApiConfigUI();
+  if (isApiEnabled()) {
+    handleFetchAllFromMySql(false);
+  }
+});
