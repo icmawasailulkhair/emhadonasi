@@ -25,6 +25,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -1264,48 +1265,55 @@
               </button>
             </div>
 
-            <!-- Card 7: Konfigurasi Database REST API (MySQL Online Hosting) -->
-            <div class="card" style="padding: 1.5rem; grid-column: span 2; border: 1.5px solid var(--primary-200); background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-surface) 100%);">
+            <!-- Card 7: Konfigurasi Database Cloud (Supabase Online Real-Time) -->
+            <div class="card" style="padding: 1.5rem; grid-column: span 2; border: 1.5px solid var(--emerald-300); background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-surface) 100%);">
               <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
                 <div style="display:flex; align-items:center; gap:0.6rem;">
-                  <div style="width:38px; height:38px; border-radius:10px; background:var(--primary-100); color:var(--primary-700); display:flex; align-items:center; justify-content:center; font-size:1.15rem;">
-                    <i class="fa-solid fa-database"></i>
+                  <div style="width:38px; height:38px; border-radius:10px; background:#dcfce7; color:#15803d; display:flex; align-items:center; justify-content:center; font-size:1.25rem;">
+                    <i class="fa-solid fa-bolt"></i>
                   </div>
                   <div>
-                    <h3 style="font-size:0.95rem; margin:0; color:var(--text-primary);">Koneksi Database REST API (MySQL Online)</h3>
-                    <span style="font-size:0.72rem; color:var(--text-muted);">Hubungkan aplikasi frontend ke database MySQL di hosting cPanel / VPS Anda</span>
+                    <h3 style="font-size:0.95rem; margin:0; color:var(--text-primary);">Koneksi Database Cloud (Supabase Online)</h3>
+                    <span style="font-size:0.72rem; color:var(--text-muted);">Database cloud PostgreSQL online gratis & aman tanpa perlu sewa server backend</span>
                   </div>
                 </div>
-                <span class="badge" id="badgeApiDbStatus" style="background:var(--slate-100); color:var(--slate-700); border:1px solid var(--slate-300); font-weight:600;">
+                <span class="badge" id="badgeSupabaseStatus" style="background:var(--slate-100); color:var(--slate-700); border:1px solid var(--slate-300); font-weight:600;">
                   <i class="fa-solid fa-hard-drive"></i> Mode: LocalStorage (Offline)
                 </span>
               </div>
 
               <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:1rem; line-height:1.5;">
-                Unggah file <code>backend/api.php</code> dan import skema <code>backend/database.sql</code> ke hosting Anda. Kemudian masukkan link URL endpoint file <code>api.php</code> tersebut di bawah ini untuk mengaktifkan sinkronisasi online *real-time* lintas perangkat.
+                Buat proyek gratis di <a href="https://supabase.com" target="_blank" style="color:var(--emerald-600); font-weight:600; text-decoration:underline;">supabase.com</a>, jalankan file skrip SQL <code>supabase/schema.sql</code> di SQL Editor Supabase, lalu masukkan <strong>Project URL</strong> & <strong>Anon Key</strong> di bawah ini untuk mengaktifkan sinkronisasi cloud *real-time*.
               </p>
 
-              <div class="form-group mb-3">
-                <label for="cfgApiBaseUrl" style="font-weight:600;">URL Endpoint REST API (api.php) *</label>
-                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                  <input type="url" id="cfgApiBaseUrl" class="form-control" style="flex:1; min-width:260px;" placeholder="https://domain-anda.com/api.php">
-                  <button type="button" class="btn btn-secondary btn-sm" onclick="handleTestApiConnection()" style="white-space:nowrap;">
-                    <i class="fa-solid fa-plug-circle-check"></i> Tes Koneksi
-                  </button>
-                  <button type="button" class="btn btn-primary btn-sm" onclick="handleSaveApiConfig()" style="white-space:nowrap;">
-                    <i class="fa-solid fa-floppy-disk"></i> Simpan & Aktifkan
-                  </button>
+              <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:0.75rem; margin-bottom:1rem;">
+                <div class="form-group">
+                  <label for="cfgSupabaseUrl" style="font-weight:600;">Supabase Project URL *</label>
+                  <input type="url" id="cfgSupabaseUrl" class="form-control" placeholder="https://xyzproject.supabase.co">
+                </div>
+                <div class="form-group">
+                  <label for="cfgSupabaseAnonKey" style="font-weight:600;">Supabase Anon Public Key *</label>
+                  <input type="text" id="cfgSupabaseAnonKey" class="form-control" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
                 </div>
               </div>
 
-              <div style="display:flex; gap:0.6rem; flex-wrap:wrap; padding-top:0.5rem; border-top:1px dashed var(--border-subtle);">
-                <button type="button" class="btn btn-success btn-sm" onclick="handleSyncAllToMySql()" title="Unggah seluruh data lokal saat ini ke database MySQL hosting">
-                  <i class="fa-solid fa-cloud-arrow-up"></i> Migrasi / Upload Data Lokal ke MySQL
+              <div style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.75rem;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="handleTestSupabaseConnection()" style="white-space:nowrap;">
+                  <i class="fa-solid fa-plug-circle-check"></i> Tes Koneksi Supabase
                 </button>
-                <button type="button" class="btn btn-secondary btn-sm" onclick="handleFetchAllFromMySql()" title="Tarik data terbaru dari database MySQL hosting">
-                  <i class="fa-solid fa-cloud-arrow-down"></i> Tarik Data dari MySQL ke Lokal
+                <button type="button" class="btn btn-primary btn-sm" onclick="handleSaveSupabaseConfig()" style="white-space:nowrap;">
+                  <i class="fa-solid fa-floppy-disk"></i> Simpan & Aktifkan Supabase
                 </button>
-                <button type="button" class="btn btn-sm" onclick="handleDisableApiMode()" style="background:#fee2e2; color:#991b1b; border:1px solid #fca5a5;">
+              </div>
+
+              <div style="display:flex; gap:0.6rem; flex-wrap:wrap; padding-top:0.6rem; border-top:1px dashed var(--border-subtle);">
+                <button type="button" class="btn btn-success btn-sm" onclick="handleSyncAllToSupabase()" title="Unggah seluruh data lokal saat ini ke cloud Supabase">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Migrasi / Upload Data Lokal ke Supabase
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="handleFetchAllFromSupabase()" title="Tarik data terbaru dari cloud Supabase ke lokal">
+                  <i class="fa-solid fa-cloud-arrow-down"></i> Tarik Data dari Supabase ke Lokal
+                </button>
+                <button type="button" class="btn btn-sm" onclick="handleDisableSupabaseMode()" style="background:#fee2e2; color:#991b1b; border:1px solid #fca5a5;">
                   <i class="fa-solid fa-power-off"></i> Nonaktifkan (Kembali ke LocalStorage)
                 </button>
               </div>

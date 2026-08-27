@@ -3772,43 +3772,66 @@ function handleResetProfilePhoto() {
 })();
 
 // ============================================================================
-// REST API MYSQL ONLINE INTEGRATION MODULE
+// SUPABASE CLOUD DATABASE INTEGRATION MODULE (PostgreSQL Online)
 // ============================================================================
-const API_BASE_URL_KEY = "emha_api_base_url";
-const API_ENABLED_KEY  = "emha_api_enabled";
+const SUPABASE_URL_KEY     = "emha_supabase_url";
+const SUPABASE_KEY_KEY     = "emha_supabase_key";
+const SUPABASE_ENABLED_KEY = "emha_supabase_enabled";
 
-function getApiBaseUrl() {
+let _supabaseClient = null;
+
+function getSupabaseUrl() {
   try {
-    return (localStorage.getItem(API_BASE_URL_KEY) || "").trim().replace(/\/+$/, "");
+    return (localStorage.getItem(SUPABASE_URL_KEY) || "").trim().replace(/\/+$/, "");
   } catch(e) {
     return "";
   }
 }
 
-function isApiEnabled() {
+function getSupabaseAnonKey() {
   try {
-    return localStorage.getItem(API_ENABLED_KEY) === "true" && getApiBaseUrl().length > 0;
+    return (localStorage.getItem(SUPABASE_KEY_KEY) || "").trim();
+  } catch(e) {
+    return "";
+  }
+}
+
+function isSupabaseEnabled() {
+  try {
+    return localStorage.getItem(SUPABASE_ENABLED_KEY) === "true" && getSupabaseUrl().length > 0 && getSupabaseAnonKey().length > 0;
   } catch(e) {
     return false;
   }
 }
 
-function renderApiConfigUI() {
-  const urlInp = document.getElementById("cfgApiBaseUrl");
-  const badge = document.getElementById("badgeApiDbStatus");
-  const url = getApiBaseUrl();
-  const enabled = isApiEnabled();
-
-  if (urlInp && !urlInp.value) {
-    urlInp.value = url;
+function getSupabaseClient() {
+  if (_supabaseClient) return _supabaseClient;
+  const url = getSupabaseUrl();
+  const key = getSupabaseAnonKey();
+  if (url && key && window.supabase && typeof window.supabase.createClient === "function") {
+    _supabaseClient = window.supabase.createClient(url, key);
+    return _supabaseClient;
   }
+  return null;
+}
+
+function renderSupabaseConfigUI() {
+  const urlInp = document.getElementById("cfgSupabaseUrl");
+  const keyInp = document.getElementById("cfgSupabaseAnonKey");
+  const badge = document.getElementById("badgeSupabaseStatus");
+  const url = getSupabaseUrl();
+  const key = getSupabaseAnonKey();
+  const enabled = isSupabaseEnabled();
+
+  if (urlInp && !urlInp.value) urlInp.value = url;
+  if (keyInp && !keyInp.value) keyInp.value = key;
 
   if (badge) {
     if (enabled) {
-      badge.style.background = "var(--emerald-50)";
-      badge.style.color = "var(--emerald-700)";
-      badge.style.border = "1px solid var(--emerald-300)";
-      badge.innerHTML = '<i class="fa-solid fa-cloud-bolt"></i> Mode: MySQL Online (Aktif)';
+      badge.style.background = "#dcfce7";
+      badge.style.color = "#15803d";
+      badge.style.border = "1px solid #86efac";
+      badge.innerHTML = '<i class="fa-solid fa-cloud-bolt"></i> Mode: Supabase Cloud (Aktif)';
     } else {
       badge.style.background = "var(--slate-100)";
       badge.style.color = "var(--slate-700)";
@@ -3818,132 +3841,235 @@ function renderApiConfigUI() {
   }
 }
 
-async function handleTestApiConnection() {
-  const urlInp = document.getElementById("cfgApiBaseUrl");
+async function handleTestSupabaseConnection() {
+  const urlInp = document.getElementById("cfgSupabaseUrl");
+  const keyInp = document.getElementById("cfgSupabaseAnonKey");
   const url = (urlInp?.value || "").trim().replace(/\/+$/, "");
-  if (!url) {
-    showToast("Masukkan URL endpoint API terlebih dahulu!", "danger");
+  const key = (keyInp?.value || "").trim();
+
+  if (!url || !key) {
+    showToast("Masukkan Supabase Project URL dan Anon Key terlebih dahulu!", "danger");
     return;
   }
 
-  showToast("Menghubungi server REST API MySQL...", "info");
+  if (!window.supabase || typeof window.supabase.createClient !== "function") {
+    showToast("Pustaka Supabase JS belum selesai dimuat di browser.", "danger");
+    return;
+  }
+
+  showToast("Menghubungi server Supabase Cloud...", "info");
   try {
-    const pingUrl = url.includes("?") ? `${url}&action=ping` : `${url}?action=ping`;
-    const res = await fetch(pingUrl, { method: "GET", headers: { "Accept": "application/json" } });
-    if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
-    const json = await res.json();
-    if (json.status === "ok" || json.status === "success") {
-      showToast("Koneksi ke REST API MySQL Berhasil! ✅", "success");
-    } else {
-      showToast("Respon server: " + (json.message || "Gagal"), "warning");
-    }
+    const testClient = window.supabase.createClient(url, key);
+    const { data, error } = await testClient.from("donors").select("id").limit(1);
+    if (error) throw error;
+
+    showToast("Koneksi ke Supabase Cloud Berhasil & Aktif! ⚡", "success");
   } catch (err) {
-    showToast("Gagal terhubung ke REST API: " + err.message, "danger");
+    showToast("Gagal terhubung ke Supabase: " + (err.message || err.error_description || JSON.stringify(err)), "danger");
   }
 }
 
-async function handleSaveApiConfig() {
-  const urlInp = document.getElementById("cfgApiBaseUrl");
+async function handleSaveSupabaseConfig() {
+  const urlInp = document.getElementById("cfgSupabaseUrl");
+  const keyInp = document.getElementById("cfgSupabaseAnonKey");
   const url = (urlInp?.value || "").trim().replace(/\/+$/, "");
-  if (!url) {
-    showToast("Harap masukkan URL endpoint API yang valid!", "danger");
+  const key = (keyInp?.value || "").trim();
+
+  if (!url || !key) {
+    showToast("Harap isi Project URL dan Anon Key dengan benar!", "danger");
     return;
   }
 
   try {
-    localStorage.setItem(API_BASE_URL_KEY, url);
-    localStorage.setItem(API_ENABLED_KEY, "true");
-    renderApiConfigUI();
-    showToast("Konfigurasi disimpan! Mode REST API MySQL Aktif.", "success");
-    // Otomatis tarik data terbaru
-    await handleFetchAllFromMySql(false);
+    localStorage.setItem(SUPABASE_URL_KEY, url);
+    localStorage.setItem(SUPABASE_KEY_KEY, key);
+    localStorage.setItem(SUPABASE_ENABLED_KEY, "true");
+    _supabaseClient = null; // Reset cached client instance
+
+    renderSupabaseConfigUI();
+    showToast("Konfigurasi disimpan! Mode Supabase Cloud Aktif.", "success");
+    await handleFetchAllFromSupabase(false);
   } catch (e) {
-    showToast("Gagal menyimpan konfigurasi ke browser: " + e.message, "danger");
+    showToast("Gagal menyimpan konfigurasi: " + e.message, "danger");
   }
 }
 
-function handleDisableApiMode() {
-  localStorage.setItem(API_ENABLED_KEY, "false");
-  renderApiConfigUI();
-  showToast("Mode MySQL dinonaktifkan. Aplikasi kembali ke penyimpanan LocalStorage.", "info");
+function handleDisableSupabaseMode() {
+  localStorage.setItem(SUPABASE_ENABLED_KEY, "false");
+  renderSupabaseConfigUI();
+  showToast("Mode Supabase dinonaktifkan. Aplikasi kembali ke LocalStorage.", "info");
 }
 
-async function handleSyncAllToMySql() {
-  const url = getApiBaseUrl();
-  if (!url) {
-    showToast("URL API belum dikonfigurasi! Harap simpan URL API terlebih dahulu.", "danger");
+async function handleSyncAllToSupabase() {
+  const client = getSupabaseClient();
+  if (!client) {
+    showToast("Supabase belum terhubung! Simpan Project URL & Key terlebih dahulu.", "danger");
     return;
   }
 
-  showToast("Mengunggah seluruh data lokal ke database MySQL...", "info");
+  showToast("Mengunggah seluruh data lokal ke cloud Supabase...", "info");
   try {
-    const syncUrl = url.includes("?") ? `${url}&action=sync_all` : `${url}?action=sync_all`;
-    const payload = {
-      donors,
-      donations,
-      expenses,
-      categoriesMasuk,
-      categoriesKeluar,
-      trash
-    };
-
-    const res = await fetch(syncUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    if (json.status === "success" || json.status === "ok") {
-      showToast("Seluruh data lokal berhasil dimigrasikan ke MySQL Hosting! 🎉", "success");
-    } else {
-      showToast("Gagal migrasi: " + (json.message || "Error tidak dikenal"), "danger");
+    // 1. Donors
+    if (donors.length > 0) {
+      const donorsPayload = donors.map(d => ({
+        id: d.id,
+        nama: d.nama,
+        hp: d.hp || null,
+        provinsi: d.provinsi || null,
+        kabupaten: d.kabupaten || null,
+        kecamatan: d.kecamatan || null,
+        kelurahan: d.kelurahan || null,
+        alamat_maps: d.alamatMaps || d.alamat_maps || null
+      }));
+      const { error: errDonors } = await client.from("donors").upsert(donorsPayload, { onConflict: "id" });
+      if (errDonors) throw errDonors;
     }
+
+    // 2. Donations
+    if (donations.length > 0) {
+      const donationsPayload = donations.map(d => ({
+        id: d.id,
+        donor_id: d.donorId || d.donor_id || null,
+        nama: d.nama,
+        tanggal: d.tanggal || new Date().toISOString().split("T")[0],
+        jumlah: Number(d.jumlah) || 0,
+        tujuan: d.tujuan || "Wakaf Jariyah",
+        metode: d.metode || "Transfer",
+        catatan: d.catatan || ""
+      }));
+      const { error: errDonations } = await client.from("donations").upsert(donationsPayload, { onConflict: "id" });
+      if (errDonations) throw errDonations;
+    }
+
+    // 3. Expenses
+    if (expenses.length > 0) {
+      const expensesPayload = expenses.map(e => ({
+        id: e.id,
+        tanggal: e.tanggal || new Date().toISOString().split("T")[0],
+        kategori: e.kategori,
+        jumlah: Number(e.jumlah) || 0,
+        metode: e.metode || "Tunai",
+        catatan: e.catatan || ""
+      }));
+      const { error: errExpenses } = await client.from("expenses").upsert(expensesPayload, { onConflict: "id" });
+      if (errExpenses) throw errExpenses;
+    }
+
+    // 4. Categories
+    if (categoriesMasuk.length > 0) {
+      const catMasukPayload = categoriesMasuk.map(c => ({ nama: c }));
+      await client.from("categories_masuk").upsert(catMasukPayload, { onConflict: "nama" });
+    }
+    if (categoriesKeluar.length > 0) {
+      const catKeluarPayload = categoriesKeluar.map(c => ({ nama: c }));
+      await client.from("categories_keluar").upsert(catKeluarPayload, { onConflict: "nama" });
+    }
+
+    // 5. Trash
+    if (trash.length > 0) {
+      const trashPayload = trash.map(t => ({
+        id: t.id,
+        item_type: t.type || t.item_type || "donasi",
+        item_data: t.data || t.item_data || {},
+        deleted_at: t.deletedAt || t.deleted_at || new Date().toISOString()
+      }));
+      await client.from("trash").upsert(trashPayload, { onConflict: "id" });
+    }
+
+    showToast("Seluruh data lokal berhasil dimigrasikan ke Supabase Cloud! ⚡", "success");
   } catch (err) {
-    showToast("Gagal sinkronisasi ke MySQL: " + err.message, "danger");
+    showToast("Gagal migrasi ke Supabase: " + (err.message || JSON.stringify(err)), "danger");
   }
 }
 
-async function handleFetchAllFromMySql(notifySuccess = true) {
-  const url = getApiBaseUrl();
-  if (!url) return;
+async function handleFetchAllFromSupabase(notifySuccess = true) {
+  const client = getSupabaseClient();
+  if (!client) return;
 
   try {
-    const initUrl = url.includes("?") ? `${url}&action=init_data` : `${url}?action=init_data`;
-    const res = await fetch(initUrl, { method: "GET", headers: { "Accept": "application/json" } });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
+    // 1. Fetch Donors
+    const { data: dDonors, error: eDonors } = await client.from("donors").select("*").order("id", { ascending: true });
+    if (!eDonors && Array.isArray(dDonors) && dDonors.length > 0) {
+      donors = dDonors.map(d => ({
+        id: d.id,
+        nama: d.nama,
+        hp: d.hp || "",
+        provinsi: d.provinsi || "",
+        kabupaten: d.kabupaten || "",
+        kecamatan: d.kecamatan || "",
+        kelurahan: d.kelurahan || "",
+        alamatMaps: d.alamat_maps || ""
+      }));
+    }
 
-    if (json.status === "success" && json.data) {
-      const d = json.data;
-      if (Array.isArray(d.donors) && d.donors.length > 0) donors = d.donors;
-      if (Array.isArray(d.donations)) donations = d.donations;
-      if (Array.isArray(d.expenses)) expenses = d.expenses;
-      if (Array.isArray(d.categoriesMasuk) && d.categoriesMasuk.length > 0) categoriesMasuk = d.categoriesMasuk;
-      if (Array.isArray(d.categoriesKeluar) && d.categoriesKeluar.length > 0) categoriesKeluar = d.categoriesKeluar;
-      if (Array.isArray(d.trash)) trash = d.trash;
+    // 2. Fetch Donations
+    const { data: dDonations, error: eDonations } = await client.from("donations").select("*").order("tanggal", { ascending: false }).order("id", { ascending: false });
+    if (!eDonations && Array.isArray(dDonations)) {
+      donations = dDonations.map(d => ({
+        id: d.id,
+        donorId: d.donor_id || "",
+        nama: d.nama,
+        tanggal: d.tanggal,
+        jumlah: Number(d.jumlah) || 0,
+        tujuan: d.tujuan,
+        metode: d.metode,
+        catatan: d.catatan || ""
+      }));
+    }
 
-      saveToStorage();
-      renderDashboardOverview();
-      renderDonasiTable();
-      renderDonaturTable();
-      renderKasTable();
-      populateAllCategorySelects();
+    // 3. Fetch Expenses
+    const { data: dExpenses, error: eExpenses } = await client.from("expenses").select("*").order("tanggal", { ascending: false }).order("id", { ascending: false });
+    if (!eExpenses && Array.isArray(dExpenses)) {
+      expenses = dExpenses.map(e => ({
+        id: e.id,
+        tanggal: e.tanggal,
+        kategori: e.kategori,
+        jumlah: Number(e.jumlah) || 0,
+        metode: e.metode,
+        catatan: e.catatan || ""
+      }));
+    }
 
-      if (notifySuccess) {
-        showToast("Data terbaru berhasil ditarik dari database MySQL!", "success");
-      }
+    // 4. Fetch Categories
+    const { data: dCatMasuk } = await client.from("categories_masuk").select("nama").order("id", { ascending: true });
+    if (Array.isArray(dCatMasuk) && dCatMasuk.length > 0) {
+      categoriesMasuk = dCatMasuk.map(c => c.nama);
+    }
+    const { data: dCatKeluar } = await client.from("categories_keluar").select("nama").order("id", { ascending: true });
+    if (Array.isArray(dCatKeluar) && dCatKeluar.length > 0) {
+      categoriesKeluar = dCatKeluar.map(c => c.nama);
+    }
+
+    // 5. Fetch Trash
+    const { data: dTrash } = await client.from("trash").select("*").order("deleted_at", { ascending: false });
+    if (Array.isArray(dTrash)) {
+      trash = dTrash.map(t => ({
+        id: t.id,
+        type: t.item_type,
+        data: t.item_data,
+        deletedAt: t.deleted_at
+      }));
+    }
+
+    saveToStorage();
+    renderDashboardOverview();
+    renderDonasiTable();
+    renderDonaturTable();
+    renderKasTable();
+    populateAllCategorySelects();
+
+    if (notifySuccess) {
+      showToast("Data terbaru berhasil ditarik dari Supabase Cloud! ⚡", "success");
     }
   } catch (err) {
-    console.warn("Gagal fetch dari MySQL API:", err);
+    console.warn("Gagal fetch dari Supabase:", err);
   }
 }
 
-// Inisialisasi status koneksi API & auto-fetch saat aplikasi dimuat
+// Inisialisasi status koneksi Supabase & auto-fetch saat aplikasi dimuat
 document.addEventListener("DOMContentLoaded", () => {
-  renderApiConfigUI();
-  if (isApiEnabled()) {
-    handleFetchAllFromMySql(false);
+  renderSupabaseConfigUI();
+  if (isSupabaseEnabled()) {
+    handleFetchAllFromSupabase(false);
   }
 });
